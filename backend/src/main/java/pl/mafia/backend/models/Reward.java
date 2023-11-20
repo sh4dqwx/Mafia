@@ -1,7 +1,21 @@
 package pl.mafia.backend.models;
 
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.ToString;
+
+@Entity
+@Table(name = "Reward")
+@Data
 public class Reward {
-    private int id;
+    @Id
+    @ToString.Exclude
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
     private String title;
-    private int acquiring_method;
+
+    @Column(nullable = false)
+    private String acquiring_method;
 }

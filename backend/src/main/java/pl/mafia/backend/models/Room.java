@@ -1,9 +1,33 @@
 package pl.mafia.backend.models;
 
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.ToString;
+
+import java.util.List;
+
+@Entity
+@Table(name = "Room")
+@Data
 public class Room {
-    int id;
-    private Account account; //idHost
+    @Id
+    @ToString.Exclude
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ToString.Exclude
+    @OneToMany
+    @JoinColumn(name = "id_host")
+    private Account host;
+
+    @ToString.Exclude
+    @OneToMany
+    @JoinColumn(name = "id_game")
     private Game game;
-    private int accessCode;
-    private int type;
+
+    @Column(nullable = false)
+    private String accessCode;
+
+    @ManyToMany(mappedBy = "rooms")
+    private List<Account> accounts;
 }
