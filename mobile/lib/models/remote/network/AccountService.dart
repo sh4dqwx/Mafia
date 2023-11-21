@@ -19,7 +19,7 @@ class AccountService {
     }
   }
 
-  Future<void> sendToServer(Account account) async {
+  Future<void> createAccount(Account account) async {
     try {
       final response = await http.post(
         Uri.parse("$baseUrl/accounts"),
