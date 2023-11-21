@@ -1,20 +1,36 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class loginViewModel{
-  loginViewModel();
 
-  String _username = "";
-  String _password = "";
+class loginViewModel with ChangeNotifier {
 
-  String get username => _username;
-  String get password => _password;
+  final _myRepo = AccountService();
 
-  void setUsername(String username){
-    _username = username;
+  bool _loading = false;
+  bool get loading => _loading;
+
+  setLoading(bool value){
+    _loading = value;
+    notifyListeners();
   }
 
-  void setPassword(String password){
-    _password = password;
-  }
+  Future<void> createAccount (dynamic data, BuildContext context) async {
 
+    setLoading(true);
+
+    _myRepo.registerApi(data).then((value){
+      setLoading(false);
+      //  nawigacja do ekranu głównego
+      // Navigator.pushNamed(context, RoutesName.home);
+      if (kDebugMode){
+        print(value.toString());
+      }
+
+    }).onError((error, stackTrace) {
+      setLoading(false);
+      if(kDebugMode){
+        print(error.toString());
+      }
+    });
+  }
 }
