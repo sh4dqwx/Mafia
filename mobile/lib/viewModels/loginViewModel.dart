@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class loginViewModel {
+class loginViewModel{
   loginViewModel();
 
   String _username = "";
