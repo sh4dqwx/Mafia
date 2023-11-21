@@ -2,12 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:mobile/models/local/AppException.dart';
-import 'package:mobile/models/remote/network/BaseApiService.dart';
 import 'package:mobile/models/local/Account.dart';
 
-class AccountService{
+class AccountService {
 
-  final String baseUrl ="";
+  final String baseUrl = "";
 
   Future<Account> getAccount(int accountId) async {
     try {
@@ -20,5 +19,39 @@ class AccountService{
     }
   }
 
+  Future<void> sendToServer(Account account) async {
+    try {
+      final response = await http.post(
+        Uri.parse("$baseUrl/accounts"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(account.toJson()),
+      );
 
+      var responseJson = returnResponse(response);
+    } on SocketException {
+      throw FetchDataException('No Internet Connection');
+    }
+  }
+
+  dynamic returnResponse(http.Response response) {
+    switch (response.statusCode) {
+      case 200:
+        dynamic responseJson = jsonDecode(response.body);
+        return responseJson;
+      case 400:
+        throw BadRequestException(response.toString());
+      case 401:
+      case 403:
+        throw UnauthorisedException(response.body.toString());
+      case 404:
+        throw UnauthorisedException(response.body.toString());
+      case 500:
+      default:
+        throw FetchDataException(
+            'Error occured while communication with server' +
+                ' with status code : ${response.statusCode}');
+    }
+  }
 }
