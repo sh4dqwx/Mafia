@@ -13,14 +13,17 @@ public class Vote {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ToString.Exclude
     @ManyToOne
     @Column(name = "id_voting")
     private Voting voting;
 
+    @ToString.Exclude
     @ManyToOne
     @Column(name = "id_voter")
     private Account voter;
 
+    @ToString.Exclude
     @ManyToOne
     @Column(name = "id_voted")
     private Account voted;

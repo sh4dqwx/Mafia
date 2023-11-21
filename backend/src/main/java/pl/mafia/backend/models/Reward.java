@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
 
+import java.util.List;
+
 @Entity
 @Table(name = "Reward")
 @Data
@@ -18,4 +20,8 @@ public class Reward {
 
     @Column(nullable = false)
     private String acquiring_method;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "reward")
+    private List<Round> rounds;
 }

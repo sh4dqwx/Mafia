@@ -19,6 +19,16 @@ public class Game {
     @Column(nullable = false)
     private Timestamp createTimestamp;
 
+    @ToString.Exclude
+    @OneToOne
+    @JoinColumn(name = "id_room")
+    private Room room;
+
+    @ToString.Exclude
     @ManyToMany(mappedBy = "games")
     private List<Account> accounts;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "game")
+    private List<Round> rounds;
 }

@@ -16,18 +16,19 @@ public class Room {
     private Long id;
 
     @ToString.Exclude
-    @OneToMany
+    @OneToOne
     @JoinColumn(name = "id_host")
     private Account host;
 
     @ToString.Exclude
-    @OneToMany
+    @OneToOne
     @JoinColumn(name = "id_game")
     private Game game;
 
     @Column(nullable = false)
     private String accessCode;
 
-    @ManyToMany(mappedBy = "rooms")
+    @ToString.Exclude
+    @OneToMany(mappedBy = "room")
     private List<Account> accounts;
 }

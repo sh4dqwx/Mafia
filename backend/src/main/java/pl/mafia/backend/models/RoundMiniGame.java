@@ -4,28 +4,25 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
 
-import java.util.List;
-
 @Entity
-@Table(name = "Voting")
+@IdClass(RoundMiniGameIdentifier.class)
+@Table(name = "RoundMiniGame")
 @Data
-public class Voting {
+public class RoundMiniGame {
     @Id
     @ToString.Exclude
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @ToString.Exclude
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "id_round")
     private Round round;
+
+    @Id
+    @ToString.Exclude
+    @ManyToOne
+    @JoinColumn(name = "id_minigame")
+    private Minigame minigame;
 
     @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "id_account")
     private Account account;
-
-    @ToString.Exclude
-    @OneToMany(mappedBy = "voting")
-    private List<Vote> votes;
 }

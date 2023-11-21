@@ -34,7 +34,28 @@ public class Account {
     private List<Game> games;
 
     @ToString.Exclude
-    @ManyToMany
-    @JoinTable(name = "RoomAccount", joinColumns = @JoinColumn(name = "id_account"), inverseJoinColumns = @JoinColumn(name = "id_room"))
-    private List<Room> rooms;
+    @ManyToOne
+    @JoinColumn(name = "id_room")
+    private Room room;
+
+    @ToString.Exclude
+    @OneToOne
+    @JoinColumn(name = "id_room_hosted")
+    private Room hostedRoom;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "account")
+    private List<RoundMiniGame> roundMiniGames;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "account")
+    private List<Voting> votings;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "voter")
+    private List<Vote> votesAsVoter;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "voted")
+    private List<Vote> votesAsVoted;
 }
