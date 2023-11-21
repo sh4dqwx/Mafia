@@ -10,6 +10,8 @@ class _RegisterPageState extends State<Register> {
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _confirmPasswordController = TextEditingController();
   bool _isRegistered = false;
+  bool _showErrorMessage = false;
+  bool _passwordsMismatch = false;
 
   @override
   Widget build(BuildContext context) {
@@ -38,20 +40,41 @@ class _RegisterPageState extends State<Register> {
               obscureText: true,
               decoration: InputDecoration(labelText: 'Confirm Password'),
             ),
-            SizedBox(height: 32.0),
+            SizedBox(height: 16.0),
+            if (_showErrorMessage || _passwordsMismatch)
+              Text(
+                _passwordsMismatch
+                    ? 'Please make sure your password match.'
+                    : 'Add password and email',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 18.0,
+                ),
+              ),
             ElevatedButton(
               onPressed: () {
                 String email = _emailController.text;
                 String password = _passwordController.text;
                 String confirmPassword = _confirmPasswordController.text;
 
-                if (password == confirmPassword) {
+                if (email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
+                  setState(() {
+                    _showErrorMessage = true;
+                    _passwordsMismatch = false; // Reset password mismatch error
+                  });
+                } else if (password == confirmPassword) {
                   print('Email: $email, Password: $password');
                   setState(() {
                     _isRegistered = true;
+                    _showErrorMessage = false; // Reset error message
+                    _passwordsMismatch = false; // Reset password mismatch error
                   });
                 } else {
-                  print('Password is different');
+                  setState(() {
+                    _passwordsMismatch = true;
+                    _showErrorMessage = false; // Reset error message
+                  });
+                  print('Password mismatch');
                 }
               },
               child: Text('Confirm'),
