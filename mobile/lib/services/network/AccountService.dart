@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'package:mobile/models/local/AppException.dart';
-import 'package:mobile/models/local/Account.dart';
+import 'package:mobile/services/network/AppException.dart';
+import 'package:mobile/models/Account.dart';
 
 class AccountService {
 
