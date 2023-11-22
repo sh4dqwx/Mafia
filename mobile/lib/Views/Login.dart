@@ -56,6 +56,7 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(height: 16.0),
             TextButton(
               onPressed: () {
+                // do rejestracji
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => Register()),
