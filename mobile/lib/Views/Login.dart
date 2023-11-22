@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'Register.dart';
 
 class Login extends StatelessWidget {
   @override
@@ -56,6 +57,10 @@ class _LoginPageState extends State<LoginPage> {
             TextButton(
               onPressed: () {
                 // do rejestracji
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Register()),
+                );
               },
               child: Text('Register'),
             ),
