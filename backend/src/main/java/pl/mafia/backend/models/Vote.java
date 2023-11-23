@@ -15,16 +15,16 @@ public class Vote {
 
     @ToString.Exclude
     @ManyToOne
-    @Column(name = "id_voting")
+    @JoinColumn(name = "id_voting")
     private Voting voting;
 
     @ToString.Exclude
     @ManyToOne
-    @Column(name = "id_voter")
+    @JoinColumn(name = "id_voter")
     private Account voter;
 
     @ToString.Exclude
     @ManyToOne
-    @Column(name = "id_voted")
+    @JoinColumn(name = "id_voted")
     private Account voted;
 }
