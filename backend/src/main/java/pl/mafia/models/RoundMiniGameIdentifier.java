@@ -1,4 +1,4 @@
-package pl.mafia.backend.models;
+package pl.mafia.models;
 
 import lombok.Data;
 import lombok.ToString;
