@@ -20,6 +20,9 @@ class MenuPage extends StatefulWidget {
 
 class _MenuPageState extends State<MenuPage> {
 
+  // komentarz bo niepołączone branche
+  //MenuViewModel _viewModel = menuViewModel();
+
   // nickname użytkownika do testów
   String nickname = "Testowy123";
 
@@ -44,16 +47,8 @@ class _MenuPageState extends State<MenuPage> {
               ),
             SizedBox(height: 25.0),
             ElevatedButton(
-              onPressed: () {
-                /* - Przekierowanie do dołączenia do pokoju
-
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Menu()),
-                );
-
-                */
-              },
+              // komentarz bo niepołączone branche
+              onPressed: () => {}, //_viewModel.joinGame(context),
               style: ElevatedButton.styleFrom(
                 minimumSize: Size(MediaQuery.of(context).size.width - 25.0, 60),
                 textStyle: TextStyle(fontSize: 32.0),
@@ -62,14 +57,8 @@ class _MenuPageState extends State<MenuPage> {
             ),
             SizedBox(height: 20.0),
             ElevatedButton(
-              onPressed: () {
-                /* - Przekierowanie do stworzenia nowego pokoju
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Menu()),
-                );
-                */
-              },
+              // komentarz bo niepołączone branche
+              onPressed: () => {}, //_viewModel.createGame(context),
               style: ElevatedButton.styleFrom(
                 minimumSize: Size(double.infinity, 60),
                 textStyle: TextStyle(fontSize: 32.0),
@@ -78,15 +67,8 @@ class _MenuPageState extends State<MenuPage> {
             ),
             SizedBox(height: 20.0),
             ElevatedButton(
-              onPressed: () {
-                /* - Przekierowanie do historii gier
-
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Menu()),
-                );
-                */
-              },
+              // komentarz bo niepołączone branche
+              onPressed: () => {}, //_viewModel.gameHistory(context),
               style: ElevatedButton.styleFrom(
                 minimumSize: Size(double.infinity, 60),
                 textStyle: TextStyle(fontSize: 32.0),
@@ -95,15 +77,8 @@ class _MenuPageState extends State<MenuPage> {
             ),
             SizedBox(height: 20.0),
             ElevatedButton(
-              onPressed: () {
-                /* - Przekierowanie do ustawień
-
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Menu()),
-                );
-                 */
-              },
+              // komentarz bo niepołączone branche
+              onPressed: () => {}, //_viewModel.settings(context),
               style: ElevatedButton.styleFrom(
                 minimumSize: Size(double.infinity, 60),
                 textStyle: TextStyle(fontSize: 32.0),
@@ -112,13 +87,8 @@ class _MenuPageState extends State<MenuPage> {
             ),
             SizedBox(height: 20.0),
             ElevatedButton(
-              onPressed: () {
-                /* - Przekierowanie do wylogowania się
-
-                Tutaj wylogowywanie się
-
-                */
-              },
+              // komentarz bo niepołączone branche
+              onPressed: () => {}, //_viewModel.logout(context),
               style: ElevatedButton.styleFrom(
                 minimumSize: Size(double.infinity, 60),
                 textStyle: TextStyle(fontSize: 32.0),
