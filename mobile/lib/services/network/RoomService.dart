@@ -19,6 +19,24 @@ class RoomService {
     }
   }
 
+  Future<List<Room>> getAllRooms() async {
+    try {
+      final response = await http.get(
+          Uri.parse("$baseUrl/room"));
+      if (response.statusCode == 200) {
+        List<dynamic> roomsJson = jsonDecode(response.body);
+        List<Room> rooms = roomsJson
+            .map((json) => Room.fromJson(json as Map<String, dynamic>))
+            .toList();
+        return rooms;
+      } else {
+        throw FetchDataException('Failed to load rooms');
+      }
+    } on SocketException {
+      throw FetchDataException('No Internet Connection');
+    }
+  }
+
   Future<void> createRoom(Room room) async {
     try {
       final response = await http.post(
