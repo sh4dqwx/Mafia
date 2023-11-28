@@ -1,4 +1,4 @@
-package pl.mafia.backend.Room.Controller;
+package pl.mafia.backend.Controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
