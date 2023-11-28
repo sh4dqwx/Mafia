@@ -1,10 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile/services/network/WSTestService.dart';
 
 
 class registerViewModel with ChangeNotifier {
-
-  final _myRepo = AccountService();
+  final WSTestService testService = WSTestService();
+  //final _myRepo = AccountService();
 
   bool _loading = false;
   bool get loading => _loading;
@@ -14,23 +15,28 @@ class registerViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> createAccount (dynamic data, BuildContext context) async {
+  // Future<void> createAccount (dynamic data, BuildContext context) async {
+  //
+  //   setLoading(true);
+  //
+  //   _myRepo.registerApi(data).then((value){
+  //     setLoading(false);
+  //     //  nawigacja do ekranu głównego
+  //     // Navigator.pushNamed(context, RoutesName.home);
+  //     if (kDebugMode){
+  //       print(value.toString());
+  //     }
+  //
+  //   }).onError((error, stackTrace) {
+  //     setLoading(false);
+  //     if(kDebugMode){
+  //       print(error.toString());
+  //     }
+  //   });
+  // }
 
-    setLoading(true);
-
-    _myRepo.registerApi(data).then((value){
-      setLoading(false);
-      //  nawigacja do ekranu głównego
-      // Navigator.pushNamed(context, RoutesName.home);
-      if (kDebugMode){
-        print(value.toString());
-      }
-
-    }).onError((error, stackTrace) {
-      setLoading(false);
-      if(kDebugMode){
-        print(error.toString());
-      }
-    });
+  Future<void> sendMessage() {
+    return testService.connect()
+        .then((result) => testService.sendMessage());
   }
 }

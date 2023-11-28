@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/services/network/WSTestService.dart';
+import 'package:mobile/viewModels/registerViewModel.dart';
 
 class Register extends StatefulWidget {
   @override
@@ -6,6 +8,8 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<Register> {
+  final registerViewModel viewModel = registerViewModel();
+
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _confirmPasswordController = TextEditingController();
@@ -53,6 +57,8 @@ class _RegisterPageState extends State<Register> {
               ),
             ElevatedButton(
               onPressed: () {
+                viewModel.sendMessage();
+
                 String email = _emailController.text;
                 String password = _passwordController.text;
                 String confirmPassword = _confirmPasswordController.text;
