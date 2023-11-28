@@ -11,7 +11,7 @@ class RoomService {
   Future<Room> getRoom(int roomId) async {
     try {
       final response = await http.get(
-          Uri.parse("$baseUrl/rooms/$roomId"));
+          Uri.parse("$baseUrl/room/$roomId"));
       return Room.fromJson(
           jsonDecode(response.body) as Map<String, dynamic>);
     } on SocketException {
@@ -22,7 +22,7 @@ class RoomService {
   Future<void> createRoom(Room room) async {
     try {
       final response = await http.post(
-        Uri.parse("$baseUrl/rooms"),
+        Uri.parse("$baseUrl/room"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
