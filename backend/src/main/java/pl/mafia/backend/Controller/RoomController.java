@@ -1,45 +1,44 @@
 package pl.mafia.backend.Controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import pl.mafia.backend.models.Room;
-
+import pl.mafia.backend.Repository.RoomRepository;  // Assuming you have a RoomRepository
+import pl.mafia.backend.models.Room;  // Update import to Room
+import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 public class RoomController {
 
-    @GetMapping("/rooms")
+    @Autowired
+    private RoomRepository roomRepository;
+
+    @GetMapping("/room")
     public List<Room> get(){
-        return db.values();
+        return (List<Room>) roomRepository.findAll();
     }
 
-    @GetMapping("/rooms/{id}")
+    @GetMapping("/room/{id}")
     public Room get(@PathVariable String id){
-        Room room = db.get(id);
-        if(room == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        return room;
+        long roomId = Long.parseLong(id);
+        return roomRepository.findById(roomId);
     }
 
-    @DeleteMapping("/rooms/{id}")
-    public void delete(@PathVariable String id){
-        Room room = db.remove(id);
-        if(room == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+    @DeleteMapping("/room/{id}")
+    public void delete(@PathVariable String id) {
+        long roomId = Long.parseLong(id);
+        Room room = roomRepository.findById(roomId);
+        if (room == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        } else {
+            roomRepository.delete(room);
+        }
     }
 
-    @PostMapping("/rooms")
-    public Room create(@RequestBody Room room){
-        room.setId(UUID.randomUUID().toString());
-        db.put(room.getId(), room);
-        return room;
+    @PostMapping("/room/")
+    public Room create(@RequestBody Room room) {
+        return roomRepository.save(room);
     }
 
-    @PutMapping("/rooms/{id}")
-    public Room put(@RequestBody Room room, @PathVariable String id){
-        room.setId(id);
-        db.put(id, room);
-        return room;
-    }
 }
