@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../viewmodels/registerViewModel.dart';
 
 class Register extends StatefulWidget {
   @override
@@ -9,12 +11,15 @@ class _RegisterPageState extends State<Register> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _confirmPasswordController = TextEditingController();
+  TextEditingController _loginController = TextEditingController();
   bool _isRegistered = false;
   bool _showErrorMessage = false;
   bool _passwordsMismatch = false;
 
   @override
   Widget build(BuildContext context) {
+    final RegisterViewModel = Provider.of<registerViewModel>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Register Page'),
@@ -24,6 +29,11 @@ class _RegisterPageState extends State<Register> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            TextField(
+              controller: _loginController,
+              decoration: InputDecoration(labelText: 'Login'),
+            ),
+            SizedBox(height: 16.0),
             TextField(
               controller: _emailController,
               decoration: InputDecoration(labelText: 'Email'),
@@ -45,27 +55,28 @@ class _RegisterPageState extends State<Register> {
               Text(
                 _passwordsMismatch
                     ? 'Please make sure your password match.'
-                    : 'Add password and email',
+                    : 'Add login, password and email',
                 style: TextStyle(
                   color: Colors.red,
                   fontSize: 18.0,
                 ),
               ),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
+                String login = _loginController.text;
                 String email = _emailController.text;
                 String password = _passwordController.text;
                 String confirmPassword = _confirmPasswordController.text;
 
-                if (email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
+                if (email.isEmpty || password.isEmpty || login.isEmpty || confirmPassword.isEmpty) {
                   setState(() {
                     _showErrorMessage = true;
                     _passwordsMismatch = false; // Reset password mismatch error
                   });
                 } else if (password == confirmPassword) {
-                  print('Email: $email, Password: $password');
+                  await RegisterViewModel.createAccount(login, email, password, context);
+                  
                   setState(() {
-                    _isRegistered = true;
                     _showErrorMessage = false; // Reset error message
                     _passwordsMismatch = false; // Reset password mismatch error
                   });
@@ -80,7 +91,7 @@ class _RegisterPageState extends State<Register> {
               child: Text('Confirm'),
             ),
             SizedBox(height: 16.0),
-            if (_isRegistered)
+            if (RegisterViewModel.isRegistered)
               Text(
                 'Registered!',
                 style: TextStyle(

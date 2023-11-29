@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
+import '../services/network/AccountService.dart';
+import 'package:mobile/models/Account.dart';
 
 class loginViewModel with ChangeNotifier {
 
@@ -14,16 +15,25 @@ class loginViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> createAccount (dynamic data, BuildContext context) async {
+  Future<void> loginAccount (String log, String pass, BuildContext context) async {
 
     setLoading(true);
 
-    _myRepo.registerApi(data).then((value){
+    Account myAccount = Account(
+      id: 1,
+      login: log,
+      password: pass,
+      email: 'mail',
+      nickname: log,
+    );
+
+    //tymczasowo createAccount, metoda bedzie zmieniona
+    _myRepo.createAccount(myAccount).then((value){
       setLoading(false);
       //  nawigacja do ekranu głównego
       // Navigator.pushNamed(context, RoutesName.home);
       if (kDebugMode){
-        print(value.toString());
+       // print(value.toString());
       }
 
     }).onError((error, stackTrace) {

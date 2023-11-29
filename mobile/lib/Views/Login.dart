@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'Register.dart';
+import '../viewmodels/loginViewModel.dart';
 
 class Login extends StatelessWidget {
   @override
@@ -23,8 +25,11 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
+
   @override
   Widget build(BuildContext context) {
+    final LoginViewModel = Provider.of<loginViewModel>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Login'),
@@ -46,9 +51,12 @@ class _LoginPageState extends State<LoginPage> {
             ),
             SizedBox(height: 32.0),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 String username = _usernameController.text;
                 String password = _passwordController.text;
+
+                // Wywołanie funkcji z loginViewModel przy logowaniu
+                await LoginViewModel.loginAccount(username, password, context);
                 print('Username: $username, Password: $password');
               },
               child: Text('Login'),
