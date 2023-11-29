@@ -34,7 +34,7 @@ public class AccountController {
             accountRepository.delete(account);
         }
     }
-    @PostMapping("/account/")
+    @PostMapping("/account")
     public Account createAccount(@RequestBody Account account) {
         String login = account.getLogin();
         String email = account.getEmail();
