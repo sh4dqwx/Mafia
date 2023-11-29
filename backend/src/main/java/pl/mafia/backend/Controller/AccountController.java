@@ -14,18 +14,18 @@ public class AccountController {
     @Autowired
     private AccountRepository accountRepository;
 
-    @GetMapping("/accounts")
-    public List<Account> get(){
+    @GetMapping("/account")
+    public List<Account> getAllAccounts(){
         return (List<Account>) accountRepository.findAll();
     }
-    @GetMapping("/accounts/{id}")
-    public Account get(@PathVariable String id){
+    @GetMapping("/account/{id}")
+    public Account getAccount(@PathVariable String id){
         long accountId = Long.parseLong(id);
         return accountRepository.findById(accountId);
     }
 
-    @DeleteMapping("/accounts/{id}")
-    public void delete(@PathVariable String id) {
+    @DeleteMapping("/account/{id}")
+    public void deleteAccount(@PathVariable String id) {
         long accountId = Long.parseLong(id);
         Account account = accountRepository.findById(accountId);
         if (account == null) {
@@ -34,27 +34,26 @@ public class AccountController {
             accountRepository.delete(account);
         }
     }
-    @PostMapping("/acounts/")
-    public Account create(@RequestBody Account account) {
-//        String login = account.getLogin();
-//        String email = account.getEmail();
-//
-//        Account existingLogin = accountRepository.findByLogin(login);
-//        Account existingEmail = accountRepository.findByEmail(email);
-//        if (existingLogin != null || existingEmail != null) {
-//            throw new ResponseStatusException(HttpStatus.CONFLICT, "Account already exists.");
-//        }
+    @PostMapping("/account/")
+    public Account createAccount(@RequestBody Account account) {
+        String login = account.getLogin();
+        String email = account.getEmail();
+
+        Account existingLogin = accountRepository.findByLogin(login);
+        Account existingEmail = accountRepository.findByEmail(email);
+        if (existingLogin != null || existingEmail != null) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Account already exists.");
+        }
         return accountRepository.save(account);
     }
 
-    @PutMapping("/accounts/{id}")
-    public Account put(@RequestBody Account account, @PathVariable String id) {
+    @PutMapping("/account/{id}")
+    public Account updateAccount(@RequestBody Account account, @PathVariable String id) {
         long accountId = Long.parseLong(id);
         Account existingAccount = accountRepository.findById(accountId);
         if (existingAccount == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         } else {
-//            account.setId(accountId);
             return accountRepository.save(account);
         }
     }
