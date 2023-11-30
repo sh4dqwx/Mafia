@@ -12,7 +12,8 @@ import java.util.List;
 public class Account {
     @Id
     @ToString.Exclude
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "account_sequence")
+    @SequenceGenerator(name = "account_sequence", sequenceName = "ACCOUNT_SEQ")
     private Long id;
 
     @Column(unique = true, nullable = false)
@@ -37,11 +38,6 @@ public class Account {
     @ManyToOne
     @JoinColumn(name = "id_room")
     private Room room;
-
-    @ToString.Exclude
-    @OneToOne
-    @JoinColumn(name = "id_room_hosted")
-    private Room hostedRoom;
 
     @ToString.Exclude
     @OneToMany(mappedBy = "account")

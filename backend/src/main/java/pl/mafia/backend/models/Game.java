@@ -13,16 +13,12 @@ import java.util.List;
 public class Game {
     @Id
     @ToString.Exclude
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "game_sequence")
+    @SequenceGenerator(name = "game_sequence", sequenceName = "GAME_SEQ")
     private Long id;
 
     @Column(nullable = false)
     private Timestamp createTimestamp;
-
-    @ToString.Exclude
-    @OneToOne
-    @JoinColumn(name = "id_room")
-    private Room room;
 
     @ToString.Exclude
     @ManyToMany(mappedBy = "games")
