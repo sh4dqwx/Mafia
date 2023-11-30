@@ -12,7 +12,8 @@ import java.util.List;
 public class Minigame {
     @Id
     @ToString.Exclude
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "minigame_sequence")
+    @SequenceGenerator(name = "minigame_sequence", sequenceName = "MINIGAME_SEQ")
     private Long id;
 
     @Column(nullable = false)

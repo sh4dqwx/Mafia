@@ -12,13 +12,9 @@ import java.util.List;
 public class Voting {
     @Id
     @ToString.Exclude
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "voting_sequence")
+    @SequenceGenerator(name = "voting_sequence", sequenceName = "VOTING_SEQ")
     private Long id;
-
-    @ToString.Exclude
-    @OneToOne
-    @JoinColumn(name = "id_round")
-    private Round round;
 
     @ToString.Exclude
     @ManyToOne

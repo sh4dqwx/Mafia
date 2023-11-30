@@ -12,7 +12,8 @@ import java.util.List;
 public class Reward {
     @Id
     @ToString.Exclude
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "reward_sequence")
+    @SequenceGenerator(name = "reward_sequence", sequenceName = "REWARD_SEQ")
     private Long id;
 
     @Column(nullable = false)
