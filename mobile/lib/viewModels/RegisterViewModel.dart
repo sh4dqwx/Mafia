@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/models/Account.dart';
 import '../services/network/AccountService.dart';
 
-class registerViewModel with ChangeNotifier {
+class RegisterViewModel extends ChangeNotifier {
 
   final _myRepo = AccountService();
 
@@ -17,17 +17,9 @@ class registerViewModel with ChangeNotifier {
 
   bool isRegistered=true; //tymczasowo aby sie view nie rozwalil, ale to chodzi o to aby zwracalo true jak zapisze w bazie
 
-  Future<void> createAccount (String log, String mail, String pass, BuildContext context) async {
+  Future<void> createAccount (String login, String email, String password) async {
     setLoading(true);
-    Account myAccount = Account(
-      id: 1,
-      login: log,
-      password: pass,
-      email: mail,
-      nickname: log,
-    );
-
-    _myRepo.createAccount(myAccount).then((value){
+    _myRepo.createAccount(login, email, password).then((value){
       setLoading(false);
       //  nawigacja do ekranu głównego
       // Navigator.pushNamed(context, RoutesName.home);

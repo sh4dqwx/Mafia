@@ -1,38 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/Views/Register.dart';
 import 'package:provider/provider.dart';
-import 'Register.dart';
-import '../viewmodels/loginViewModel.dart';
-
-class Login extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Login',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: LoginPage(),
-    );
-  }
-}
+import '../viewmodels/LoginViewModel.dart';
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
-  _LoginPageState createState() => _LoginPageState();
+  LoginPageState createState() => LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  TextEditingController _usernameController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-
+class LoginPageState extends State<LoginPage> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    final LoginViewModel = Provider.of<loginViewModel>(context);
-
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login'),
+        title: const Text('Login'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -41,36 +27,32 @@ class _LoginPageState extends State<LoginPage> {
           children: [
             TextField(
               controller: _usernameController,
-              decoration: InputDecoration(labelText: 'Username'),
+              decoration: const InputDecoration(labelText: 'Username'),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             TextField(
               controller: _passwordController,
               obscureText: true,
-              decoration: InputDecoration(labelText: 'Password'),
+              decoration: const InputDecoration(labelText: 'Password'),
             ),
-            SizedBox(height: 32.0),
-            ElevatedButton(
-              onPressed: () async {
-                String username = _usernameController.text;
-                String password = _passwordController.text;
-
-                // Wywołanie funkcji z loginViewModel przy logowaniu
-                await LoginViewModel.loginAccount(username, password, context);
-                print('Username: $username, Password: $password');
-              },
-              child: Text('Login'),
+            const SizedBox(height: 32.0),
+            Consumer<LoginViewModel>(
+              builder: (context, viewModel, child) {
+                return ElevatedButton(
+                  onPressed: () => {},
+                  child: const Text('Login')
+                );
+              }
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             TextButton(
               onPressed: () {
-                // do rejestracji
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Register()),
+                  MaterialPageRoute(builder: (context) => RegisterPage()),
                 );
               },
-              child: Text('Register'),
+              child: const Text('Register'),
             ),
           ],
         ),
