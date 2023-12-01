@@ -12,7 +12,8 @@ import java.util.List;
 public class Account {
     @Id
     @ToString.Exclude
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "account_sequence")
+    @SequenceGenerator(name = "account_sequence", sequenceName = "ACCOUNT_SEQ", allocationSize = 1)
     private Long id;
 
     @Column(unique = true, nullable = false)
@@ -29,19 +30,14 @@ public class Account {
     private String nickname;
 
     @ToString.Exclude
-    @ManyToMany
-    @JoinTable(name = "GameAccount", joinColumns = @JoinColumn(name = "id_account"), inverseJoinColumns = @JoinColumn(name = "id_game"))
-    private List<Game> games;
-
-    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "id_room")
     private Room room;
 
     @ToString.Exclude
-    @OneToOne
-    @JoinColumn(name = "id_room_hosted")
-    private Room hostedRoom;
+    @ManyToMany
+    @JoinTable(name = "GameAccount", joinColumns = @JoinColumn(name = "id_account"), inverseJoinColumns = @JoinColumn(name = "id_game"))
+    private List<Game> games;
 
     @ToString.Exclude
     @OneToMany(mappedBy = "account")

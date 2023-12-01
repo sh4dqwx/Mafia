@@ -12,7 +12,8 @@ import java.util.List;
 public class Room {
     @Id
     @ToString.Exclude
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "room_sequence")
+    @SequenceGenerator(name = "room_sequence", sequenceName = "ROOM_SEQ", allocationSize = 1)
     private Long id;
 
     @ToString.Exclude
@@ -22,10 +23,10 @@ public class Room {
 
     @ToString.Exclude
     @OneToOne
-    @JoinColumn(name = "id_game")
+    @JoinColumn(name = "id_game", unique = true)
     private Game game;
 
-    @Column(nullable = false)
+    @Column(name = "access_code", nullable = false)
     private String accessCode;
 
     @ToString.Exclude

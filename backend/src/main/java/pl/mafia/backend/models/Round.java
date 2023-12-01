@@ -12,7 +12,8 @@ import java.util.List;
 public class Round {
     @Id
     @ToString.Exclude
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "round_sequence")
+    @SequenceGenerator(name = "round_sequence", sequenceName = "ROUND_SEQ", allocationSize = 1)
     private Long id;
 
     @ToString.Exclude
@@ -27,17 +28,17 @@ public class Round {
 
     @ToString.Exclude
     @OneToOne
-    @JoinColumn(name = "id_voting_city")
+    @JoinColumn(name = "id_voting_city", unique = true)
     private Voting votingCity;
 
     @ToString.Exclude
     @OneToOne
-    @JoinColumn(name = "id_voting_mafia")
+    @JoinColumn(name = "id_voting_mafia", unique = true)
     private Voting votingMafia;
 
     @ToString.Exclude
     @OneToOne
-    @JoinColumn(name = "id_voting_reward")
+    @JoinColumn(name = "id_voting_reward", unique = true)
     private Voting votingReward;
 
     @ToString.Exclude
