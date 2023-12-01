@@ -13,7 +13,7 @@ public class Minigame {
     @Id
     @ToString.Exclude
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "minigame_sequence")
-    @SequenceGenerator(name = "minigame_sequence", sequenceName = "MINIGAME_SEQ")
+    @SequenceGenerator(name = "minigame_sequence", sequenceName = "MINIGAME_SEQ", allocationSize = 1)
     private Long id;
 
     @Column(nullable = false)

@@ -14,7 +14,7 @@ public class Game {
     @Id
     @ToString.Exclude
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "game_sequence")
-    @SequenceGenerator(name = "game_sequence", sequenceName = "GAME_SEQ")
+    @SequenceGenerator(name = "game_sequence", sequenceName = "GAME_SEQ", allocationSize = 1)
     private Long id;
 
     @Column(nullable = false)

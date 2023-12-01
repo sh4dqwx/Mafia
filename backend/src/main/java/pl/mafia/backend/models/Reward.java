@@ -13,7 +13,7 @@ public class Reward {
     @Id
     @ToString.Exclude
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "reward_sequence")
-    @SequenceGenerator(name = "reward_sequence", sequenceName = "REWARD_SEQ")
+    @SequenceGenerator(name = "reward_sequence", sequenceName = "REWARD_SEQ", allocationSize = 1)
     private Long id;
 
     @Column(nullable = false)

@@ -13,7 +13,7 @@ public class Voting {
     @Id
     @ToString.Exclude
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "voting_sequence")
-    @SequenceGenerator(name = "voting_sequence", sequenceName = "VOTING_SEQ")
+    @SequenceGenerator(name = "voting_sequence", sequenceName = "VOTING_SEQ", allocationSize = 1)
     private Long id;
 
     @ToString.Exclude

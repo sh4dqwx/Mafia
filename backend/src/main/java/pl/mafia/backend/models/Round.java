@@ -13,7 +13,7 @@ public class Round {
     @Id
     @ToString.Exclude
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "round_sequence")
-    @SequenceGenerator(name = "round_sequence", sequenceName = "ROUND_SEQ")
+    @SequenceGenerator(name = "round_sequence", sequenceName = "ROUND_SEQ", allocationSize = 1)
     private Long id;
 
     @ToString.Exclude
