@@ -1,46 +1,31 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../services/network/AccountService.dart';
-import 'package:mobile/models/Account.dart';
 
 class LoginViewModel extends ChangeNotifier {
 
-  final _myRepo = AccountService();
+  final _accountService = AccountService();
 
   bool _loading = false;
   bool get loading => _loading;
-
-  setLoading(bool value){
+  void _setLoading(bool value) {
     _loading = value;
     notifyListeners();
   }
 
-  Future<void> loginAccount (String log, String pass) async {
+  Future<bool> login(String log, String pass) async {
+    _setLoading(true);
+    try {
+      await _accountService.login(log, pass);
+      _setLoading(false);
+      return true;
+    } catch(e) {
+      _setLoading(false);
+      return false;
+    }
+  }
 
-    // setLoading(true);
-    //
-    // Account myAccount = Account(
-    //   id: 1,
-    //   login: log,
-    //   password: pass,
-    //   email: 'mail',
-    //   nickname: log,
-    // );
-    //
-    // //tymczasowo createAccount, metoda bedzie zmieniona
-    // _myRepo.createAccount().then((value){
-    //   setLoading(false);
-    //   //  nawigacja do ekranu głównego
-    //   // Navigator.pushNamed(context, RoutesName.home);
-    //   if (kDebugMode){
-    //    // print(value.toString());
-    //   }
-    //
-    // }).onError((error, stackTrace) {
-    //   setLoading(false);
-    //   if(kDebugMode){
-    //     print(error.toString());
-    //   }
-    // });
+  void reset() {
+    _loading = false;
   }
 }

@@ -6,7 +6,7 @@ import 'package:mobile/models/Account.dart';
 
 class AccountService {
 
-  final String baseUrl = "https://3a88-91-239-155-102.ngrok-free.app";
+  final String baseUrl = "https://8b95-91-239-155-102.ngrok-free.app";
 
   Future<Account> getAccount(int accountId) async {
     try {
@@ -19,9 +19,9 @@ class AccountService {
     }
   }
 
-  Future<void> createAccount(String login, String email, String password) async {
+  Future<dynamic> register(String login, String email, String password) async {
     try {
-      final response = await http.post(
+      final http.Response response = await http.post(
         Uri.parse("$baseUrl/account"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -33,8 +33,13 @@ class AccountService {
         }),
       );
 
-      var responseJson = returnResponse(response);
-      print(responseJson);
+      if(response.statusCode == 200) {
+        var responseJson = jsonDecode(response.body);
+        print(responseJson);
+        return responseJson;
+      } else {
+        throw FetchDataException('Error occured while communication with server with status code : ${response.statusCode}');
+      }
     } on SocketException {
       throw FetchDataException('No Internet Connection');
     }

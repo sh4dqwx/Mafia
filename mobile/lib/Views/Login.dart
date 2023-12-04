@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mobile/Views/Register.dart';
 import 'package:provider/provider.dart';
-import '../viewmodels/LoginViewModel.dart';
+import '../viewModels/LoginViewModel.dart';
+import 'Menu.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -10,9 +12,25 @@ class LoginPage extends StatefulWidget {
   LoginPageState createState() => LoginPageState();
 }
 
-class LoginPageState extends State<LoginPage> {
-  final TextEditingController _usernameController = TextEditingController();
+class LoginPageState extends State<LoginPage> with RouteAware {
+  final TextEditingController _loginController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void didChangeDependencies() {
+    context.read<LoginViewModel>().reset();
+    _loginController.clear();
+    _passwordController.clear();
+    super.didChangeDependencies();
+  }
+
+  @override
+  void didPopNext() {
+    context.read<LoginViewModel>().reset();
+    _loginController.clear();
+    _passwordController.clear();
+    super.didPopNext();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +44,8 @@ class LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextField(
-              controller: _usernameController,
-              decoration: const InputDecoration(labelText: 'Username'),
+              controller: _loginController,
+              decoration: const InputDecoration(labelText: 'Login'),
             ),
             const SizedBox(height: 16.0),
             TextField(
@@ -39,7 +57,23 @@ class LoginPageState extends State<LoginPage> {
             Consumer<LoginViewModel>(
               builder: (context, viewModel, child) {
                 return ElevatedButton(
-                  onPressed: () => {},
+                  onPressed: () async {
+                    bool isLogged = await viewModel.login(
+                      _loginController.text,
+                      _passwordController.text
+                    );
+                    if(isLogged) {
+                      Fluttertoast.showToast(
+                          msg: "Successful login",
+                          toastLength: Toast.LENGTH_SHORT
+                      );
+                      if(!context.mounted) return;
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const MenuPage())
+                      );
+                    }
+                  },
                   child: const Text('Login')
                 );
               }
@@ -49,7 +83,7 @@ class LoginPageState extends State<LoginPage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => RegisterPage()),
+                  MaterialPageRoute(builder: (context) => const RegisterPage()),
                 );
               },
               child: const Text('Register'),

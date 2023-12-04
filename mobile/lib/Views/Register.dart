@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import '../viewmodels/RegisterViewModel.dart';
+import '../viewModels/RegisterViewModel.dart';
+import 'Menu.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -9,20 +11,39 @@ class RegisterPage extends StatefulWidget {
   RegisterPageState createState() => RegisterPageState();
 }
 
-class RegisterPageState extends State<RegisterPage> {
+class RegisterPageState extends State<RegisterPage> with RouteAware {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
   final TextEditingController _loginController = TextEditingController();
-  bool _isRegistered = false;
   bool _showErrorMessage = false;
   bool _passwordsMismatch = false;
+
+  @override
+  void didChangeDependencies() {
+    context.read<RegisterViewModel>().reset();
+    _emailController.clear();
+    _passwordController.clear();
+    _confirmPasswordController.clear();
+    _loginController.clear();
+    super.didChangeDependencies();
+  }
+
+  @override
+  void didPopNext() {
+    context.read<RegisterViewModel>().reset();
+    _emailController.clear();
+    _passwordController.clear();
+    _confirmPasswordController.clear();
+    _loginController.clear();
+    super.didPopNext();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Register Page'),
+        title: const Text('Register'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -76,8 +97,18 @@ class RegisterPageState extends State<RegisterPage> {
                         _passwordsMismatch = false; // Reset password mismatch error
                       });
                     } else if (password == confirmPassword) {
-                      await viewModel.createAccount(login, email, password);
-
+                      bool isRegistered = await viewModel.register(login, email, password);
+                      if(isRegistered) {
+                        Fluttertoast.showToast(
+                          msg: "Successful registration",
+                          toastLength: Toast.LENGTH_SHORT
+                        );
+                        if(!context.mounted) return;
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const MenuPage())
+                        );
+                      }
                       setState(() {
                         _showErrorMessage = false; // Reset error message
                         _passwordsMismatch = false; // Reset password mismatch error
@@ -92,20 +123,6 @@ class RegisterPageState extends State<RegisterPage> {
                   },
                   child: const Text('Confirm'),
                 );
-              }
-            ),
-            const SizedBox(height: 16.0),
-            Consumer<RegisterViewModel>(
-              builder: (context, viewModel, child) {
-                return viewModel.isRegistered
-                    ? const Text(
-                        'Registered!',
-                        style: TextStyle(
-                          color: Colors.green,
-                          fontSize: 18.0,
-                        )
-                      )
-                    : const SizedBox();
               }
             )
           ],
