@@ -1,7 +1,6 @@
-package pl.mafia.backend.Repositories;
+package pl.mafia.backend.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.CrudRepository;
 import pl.mafia.backend.models.Account;
 import pl.mafia.backend.models.Room;
 
