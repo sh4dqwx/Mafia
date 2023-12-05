@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 
-class Lobby extends StatelessWidget {
+class Room extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -29,7 +29,7 @@ class _WaitingRoomState extends State<WaitingRoom> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Lobby'),
+        title: Text('Room'),
         backgroundColor: Colors.blue,
       ),
       body: Stack(
