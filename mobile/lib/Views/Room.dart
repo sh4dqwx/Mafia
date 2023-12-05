@@ -18,6 +18,7 @@ class WaitingRoom extends StatefulWidget {
 class _WaitingRoomState extends State<WaitingRoom> {
   int numberOfPlayers = 0;
   String roomCode = generateRandomCode();
+  bool isHost = false; // czy użytkownik jest hostem
 
   static String generateRandomCode() {
     final Random random = Random();
@@ -31,6 +32,21 @@ class _WaitingRoomState extends State<WaitingRoom> {
       appBar: AppBar(
         title: Text('Room'),
         backgroundColor: Colors.blue,
+        actions: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: GestureDetector(
+                onTap: () {
+                  // ustawienia dla wszysktich
+                  print('Open settings');
+                },
+                child: Icon(
+                  Icons.settings,
+                  size: 30,
+                ),
+              ),
+            ),
+        ],
       ),
       body: Stack(
         children: [
@@ -45,8 +61,7 @@ class _WaitingRoomState extends State<WaitingRoom> {
                 SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
-                    // start tundy
-                    print('Rozpocznij runde');
+                    print('Start the game');
                   },
                   child: Text('Start the game'),
                   style: ElevatedButton.styleFrom(
@@ -56,8 +71,25 @@ class _WaitingRoomState extends State<WaitingRoom> {
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   ),
                 ),
+                SizedBox(height: 10),
+                if (isHost)
+                  ElevatedButton(
+                    onPressed: () {
+                      // ustawienia gry
+                      print('Open game settings');
+                    },
+                    child: Text('Game Settings'),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.blue,
+                      onPrimary: Colors.white,
+                      textStyle: TextStyle(fontSize: 18),
+                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    ),
+                  ),
                 SizedBox(height: 20),
                 Text('Code: $roomCode'),
+                if (isHost)
+                  Text('You are the host'),
               ],
             ),
           ),
@@ -67,6 +99,7 @@ class _WaitingRoomState extends State<WaitingRoom> {
             child: GestureDetector(
               onTap: () {
                 // otwieranie chatu
+                print('Open chat');
               },
               child: Icon(
                 Icons.chat,
