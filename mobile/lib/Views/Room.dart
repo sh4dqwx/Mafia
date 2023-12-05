@@ -5,11 +5,7 @@ import 'package:provider/provider.dart';
 class RoomPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => RoomViewModel(),
-      child: Consumer<RoomViewModel>(
-        builder: (context, viewModel, child) {
-          return Scaffold(
+    return Scaffold(
             appBar: AppBar(
               title: Text('Room'),
               backgroundColor: Colors.blue,
@@ -28,8 +24,10 @@ class RoomPage extends StatelessWidget {
                 ),
               ],
             ),
-            body: Stack(
-              children: [
+            body: Consumer<RoomViewModel>(
+              builder: (context, viewModel, child) {
+                return Stack(
+                children: [
                 Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -70,7 +68,6 @@ class RoomPage extends StatelessWidget {
                   ),
                 ),
               ],
-            ),
           );
         },
       ),
