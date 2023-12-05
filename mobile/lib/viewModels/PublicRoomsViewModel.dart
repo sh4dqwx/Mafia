@@ -15,7 +15,7 @@ class PublicRoomsViewModel with ChangeNotifier {
       _publicRooms = pokoje;
       notifyListeners();
     } catch (e) {
-      print('Błąd podczas pobierania listy pokoi: $e');
+      print('Error while fetching room list: $e');
     }
   }
 
