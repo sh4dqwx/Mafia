@@ -1,4 +1,4 @@
-package pl.mafia.backend.Repository;
+package pl.mafia.backend.repositories;
 
 import org.springframework.data.repository.CrudRepository;
 import pl.mafia.backend.models.Account;
