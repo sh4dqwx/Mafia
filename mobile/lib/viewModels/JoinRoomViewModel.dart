@@ -11,22 +11,24 @@ class JoinPrivateRoomViewModel {
 
   Future<void> joinRoom() async {
     String lobbyCode = lobbyCodeController.text;
-    if (lobbyCode.isNotEmpty) {
-      /*  ZAKOMENTOWANA CAŁOŚĆ BO NIE MA MERGA Z BRANCHEM GDZIE JEST ROOM
+    if (lobbyCode.isNotEmpty) {/*
+      komentarz bo brak połączenia z room
       try {
         Room room = await roomService.getRoom(int.parse(lobbyCode));
 
-        // Dodaj weryfikację zgodności kodu dołączenia
-        if (room.isValidJoinCode(lobbyCode)) {
-          // Kod dołączenia jest zgodny - możesz przejść dalej
+        // Sprawdź, czy serwis zwrócił poprawny pokój
+        if (room != null) {
+          // Pokój został poprawnie pobrany - przejdź do widoku pokoju
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => Room(room: room)),
+            MaterialPageRoute(
+              builder: (context) => Room(room: room),
+            ),
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Invalid Room Code'),
+              content: Text('Error: Unable to retrieve Room data'),
             ),
           );
         }
@@ -43,8 +45,7 @@ class JoinPrivateRoomViewModel {
           ),
         );
       }*/
-    } else {
-      /*
+    } else {/*
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Please enter the Room Code'),
@@ -53,3 +54,4 @@ class JoinPrivateRoomViewModel {
     }
   }
 }
+
