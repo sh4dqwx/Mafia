@@ -6,10 +6,10 @@ class PublicRoomsPage extends StatefulWidget {
   const PublicRoomsPage({super.key});
 
   @override
-  _PublicRoomsPageState createState() => _PublicRoomsPageState();
+  PublicRoomsPageState createState() => PublicRoomsPageState();
 }
 
-class _PublicRoomsPageState extends State<PublicRoomsPage> {
+class PublicRoomsPageState extends State<PublicRoomsPage> {
   @override
   Widget build(BuildContext context) {
     //List<Room> publicRooms = context.watch<PublicRoomsViewModel>().getPublicRooms();
