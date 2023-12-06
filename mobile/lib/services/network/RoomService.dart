@@ -53,6 +53,22 @@ class RoomService {
     }
   }
 
+  Future<void> modifyRoomProperties(Room room) async { //Logika zmiany ustawień jest jeszcze nie ustalona
+    try {
+      final response = await http.put(
+        Uri.parse("$baseUrl/room/properties"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(room.toJson()), //Może będzie trzeba stworzyć tabelę i obiekt ustawień
+      );
+
+      var responseJson = returnResponse(response);
+    } on SocketException {
+      throw FetchDataException('No Internet Connection');
+    }
+  }
+
   dynamic returnResponse(http.Response response) {
     switch (response.statusCode) {
       case 200:
