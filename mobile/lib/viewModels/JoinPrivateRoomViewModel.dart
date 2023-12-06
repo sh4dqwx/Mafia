@@ -23,8 +23,11 @@ class JoinPrivateRoomViewModel extends ChangeNotifier {
 
     if (accessCode.isNotEmpty) {
       try {
+        //tutaj ma być metoda z servisu, to co poniżej to placeholder żeby nie pluło błędami
+        //bool roomIsFound = getRoom(accesCode);
         Room room = await roomService.getRoom(int.parse(accessCode));
 
+        // if (roomIsFound == true)
         if (room != null) {
           notifyListeners();
           return true;
