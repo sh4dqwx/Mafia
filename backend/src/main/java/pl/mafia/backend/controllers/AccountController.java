@@ -1,9 +1,9 @@
-package pl.mafia.backend.Controller;
+package pl.mafia.backend.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
-import pl.mafia.backend.Repository.AccountRepository;
+import pl.mafia.backend.repositories.AccountRepository;
 import pl.mafia.backend.models.Account;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
