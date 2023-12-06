@@ -33,7 +33,7 @@ class JoinPrivateRoom extends StatelessWidget {
               onPressed: () {
                 String lobbyCode = lobbyCodeController.text;
                 if (lobbyCode.isNotEmpty) {
-                  //ekran poczekalni
+                  //ekran poczekalni o danym kodzie
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
