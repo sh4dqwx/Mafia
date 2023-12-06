@@ -1,26 +1,21 @@
 import 'package:flutter/material.dart';
-import 'dart:math';
 import 'package:provider/provider.dart';
 
 class RoomPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => RoomViewModel(),
-      child: Consumer<RoomViewModel>(
-        builder: (context, viewModel, child) {
           return Scaffold(
             appBar: AppBar(
-              title: Text('Room'),
+              title: const Text('Room'),
               backgroundColor: Colors.blue,
               actions: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: GestureDetector(
                     onTap: () {
-                      print('Open settings');
+                      //ustawienia ogolne aplikacji
                     },
-                    child: Icon(
+                    child: const Icon(
                       Icons.settings,
                       size: 30,
                     ),
@@ -28,6 +23,8 @@ class RoomPage extends StatelessWidget {
                 ),
               ],
             ),
+            body: Consumer<RoomViewModel>(
+              builder: (context, viewModel, child) {
             body: Stack(
               children: [
                 Center(
@@ -36,35 +33,35 @@ class RoomPage extends StatelessWidget {
                     children: [
                       Text(
                         'Number of Players: ${viewModel.numberOfPlayers}',
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: viewModel.startGame,
-                        child: Text('Start the game'),
+                        child: const Text('Start the game'),
                         style: ElevatedButton.styleFrom(
                           primary: Colors.orange,
                           onPrimary: Colors.white,
-                          textStyle: TextStyle(fontSize: 18),
-                          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                          textStyle: const TextStyle(fontSize: 18),
+                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                         ),
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       if (viewModel.isHost)
                         ElevatedButton(
                           onPressed: viewModel.openGameSettings,
-                          child: Text('Game Settings'),
+                          child: const Text('Game Settings'),
                           style: ElevatedButton.styleFrom(
                             primary: Colors.blue,
                             onPrimary: Colors.white,
-                            textStyle: TextStyle(fontSize: 18),
-                            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                            textStyle: const TextStyle(fontSize: 18),
+                            padding: const  EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                           ),
                         ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Text('Code: ${viewModel.roomCode}'),
                       if (viewModel.isHost)
-                        Text('You are the host'),
+                        const Text('You are the host'),
                     ],
                   ),
                 ),
@@ -76,7 +73,7 @@ class RoomPage extends StatelessWidget {
                       // Otwieranie chatu
                       print('Open chat');
                     },
-                    child: Icon(
+                    child: const Icon(
                       Icons.chat,
                       size: 40,
                       color: Colors.blue,
@@ -84,7 +81,6 @@ class RoomPage extends StatelessWidget {
                   ),
                 ),
               ],
-            ),
           );
         },
       ),
