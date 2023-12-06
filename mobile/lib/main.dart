@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/viewModels/JoinPrivateRoomViewModel.dart';
 import 'package:mobile/viewModels/MenuViewModel.dart';
-import 'package:mobile/viewModels/PublicRoomsViewModel.dart';
 import 'package:provider/provider.dart';
 import '../viewModels/LoginViewModel.dart';
 import '../viewModels/RegisterViewModel.dart';
@@ -17,16 +17,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (context) => RegisterViewModel()),
-          ChangeNotifierProvider(create: (context) => LoginViewModel()),
-          ChangeNotifierProvider(create: (context) => MenuViewModel()),
-          ChangeNotifierProvider(create: (context) => PublicRoomsViewModel())
-        ],
-        child: const MaterialApp(
-          title: 'MAFIA+',
-          home: LoginPage(),
-        )
+      providers: [
+        ChangeNotifierProvider(create: (context) => RegisterViewModel()),
+        ChangeNotifierProvider(create: (context) => LoginViewModel()),
+        ChangeNotifierProvider(create: (context) => MenuViewModel()),
+        ChangeNotifierProvider(create: (context) => JoinRoomViewModel())
+      ],
+      child: const MaterialApp(
+        title: 'MAFIA+',
+        home: LoginPage(),
+      )
     );
   }
 }
