@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../viewModels/LoginViewModel.dart';
 import '../viewModels/RegisterViewModel.dart';
 import 'Views/Login.dart';
+import '../viewModels/PublicRoomsViewModel.dart';
 import 'Views/Register.dart';
 
 void main() {
@@ -21,7 +22,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => RegisterViewModel()),
         ChangeNotifierProvider(create: (context) => LoginViewModel()),
         ChangeNotifierProvider(create: (context) => MenuViewModel()),
-        ChangeNotifierProvider(create: (context) => JoinRoomViewModel())
+        ChangeNotifierProvider(create: (context) => JoinPrivateRoomViewModel()),
+        ChangeNotifierProvider(create: (context) => PublicRoomsViewModel())
       ],
       child: const MaterialApp(
         title: 'MAFIA+',
