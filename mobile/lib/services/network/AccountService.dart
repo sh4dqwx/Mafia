@@ -11,7 +11,7 @@ class AccountService {
   Future<Account> getAccount(int accountId) async {
     try {
       final response = await http.get(
-          Uri.parse("$baseUrl/accounts/$accountId"));
+          Uri.parse("$baseUrl/account/$accountId"));
       return Account.fromJson(
           jsonDecode(response.body) as Map<String, dynamic>);
     } on SocketException {
@@ -19,17 +19,27 @@ class AccountService {
     }
   }
 
-  Future<void> createAccount(Account account) async {
+  Future<dynamic> register(String login, String email, String password) async {
     try {
-      final response = await http.post(
-        Uri.parse("$baseUrl/accounts"),
+      final http.Response response = await http.post(
+        Uri.parse("$baseUrl/account"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: jsonEncode(account.toJson()),
+        body: jsonEncode(<String, String>{
+          'login': login,
+          'email': email,
+          'password': password
+        }),
       );
 
-      var responseJson = returnResponse(response);
+      if(response.statusCode == 200) {
+        var responseJson = jsonDecode(response.body);
+        print(responseJson);
+        return responseJson;
+      } else {
+        throw FetchDataException('Error occured while communication with server with status code : ${response.statusCode}');
+      }
     } on SocketException {
       throw FetchDataException('No Internet Connection');
     }

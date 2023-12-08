@@ -10,7 +10,8 @@ import lombok.ToString;
 public class Vote {
     @Id
     @ToString.Exclude
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "vote_sequence")
+    @SequenceGenerator(name = "vote_sequence", sequenceName = "VOTE_SEQ", allocationSize = 1)
     private Long id;
 
     @ToString.Exclude
