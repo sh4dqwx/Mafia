@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/Views/Login.dart';
 import 'package:mobile/Views/PublicRooms.dart';
 import 'package:mobile/viewModels/MenuViewModel.dart';
 import 'package:provider/provider.dart';
+import '../models/Room.dart';
 
 class MenuPage extends StatefulWidget {
   const MenuPage({super.key});
@@ -34,6 +36,22 @@ class MenuPageState extends State<MenuPage> {
             const SizedBox(height: 25.0),
             ElevatedButton(
               onPressed: () {
+                // brak merga
+                /*Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => JoinPrivateRoomPage()),
+                );*/
+              },
+              style: ElevatedButton.styleFrom(
+                minimumSize: Size(MediaQuery.of(context).size.width - 25.0, 60),
+                textStyle: const TextStyle(fontSize: 32.0),
+              ),
+              child: const Text('Enter room code'),
+            ),
+            const SizedBox(height: 20.0),
+            ElevatedButton(
+              onPressed: () {
+                context.read<MenuViewModel>().showPublicRoomsList(context);
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => PublicRoomsPage()),
@@ -43,19 +61,35 @@ class MenuPageState extends State<MenuPage> {
                 minimumSize: Size(MediaQuery.of(context).size.width - 25.0, 60),
                 textStyle: const TextStyle(fontSize: 32.0),
               ),
-              child: const Text('Join game'),
+              child: const Text('Public rooms list'),
             ),
             const SizedBox(height: 20.0),
             ElevatedButton(
-              onPressed: () {
-                context.read<MenuViewModel>().createGame(context);
+              onPressed: () async {
+                var menuViewModel = Provider.of<MenuViewModel>(context, listen: false);
+                Room newRoom = Room(
+                  id: 1,
+                  idHost: 123,
+                  idGame: 456,
+                  accessCode: 'ABC123',
+                  //isPublic = false,
+                );
+
+                bool isCreated = await menuViewModel.createGame(newRoom);
+                if (isCreated) {
+                  /*Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => RoomPage()),
+                  );*/
+                }
               },
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 60),
                 textStyle: const TextStyle(fontSize: 32.0),
               ),
-              child: const Text('Create game'),
+              child: const Text('Create new room'),
             ),
+
             const SizedBox(height: 20.0),
             ElevatedButton(
               onPressed: () {
@@ -81,7 +115,11 @@ class MenuPageState extends State<MenuPage> {
             const SizedBox(height: 20.0),
             ElevatedButton(
               onPressed: () {
-                context.read<MenuViewModel>().logout();
+                //tutaj jeszcze wstawić logikę wylogowania
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginPage()),
+                );
               },
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 60),
