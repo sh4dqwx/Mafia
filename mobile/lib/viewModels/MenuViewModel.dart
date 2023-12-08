@@ -6,31 +6,11 @@ class MenuViewModel extends ChangeNotifier {
   String get nickname => _nickname;
 
   void joinGame(BuildContext context) {
-    // Przejście do widoku dołączania do poczekalni
-    /*Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => JoinGameView()),
-    );*/
-
-    // Powiadomienie listenerów o zmianie stanu
     notifyListeners();
   }
 
   void createGame(BuildContext context) {
-    // Przejście do widoku tworzenia poczekalni
-    /*Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => CreateGameView()),
-    );*/
 
-    // Tymczasowo (?) przejście do widoku poczekalni
-    // Zakomentowane, bo nie ma merga z widokiem poczekalni
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(builder: (context) => WaitingRoom()),
-    // );
-
-    // Powiadomienie listenerów o zmianie stanu
     notifyListeners();
   }
 
