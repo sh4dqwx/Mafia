@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/Views/PublicRooms.dart';
 import 'package:mobile/viewModels/MenuViewModel.dart';
 import 'package:provider/provider.dart';
 
@@ -33,7 +34,10 @@ class MenuPageState extends State<MenuPage> {
             const SizedBox(height: 25.0),
             ElevatedButton(
               onPressed: () {
-                context.read<MenuViewModel>().joinGame(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PublicRoomsPage()),
+                );
               },
               style: ElevatedButton.styleFrom(
                 minimumSize: Size(MediaQuery.of(context).size.width - 25.0, 60),
