@@ -1,11 +1,24 @@
 import 'package:flutter/material.dart';
 
-class roomSettings extends StatefulWidget {
+class RoomSettings extends StatelessWidget {
   @override
-  _roomSettingsState createState() => _roomSettingsState();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Menu',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: RoomSettingsPage(),
+    );
+  }
 }
 
-class _roomSettingsState extends State<roomSettings> {
+class RoomSettingsPage extends StatefulWidget {
+  @override
+  _RoomSettingsState createState() => _RoomSettingsState();
+}
+
+class _RoomSettingsState extends State<RoomSettingsPage> {
   bool _isPublic = true; // Default to public room
   int _numberOfPlayers = 6; // Default number of players
 
@@ -26,7 +39,6 @@ class _roomSettingsState extends State<roomSettings> {
             ),
             Row(
               children: [
-                Text('Public'),
                 Radio(
                   value: true,
                   groupValue: _isPublic,
@@ -36,7 +48,7 @@ class _roomSettingsState extends State<roomSettings> {
                     });
                   },
                 ),
-                Text('Private'),
+                Text('Public'),
                 Radio(
                   value: false,
                   groupValue: _isPublic,
@@ -46,6 +58,7 @@ class _roomSettingsState extends State<roomSettings> {
                     });
                   },
                 ),
+                Text('Private'),
               ],
             ),
             SizedBox(height: 16.0),
@@ -66,8 +79,18 @@ class _roomSettingsState extends State<roomSettings> {
               },
             ),
             Text('$_numberOfPlayers Players'),
-            SizedBox(height: 16.0),
+            SizedBox(height: 20.0),
+            ElevatedButton(
+              // komentarz bo niepołączone branche
+              onPressed: () => {}, //_viewModel.createGame(context),
+              style: ElevatedButton.styleFrom(
+                minimumSize: Size(double.infinity, 60),
+                textStyle: TextStyle(fontSize: 32.0),
+              ),
+              child: Text('Save'),
+            ),
           ],
+
         ),
       ),
     );
