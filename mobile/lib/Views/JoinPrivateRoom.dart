@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class JoinPrivateRoom extends StatelessWidget {
+class JoinPrivateRoom extends StatefulWidget {
   TextEditingController lobbyCodeController = TextEditingController();
 
   @override
@@ -31,9 +31,10 @@ class JoinPrivateRoom extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                String lobbyCode = lobbyCodeController.text;
-                if (JoinPrivateRoomViewModel.validateLobbyCode(lobbyCode)) {
-                  JoinPrivareRoomViewModel.join(lobbyCode);
+                String accessCode = lobbyCodeController.text;
+                if (//context.read<JoinPrivateRoomViewModel>().validateLobbyCode(accessCode)
+                         ) {
+                 // context.read.<JoinPrivareRoomViewModel>().join(accessCode);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
