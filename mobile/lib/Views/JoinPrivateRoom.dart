@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 
-class JoinPrivateRoom extends StatefulWidget {
+class JoinPrivateRoomPage extends StatefulWidget {
   TextEditingController lobbyCodeController = TextEditingController();
 
+  @override
+  _JoinPrivateRoomState createState() => _JoinPrivateRoomState();
+}
+
+class _JoinPrivateRoomState extends State<JoinPrivateRoomPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +26,7 @@ class JoinPrivateRoom extends StatefulWidget {
                 borderRadius: BorderRadius.circular(8.0),
               ),
               child: TextField(
-                controller: lobbyCodeController,
+                controller: widget.lobbyCodeController,
                 decoration: const InputDecoration(
                   hintText: 'Enter the Room Code',
                   border: InputBorder.none,
@@ -31,10 +36,11 @@ class JoinPrivateRoom extends StatefulWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                String accessCode = lobbyCodeController.text;
-                if (//context.read<JoinPrivateRoomViewModel>().validateLobbyCode(accessCode)
-                         ) {
-                 // context.read.<JoinPrivareRoomViewModel>().join(accessCode);
+                String accessCode = widget.lobbyCodeController.text;
+                if (
+                //context.read<JoinPrivateRoomViewModel>().validateLobbyCode(accessCode)
+                true) {
+                  // context.read.<JoinPrivareRoomViewModel>().join(accessCode);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -51,4 +57,3 @@ class JoinPrivateRoom extends StatefulWidget {
     );
   }
 }
-
