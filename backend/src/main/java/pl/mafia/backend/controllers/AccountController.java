@@ -1,5 +1,6 @@
 package pl.mafia.backend.controllers;
 
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
@@ -45,12 +46,12 @@ public class AccountController {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Account already exists.");
         }
 
-        //hashowanie hasła?
+        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
 
         Account account = new Account();
         account.setEmail(email);
         account.setLogin(login);
-        account.setPassword(password);
+        account.setPassword(hashedPassword);
         account.setNickname(login);
 
         return accountRepository.save(account);
@@ -75,7 +76,7 @@ public class AccountController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account does not exists.");
         }
 
-        if (!existingAccount.getPassword().equals(password)) {
+        if (!BCrypt.checkpw(password, existingAccount.getPassword())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Wrong password.");
         }
 
