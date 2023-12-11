@@ -23,7 +23,8 @@ class RoomPage extends StatelessWidget {
                 ),
               ],
             ),
-            body: Consumer<RoomViewModel>(
+            body: Consumer //<RoomViewModel>
+              (
               builder: (context, viewModel, child) {
               children: [
                 Center(
@@ -31,12 +32,12 @@ class RoomPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                       // 'Number of Players: ${viewModel.numberOfPlayers}',
+                        'Number of Players:  $ //{ viewModel.numberOfPlayers}',
                         style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 20),
                       ElevatedButton(
-                        onPressed: viewModel.startGame,
+                        onPressed: ()=>{} //viewModel.startGame,
                         child: const Text('Start the game'),
                         style: ElevatedButton.styleFrom(
                           primary: Colors.orange,
@@ -46,7 +47,7 @@ class RoomPage extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 10),
-                      if (viewModel.isHost)
+                     // if (viewModel.isHost)
                         ElevatedButton(
                           //onPressed: viewModel.openGameSettings,
                           child: const Text('Game Settings'),
@@ -58,7 +59,7 @@ class RoomPage extends StatelessWidget {
                           ),
                         ),
                       const SizedBox(height: 20),
-                     // Text('Code: ${viewModel.roomCode}'),
+                      Text('Code: $//{viewModel.roomCode}'),
                     //  if (viewModel.isHost)
                       //  const Text('You are the host'),
                     ],
