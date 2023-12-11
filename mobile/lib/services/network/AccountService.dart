@@ -19,6 +19,32 @@ class AccountService {
     }
   }
 
+  Future<dynamic> login(String login, String password) async {
+    try {
+      final http.Response response = await http.post(
+        Uri.parse("$baseUrl/login"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'login': login,
+          'password': password
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        var responseJson = jsonDecode(response.body);
+        return responseJson;
+      } else {
+        throw FetchDataException(
+            'Error occured while communication with server with status code : ${response
+                .statusCode}');
+      }
+    } on SocketException {
+      throw FetchDataException('No Internet Connection');
+    }
+  }
+
   Future<dynamic> register(String login, String email, String password) async {
     try {
       final http.Response response = await http.post(
@@ -32,13 +58,13 @@ class AccountService {
           'password': password
         }),
       );
-
-      if(response.statusCode == 200) {
+      if (response.statusCode == 200) {
         var responseJson = jsonDecode(response.body);
-        print(responseJson);
         return responseJson;
       } else {
-        throw FetchDataException('Error occured while communication with server with status code : ${response.statusCode}');
+        throw FetchDataException(
+            'Error occured while communication with server with status code : ${response
+                .statusCode}');
       }
     } on SocketException {
       throw FetchDataException('No Internet Connection');
@@ -53,6 +79,7 @@ class AccountService {
       case 400:
         throw BadRequestException(response.toString());
       case 401:
+        throw UnauthorisedException('Invalid login credentials');
       case 403:
         throw UnauthorisedException(response.body.toString());
       case 404:
