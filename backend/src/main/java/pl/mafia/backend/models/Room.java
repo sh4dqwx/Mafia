@@ -29,6 +29,9 @@ public class Room {
     @Column(name = "access_code", nullable = false)
     private String accessCode;
 
+    @Column(name = "is_public", nullable = false)
+    private boolean isPublic;
+
     @ToString.Exclude
     @OneToMany(mappedBy = "room")
     private List<Account> accounts;
