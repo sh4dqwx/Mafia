@@ -21,8 +21,8 @@ public class RoomController {
         return roomRepository.findByIsPublicTrue();
     }
 
-    @GetMapping("/private/{accessCode}")
-    public Room getPrivateRoomByAccessCode(@PathVariable String accessCode) {
+    @GetMapping("/code/{accessCode}")
+    public Room getRoomByAccessCode(@PathVariable String accessCode) {
         Optional<Room> room = roomRepository.findByAccessCode(accessCode);
         if (room.isPresent())
             return room.get();
