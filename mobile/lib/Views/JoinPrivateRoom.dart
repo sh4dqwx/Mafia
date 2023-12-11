@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class JoinPrivateRoomPage extends StatefulWidget {
   TextEditingController lobbyCodeController = TextEditingController();
@@ -37,17 +38,15 @@ class _JoinPrivateRoomState extends State<JoinPrivateRoomPage> {
             ElevatedButton(
               onPressed: () {
                 String accessCode = widget.lobbyCodeController.text;
-                if (
-                //context.read<JoinPrivateRoomViewModel>().validateLobbyCode(accessCode)
-                true) {
-                  // context.read.<JoinPrivareRoomViewModel>().join(accessCode);
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Please enter the correct Room Code'),
-                    ),
-                  );
-                }
+                //TUTAJ ten watch sie zaczyna wiec wszystko bedzie do odkomentowania
+              //  final errorMessage = context.watch<String?>();
+               // if (errorMessage != null) {
+               //   ScaffoldMessenger.of(context).showSnackBar(
+               //     SnackBar(
+               //       content: Text(errorMessage),
+                //    ),
+                //  );
+               // }
               },
               child: Text('Join'),
             ),
