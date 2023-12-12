@@ -14,15 +14,19 @@ class RoomService {
           Uri.parse("$baseUrl/room/$roomId"));
       return Room.fromJson(
           jsonDecode(response.body) as Map<String, dynamic>);
-    } on SocketException {
-      throw FetchDataException('No Internet Connection');
+    } catch (e) {
+      if (e is SocketException) {
+        throw FetchDataException('No Internet Connection');
+      } else {
+        throw e;
+      }
     }
   }
 
-  Future<List<Room>> getAllRooms() async {
+  Future<List<Room>> getPublicRooms() async {
     try {
       final response = await http.get(
-          Uri.parse("$baseUrl/room"));
+          Uri.parse("$baseUrl/public"));
       if (response.statusCode == 200) {
         List<dynamic> roomsJson = jsonDecode(response.body);
         List<Room> rooms = roomsJson
@@ -32,8 +36,12 @@ class RoomService {
       } else {
         throw FetchDataException('Failed to load rooms');
       }
-    } on SocketException {
-      throw FetchDataException('No Internet Connection');
+    } catch (e) {
+      if (e is SocketException) {
+        throw FetchDataException('No Internet Connection');
+      } else {
+        throw e;
+      }
     }
   }
 
@@ -48,8 +56,12 @@ class RoomService {
       );
 
       var responseJson = returnResponse(response);
-    } on SocketException {
-      throw FetchDataException('No Internet Connection');
+    } catch (e) {
+      if (e is SocketException) {
+        throw FetchDataException('No Internet Connection');
+      } else {
+        throw e;
+      }
     }
   }
 
@@ -64,8 +76,12 @@ class RoomService {
       );
 
       var responseJson = returnResponse(response);
-    } on SocketException {
-      throw FetchDataException('No Internet Connection');
+    } catch (e) {
+      if (e is SocketException) {
+        throw FetchDataException('No Internet Connection');
+      } else {
+        throw e;
+      }
     }
   }
 
