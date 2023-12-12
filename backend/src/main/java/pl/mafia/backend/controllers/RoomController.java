@@ -20,7 +20,11 @@ public class RoomController {
 
     @GetMapping("/public")
     public List<Room> getPublicRooms() {
-        return roomService.getPublicRooms();
+        try {
+            return roomService.getPublicRooms();
+        } catch(Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+        }
     }
 
     @GetMapping("/code/{accessCode}")
@@ -29,6 +33,8 @@ public class RoomController {
             return roomService.getRoomByAccessCode(accessCode);
         } catch(IllegalArgumentException ex) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+        } catch(Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
         }
     }
 
@@ -38,6 +44,8 @@ public class RoomController {
             return roomService.getRoomById(id);
         } catch(IllegalArgumentException ex) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+        } catch(Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
         }
     }
 
@@ -47,6 +55,8 @@ public class RoomController {
             roomService.deleteRoomById(id);
         } catch(IllegalArgumentException ex) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+        } catch(Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
         }
     }
 
@@ -56,6 +66,8 @@ public class RoomController {
             return roomService.createRoom(room);
         } catch(IllegalArgumentException ex) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage());
+        } catch(Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
         }
     }
 }

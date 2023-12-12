@@ -4,6 +4,7 @@ import lombok.Data;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.server.ResponseStatusException;
 import pl.mafia.backend.repositories.AccountRepository;
 import pl.mafia.backend.models.Account;
@@ -21,7 +22,11 @@ public class AccountController {
 
     @GetMapping()
     public List<Account> getAllAccounts() {
-        return accountService.getAllAccounts();
+        try {
+            return accountService.getAllAccounts();
+        } catch(Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+        }
     }
 
     @GetMapping("/{id}")
@@ -30,6 +35,8 @@ public class AccountController {
             return accountService.getAccountById(id);
         } catch(IllegalArgumentException ex) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+        } catch(Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
         }
     }
 
@@ -39,6 +46,8 @@ public class AccountController {
             accountService.deleteAccountById(id);
         } catch(IllegalArgumentException ex) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+        } catch(Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
         }
     }
 
@@ -52,6 +61,8 @@ public class AccountController {
             );
         } catch(IllegalArgumentException ex) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage());
+        } catch(Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
         }
     }
 
@@ -61,6 +72,8 @@ public class AccountController {
             return accountService.updateAccountById(account, id);
         } catch(IllegalArgumentException ex) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+        } catch(Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
         }
     }
 
@@ -72,11 +85,11 @@ public class AccountController {
                     loginRequest.getPassword()
             );
         } catch(IllegalArgumentException ex) {
-            if(ex.getMessage().equals("Account does not exist."))
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
-            if(ex.getMessage().equals("Wrong password."))
-                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, ex.getMessage());
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected error occured");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+        } catch(BadCredentialsException ex) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, ex.getMessage());
+        } catch(Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
         }
     }
 

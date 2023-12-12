@@ -6,7 +6,7 @@ import 'package:mobile/models/Room.dart';
 
 class RoomService {
 
-  final String baseUrl = "";
+  final String baseUrl = "https://786c-91-239-155-102.ngrok-free.app";
 
   Future<Room> getRoom(int roomId) async {
     try {
