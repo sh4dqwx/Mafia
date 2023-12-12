@@ -6,48 +6,36 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.mafia.backend.models.Account;
 import pl.mafia.backend.repositories.AccountRepository;
-import pl.mafia.backend.utils.exceptions.CreateAccountException;
-import pl.mafia.backend.utils.exceptions.DeleteAccountException;
-import pl.mafia.backend.utils.exceptions.LoginToAccountException;
-import pl.mafia.backend.utils.exceptions.UpdateAccountException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AccountService {
     @Autowired
     private AccountRepository accountRepository;
 
-    @Transactional(readOnly = true)
     public List<Account> getAllAccounts() { return accountRepository.findAll(); }
 
-    @Transactional(readOnly = true)
     public Account getAccountById(String id) {
-        long accountId = Long.parseLong(id);
-        return accountRepository.findById(accountId);
+        Optional<Account> account = accountRepository.findById(Long.parseLong(id));
+
+        if(account.isEmpty())
+            throw new IllegalArgumentException("Account does not exist.");
+
+        return account.get();
     }
 
     @Transactional
-    public void deleteAccountById(String id) throws DeleteAccountException {
-        Account account = getAccountById(id);
-        if (account == null) {
-            throw new DeleteAccountException("Account does not exists.");
-        } else {
-            accountRepository.delete(account);
-        }
-    }
+    public Account createAccount(String email, String login, String password) {
+        Optional<Account> accountByLogin = accountRepository.findByLogin(login);
+        Optional<Account> accountByEmail = accountRepository.findByEmail(email);
 
-    @Transactional
-    public Account createAccount(String email, String login, String password) throws CreateAccountException {
-        Account existingLogin = accountRepository.findByLogin(login);
-        Account existingEmail = accountRepository.findByEmail(email);
-
-        if (existingLogin != null || existingEmail != null) {
-            throw new CreateAccountException("Account already exists");
+        if(accountByLogin.isEmpty() || accountByEmail.isEmpty()) {
+            throw new IllegalArgumentException("Account does not exist.");
         }
 
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-
         Account account = new Account();
         account.setEmail(email);
         account.setLogin(login);
@@ -58,35 +46,35 @@ public class AccountService {
     }
 
     @Transactional
-    public Account updateAccountById(Account account, String id) throws UpdateAccountException {
-        long accountId = Long.parseLong(id);
-        Account existingAccount = accountRepository.findById(accountId);
+    public void deleteAccountById(String id) {
+        Optional<Account> account = accountRepository.findById(Long.parseLong(id));
 
-        if (existingAccount == null) {
-            throw new UpdateAccountException("Account does not exists.");
-        }
+        if(account.isEmpty())
+            throw new IllegalArgumentException("Account does not exist.");
 
-        return accountRepository.save(account);
+        accountRepository.delete(account.get());
     }
 
     @Transactional
-    public Account loginToAccount(String login, String password) throws LoginToAccountException {
-        Account existingAccount = accountRepository.findByLogin(login);
+    public Account updateAccountById(Account newAccount, String id) {
+        Optional<Account> account = accountRepository.findById(Long.parseLong(id));
 
-        if (existingAccount == null) {
-            throw new LoginToAccountException(
-                    LoginToAccountException.Type.ACCOUNT_NOT_FOUND,
-                    "Account does not exists."
-            );
+        if(account.isEmpty())
+            throw new IllegalArgumentException("Account does not exist.");
+
+        return accountRepository.save(newAccount);
+    }
+
+    public Account loginToAccount(String login, String password) {
+        Optional<Account> accountByLogin = accountRepository.findByLogin(login);
+
+        if(accountByLogin.isEmpty())
+            throw new IllegalArgumentException("Account does not exist.");
+
+        if (!BCrypt.checkpw(password, accountByLogin.get().getPassword())) {
+            throw new IllegalArgumentException("Wrong password.");
         }
 
-        if (!BCrypt.checkpw(password, existingAccount.getPassword())) {
-            throw new LoginToAccountException(
-                    LoginToAccountException.Type.WRONG_PASSWORD,
-                    "Wrong password"
-            );
-        }
-
-        return existingAccount;
+        return accountByLogin.get();
     }
 }
