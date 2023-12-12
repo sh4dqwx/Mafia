@@ -1,65 +1,53 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/services/network/AppException.dart';
+import '../services/network/RoomService.dart';
+import '../models/Room.dart';
 
 class MenuViewModel extends ChangeNotifier {
   String _nickname = "Testowy123";
 
   String get nickname => _nickname;
 
+  String messageError = "";
+
   void joinGame(BuildContext context) {
-    // Przejście do widoku dołączania do poczekalni
-    /*Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => JoinGameView()),
-    );*/
-
-    // Powiadomienie listenerów o zmianie stanu
     notifyListeners();
   }
 
-  void createGame(BuildContext context) {
-    // Przejście do widoku tworzenia poczekalni
-    /*Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => CreateGameView()),
-    );*/
-
-    // Tymczasowo (?) przejście do widoku poczekalni
-    // Zakomentowane, bo nie ma merga z widokiem poczekalni
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(builder: (context) => WaitingRoom()),
-    // );
-
-    // Powiadomienie listenerów o zmianie stanu
+  void showPublicRoomsList(BuildContext context) {
     notifyListeners();
   }
+
+  Future <bool> createGame(Room room) async {
+    // Tutaj logika tworzenia nowego pokoju
+    try {
+      await RoomService().createRoom(room);
+      notifyListeners();
+      return true; // Zwracaj true w przypadku sukcesu
+    } on FetchDataException catch (e) {
+      // Obsłuż błąd braku połączenia internetowego
+      messageError = "No internet connection";
+      return false; // Zwracaj false w przypadku błędu
+    } catch (e) {
+      // Obsługa innych błędów, jeśli wystąpią
+      messageError = 'An error occurred: $e';
+      return false; // Zwracaj false w przypadku innych błędów
+    }
+  }
+
 
   void gameHistory(BuildContext context) {
-    // Przejście do widoku z historią gier
-   /* Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => GameHistoryView()),
-    );*/
 
-    // Powiadomienie listenerów o zmianie stanu
     notifyListeners();
   }
 
   void settings(BuildContext context) {
-    // Przejście do widoku ustawień
-   /* Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => SettingsView()),
-    );*/
 
-    // Powiadomienie listenerów o zmianie stanu
     notifyListeners();
   }
 
   void logout() {
-    // Tutaj logika do wylogowywania się
 
-    // Powiadomienie listenerów o zmianie stanu
     notifyListeners();
   }
 }
