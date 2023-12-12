@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
 import '../models/Room.dart';
+import '../viewModels/PublicRoomsViewModel.dart';
 
 class PublicRoomsPage extends StatefulWidget {
   const PublicRoomsPage({super.key});
@@ -12,8 +13,7 @@ class PublicRoomsPage extends StatefulWidget {
 class PublicRoomsPageState extends State<PublicRoomsPage> {
   @override
   Widget build(BuildContext context) {
-    //List<Room> publicRooms = context.watch<PublicRoomsViewModel>().getPublicRooms();
-    List<Room> publicRooms = List.empty();
+    List<Room> publicRooms = context.watch<PublicRoomsViewModel>().publicRooms;
 
     return Scaffold(
       appBar: AppBar(
