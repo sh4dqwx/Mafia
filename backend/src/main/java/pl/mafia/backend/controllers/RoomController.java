@@ -18,16 +18,16 @@ public class RoomController {
 
     @GetMapping("/public")
     public List<Room> getPublicRooms(){
-        return roomRepository.findByAccessCodeNull();
+        return roomRepository.findByIsPublicTrue();
     }
 
-    @GetMapping("/private/{accessCode}")
-    public Room getPrivateRoomByAccessCode(@PathVariable String accessCode) {
+    @GetMapping("/code/{accessCode}")
+    public Room getRoomByAccessCode(@PathVariable String accessCode) {
         Optional<Room> room = roomRepository.findByAccessCode(accessCode);
         if (room.isPresent())
             return room.get();
         else
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Room does not exists.");
     }
 
     @GetMapping("/{id}")
@@ -37,7 +37,7 @@ public class RoomController {
         if (room.isPresent())
             return room.get();
         else
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Room does not exists.");
     }
 
     @DeleteMapping("/{id}")
@@ -47,14 +47,14 @@ public class RoomController {
         if (room.isPresent())
             roomRepository.delete(room.get());
         else
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Room does not exists.");
     }
 
     @PostMapping()
     public Room createRoom(@RequestBody Room room) {
         Optional<Room> hostRoom = roomRepository.findByHost(room.getHost());
         if (hostRoom.isPresent())
-            throw new ResponseStatusException(HttpStatus.CONFLICT);
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Room already exists.");
         else
             return roomRepository.save(room);
     }
