@@ -1,12 +1,16 @@
 package pl.mafia.backend.controllers;
 
+import lombok.Data;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.server.ResponseStatusException;
 import pl.mafia.backend.repositories.AccountRepository;
 import pl.mafia.backend.models.Account;
 import org.springframework.web.bind.annotation.*;
+import pl.mafia.backend.services.AccountService;
+
 import java.util.List;
 
 @RestController
@@ -14,72 +18,91 @@ import java.util.List;
 public class AccountController {
 
     @Autowired
-    private AccountRepository accountRepository;
+    private AccountService accountService;
 
     @GetMapping()
-    public List<Account> getAllAccounts(){
-        return accountRepository.findAll();
+    public List<Account> getAllAccounts() {
+        try {
+            return accountService.getAllAccounts();
+        } catch(Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+        }
     }
 
     @GetMapping("/{id}")
-    public Account getAccountById(@PathVariable String id){
-        long accountId = Long.parseLong(id);
-        return accountRepository.findById(accountId);
+    public Account getAccountById(@PathVariable String id) {
+        try {
+            return accountService.getAccountById(id);
+        } catch(IllegalArgumentException ex) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+        } catch(Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
     public void deleteAccountById(@PathVariable String id) {
-        long accountId = Long.parseLong(id);
-        Account account = accountRepository.findById(accountId);
-        if (account == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account does not exists.");
-        } else {
-            accountRepository.delete(account);
+        try {
+            accountService.deleteAccountById(id);
+        } catch(IllegalArgumentException ex) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+        } catch(Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
         }
     }
+
     @PostMapping()
-    public Account createAccount(@RequestBody String email, @RequestBody String login, @RequestBody String password) {
-        Account existingLogin = accountRepository.findByLogin(login);
-        Account existingEmail = accountRepository.findByEmail(email);
-
-        if (existingLogin != null || existingEmail != null) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Account already exists.");
+    public Account createAccount(@RequestBody RegisterRequest registerRequest) {
+        try {
+            return accountService.createAccount(
+                    registerRequest.getEmail(),
+                    registerRequest.getLogin(),
+                    registerRequest.getPassword()
+            );
+        } catch(IllegalArgumentException ex) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage());
+        } catch(Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
         }
-
-        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-
-        Account account = new Account();
-        account.setEmail(email);
-        account.setLogin(login);
-        account.setPassword(hashedPassword);
-        account.setNickname(login);
-
-        return accountRepository.save(account);
     }
 
     @PutMapping("/{id}")
     public Account updateAccountById(@RequestBody Account account, @PathVariable String id) {
-        long accountId = Long.parseLong(id);
-        Account existingAccount = accountRepository.findById(accountId);
-        if (existingAccount == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account does not exists.");
-        } else {
-            return accountRepository.save(account);
+        try {
+            return accountService.updateAccountById(account, id);
+        } catch(IllegalArgumentException ex) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+        } catch(Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
         }
     }
 
     @PostMapping("/login")
-    public Account loginToAccount(@RequestBody String login, @RequestBody String password) {
-        Account existingAccount = accountRepository.findByLogin(login);
-
-        if (existingAccount == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account does not exists.");
+    public Account loginToAccount(@RequestBody LoginRequest loginRequest) {
+        try {
+            return accountService.loginToAccount(
+                    loginRequest.getLogin(),
+                    loginRequest.getPassword()
+            );
+        } catch(IllegalArgumentException ex) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+        } catch(BadCredentialsException ex) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, ex.getMessage());
+        } catch(Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
         }
+    }
 
-        if (!BCrypt.checkpw(password, existingAccount.getPassword())) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Wrong password.");
-        }
+    @Data
+    static class LoginRequest {
+        private String login;
+        private String password;
+    }
 
-        return existingAccount;
+    @Data
+    static class RegisterRequest {
+        private String login;
+        private String password;
+        private String email;
     }
 }
