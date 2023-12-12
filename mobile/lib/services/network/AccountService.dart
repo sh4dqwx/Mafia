@@ -6,7 +6,7 @@ import 'package:mobile/models/Account.dart';
 
 class AccountService {
 
-  final String baseUrl = "";
+  final String baseUrl = "http://localhost:8080";
 
   Future<Account> getAccount(int accountId) async {
     try {
@@ -14,8 +14,12 @@ class AccountService {
           Uri.parse("$baseUrl/account/$accountId"));
       return Account.fromJson(
           jsonDecode(response.body) as Map<String, dynamic>);
-    } on SocketException {
-      throw FetchDataException('No Internet Connection');
+    } catch (e) {
+      if (e is SocketException) {
+        throw FetchDataException('No Internet Connection');
+      } else {
+        throw e;
+      }
     }
   }
 
@@ -40,8 +44,12 @@ class AccountService {
             'Error occured while communication with server with status code : ${response
                 .statusCode}');
       }
-    } on SocketException {
-      throw FetchDataException('No Internet Connection');
+    } catch (e) {
+      if (e is SocketException) {
+        throw FetchDataException('No Internet Connection');
+      } else {
+        throw e;
+      }
     }
   }
 
@@ -66,8 +74,12 @@ class AccountService {
             'Error occured while communication with server with status code : ${response
                 .statusCode}');
       }
-    } on SocketException {
-      throw FetchDataException('No Internet Connection');
+    } catch (e) {
+       if (e is SocketException) {
+         throw FetchDataException('No Internet Connection');
+       } else {
+         throw e;
+      }
     }
   }
 
