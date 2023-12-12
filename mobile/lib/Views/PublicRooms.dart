@@ -13,7 +13,6 @@ class PublicRoomsPage extends StatefulWidget {
 class PublicRoomsPageState extends State<PublicRoomsPage> {
   @override
   Widget build(BuildContext context) {
-    //List<Room> publicRooms = context.watch<PublicRoomsViewModel>().getPublicRooms();
     List<Room> publicRooms = context.watch<PublicRoomsViewModel>().publicRooms;
 
     return Scaffold(

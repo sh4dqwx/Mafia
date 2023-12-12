@@ -20,12 +20,5 @@ class PublicRoomsViewModel with ChangeNotifier {
   }
 
   void pressed(BuildContext context, Room room) {
-    /* Przekierowanie do pokoju
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => Room(room: room),
-      ),
-    );*/
   }
 }
