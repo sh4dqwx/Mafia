@@ -6,7 +6,7 @@ import 'package:mobile/models/Account.dart';
 
 class AccountService {
 
-  final String baseUrl = "https://786c-91-239-155-102.ngrok-free.app";
+  final String baseUrl = "http://localhost:8080";
 
   Future<Account> getAccount(int accountId) async {
     try {
