@@ -67,6 +67,7 @@ class MenuPageState extends State<MenuPage> {
             ElevatedButton(
               onPressed: () async {
                 var menuViewModel = Provider.of<MenuViewModel>(context, listen: false);
+                //vvv placeholder vvv
                 Room newRoom = Room(
                   id: 1,
                   idHost: 123,
