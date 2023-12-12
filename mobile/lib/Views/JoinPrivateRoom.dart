@@ -9,7 +9,7 @@ class JoinPrivateRoomPage extends StatefulWidget {
   _JoinPrivateRoomState createState() => _JoinPrivateRoomState();
 }
 
-class _JoinPrivateRoomState extends State<JoinPrivateRoomPage> with RouteAware {
+class _JoinPrivateRoomState extends State<JoinPrivateRoomPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,11 +39,9 @@ class _JoinPrivateRoomState extends State<JoinPrivateRoomPage> with RouteAware {
             ElevatedButton(
               onPressed: () async {
                 String accessCode = widget.lobbyCodeController.text;
-                //
-                final viewModel = Provider.of<JoinPrivateRoomViewModel>(context, listen: false);
-                bool errorMessage = await viewModel.joinRoom(accessCode);
-              //  final errorMessage = context.watch<String?>();
-                if (errorMessage != null) {
+                final viewModel = context.read<JoinPrivateRoomViewModel>();
+                await viewModel.joinRoom(accessCode);
+                if (viewModel.messageError.isNotEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(viewModel.messageError),
