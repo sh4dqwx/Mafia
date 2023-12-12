@@ -2,7 +2,8 @@ package pl.mafia.backend.services;
 
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import pl.mafia.backend.models.Account;
 import pl.mafia.backend.repositories.AccountRepository;
@@ -10,7 +11,7 @@ import pl.mafia.backend.repositories.AccountRepository;
 import java.util.List;
 import java.util.Optional;
 
-@Service
+@Component
 public class AccountService {
     @Autowired
     private AccountRepository accountRepository;
@@ -31,8 +32,8 @@ public class AccountService {
         Optional<Account> accountByLogin = accountRepository.findByLogin(login);
         Optional<Account> accountByEmail = accountRepository.findByEmail(email);
 
-        if(accountByLogin.isEmpty() || accountByEmail.isEmpty()) {
-            throw new IllegalArgumentException("Account does not exist.");
+        if(accountByLogin.isPresent() || accountByEmail.isPresent()) {
+            throw new IllegalArgumentException("Account already exists.");
         }
 
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
@@ -72,7 +73,7 @@ public class AccountService {
             throw new IllegalArgumentException("Account does not exist.");
 
         if (!BCrypt.checkpw(password, accountByLogin.get().getPassword())) {
-            throw new IllegalArgumentException("Wrong password.");
+            throw new BadCredentialsException("Wrong password.");
         }
 
         return accountByLogin.get();

@@ -16,7 +16,7 @@ class LoginViewModel extends ChangeNotifier {
   Future<bool> login(String log, String pass) async {
     _setLoading(true);
     try {
-      await _accountService.login(log, pass);
+      //await _accountService.login(log, pass);
       _setLoading(false);
       return true;
     } catch(e) {
