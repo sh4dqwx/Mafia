@@ -4,7 +4,6 @@ import lombok.Data;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.server.ResponseStatusException;
 import pl.mafia.backend.repositories.AccountRepository;
 import pl.mafia.backend.models.Account;
@@ -86,7 +85,7 @@ public class AccountController {
             );
         } catch(IllegalArgumentException ex) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
-        } catch(BadCredentialsException ex) {
+        } catch(IllegalAccessException ex) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, ex.getMessage());
         } catch(Exception ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());

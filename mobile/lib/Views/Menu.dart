@@ -4,6 +4,7 @@ import 'package:mobile/Views/PublicRooms.dart';
 import 'package:mobile/viewModels/MenuViewModel.dart';
 import 'package:provider/provider.dart';
 import '../models/Room.dart';
+import 'JoinPrivateRoom.dart';
 
 class MenuPage extends StatefulWidget {
   const MenuPage({super.key});
@@ -36,11 +37,10 @@ class MenuPageState extends State<MenuPage> {
             const SizedBox(height: 25.0),
             ElevatedButton(
               onPressed: () {
-                // brak merga
-                /*Navigator.push(
+                Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => JoinPrivateRoomPage()),
-                );*/
+                );
               },
               style: ElevatedButton.styleFrom(
                 minimumSize: Size(MediaQuery.of(context).size.width - 25.0, 60),
@@ -65,25 +65,7 @@ class MenuPageState extends State<MenuPage> {
             ),
             const SizedBox(height: 20.0),
             ElevatedButton(
-              onPressed: () async {
-                var menuViewModel = Provider.of<MenuViewModel>(context, listen: false);
-                //vvv placeholder vvv
-                Room newRoom = Room(
-                  id: 1,
-                  idHost: 123,
-                  idGame: 456,
-                  accessCode: 'ABC123',
-                  //isPublic = false,
-                );
-
-                bool isCreated = await menuViewModel.createGame(newRoom);
-                if (isCreated) {
-                  /*Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => RoomPage()),
-                  );*/
-                }
-              },
+              onPressed: () async {},
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 60),
                 textStyle: const TextStyle(fontSize: 32.0),
@@ -116,11 +98,7 @@ class MenuPageState extends State<MenuPage> {
             const SizedBox(height: 20.0),
             ElevatedButton(
               onPressed: () {
-                //tutaj jeszcze wstawić logikę wylogowania
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginPage()),
-                );
+                Navigator.pop(context);
               },
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 60),

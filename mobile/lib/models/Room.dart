@@ -5,7 +5,7 @@ class Room {
   int idHost;
   int idGame;
   String accessCode;
-  boolean isPublic;
+  bool isPublic;
 
   Room({
     required this.id,
