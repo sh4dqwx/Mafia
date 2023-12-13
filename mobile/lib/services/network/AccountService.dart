@@ -26,7 +26,7 @@ class AccountService {
   Future<dynamic> login(String login, String password) async {
     try {
       final http.Response response = await http.post(
-        Uri.parse("$baseUrl/login"),
+        Uri.parse("$baseUrl/account/login"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },

@@ -2,7 +2,6 @@ package pl.mafia.backend.services;
 
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import pl.mafia.backend.models.Account;
@@ -66,14 +65,14 @@ public class AccountService {
         return accountRepository.save(newAccount);
     }
 
-    public Account loginToAccount(String login, String password) {
+    public Account loginToAccount(String login, String password) throws IllegalAccessException {
         Optional<Account> accountByLogin = accountRepository.findByLogin(login);
 
         if(accountByLogin.isEmpty())
             throw new IllegalArgumentException("Account does not exist.");
 
         if (!BCrypt.checkpw(password, accountByLogin.get().getPassword())) {
-            throw new BadCredentialsException("Wrong password.");
+            throw new IllegalAccessException("Wrong password.");
         }
 
         return accountByLogin.get();

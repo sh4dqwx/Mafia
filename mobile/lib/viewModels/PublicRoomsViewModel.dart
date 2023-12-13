@@ -11,7 +11,7 @@ class PublicRoomsViewModel with ChangeNotifier {
 
   Future<void> fetchPublicRooms() async {
     try {
-      List<Room> rooms = await _roomService.getAllRooms();
+      List<Room> rooms = await _roomService.getPublicRooms();
       _publicRooms = rooms;
       notifyListeners();
     } catch (e) {
