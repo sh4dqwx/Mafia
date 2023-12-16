@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'RoomSettings.dart';
+
 class RoomPage extends StatefulWidget {
   @override
   RoomPageState createState() => RoomPageState();
@@ -59,6 +61,12 @@ class RoomPageState extends State<RoomPage> {
                     // if (viewModel.isHost)
                     ElevatedButton(
                       onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                            builder: (context) => RoomSettingsPage(),
+                        ),
+                        );
                         //viewModel.openGameSettings;
                       },
                       //onPressed: viewModel.openGameSettings,
