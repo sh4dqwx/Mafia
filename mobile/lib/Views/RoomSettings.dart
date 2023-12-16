@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../viewModels/RoomSettingsViewModel.dart';
 
 class RoomSettingsPage extends StatefulWidget {
   @override
@@ -69,7 +72,9 @@ class _RoomSettingsPageState extends State<RoomSettingsPage> {
             SizedBox(height: 20.0),
             ElevatedButton(
               // komentarz bo niepołączone branche
-              onPressed: () => {}, //_viewModel.saveGameSettings(context),
+              onPressed: () => {
+                context.read<RoomSettingsViewModel>().saveGameSettings(context)
+              },
               style: ElevatedButton.styleFrom(
                 minimumSize: Size(double.infinity, 60),
                 textStyle: TextStyle(fontSize: 32.0),
