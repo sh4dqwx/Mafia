@@ -1,33 +1,42 @@
 import 'package:flutter/material.dart';
-import 'Register.dart';
-
-class Login extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Login',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: LoginPage(),
-    );
-  }
-}
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:mobile/Views/Register.dart';
+import 'package:provider/provider.dart';
+import '../viewModels/LoginViewModel.dart';
+import 'Menu.dart';
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
-  _LoginPageState createState() => _LoginPageState();
+  LoginPageState createState() => LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  TextEditingController _usernameController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+class LoginPageState extends State<LoginPage> with RouteAware {
+  final TextEditingController _loginController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void didChangeDependencies() {
+    context.read<LoginViewModel>().reset();
+    _loginController.clear();
+    _passwordController.clear();
+    super.didChangeDependencies();
+  }
+
+  @override
+  void didPopNext() {
+    context.read<LoginViewModel>().reset();
+    _loginController.clear();
+    _passwordController.clear();
+    super.didPopNext();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login'),
+        title: const Text('Login'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -35,34 +44,49 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextField(
-              controller: _usernameController,
-              decoration: InputDecoration(labelText: 'Username'),
+              controller: _loginController,
+              decoration: const InputDecoration(labelText: 'Login'),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             TextField(
               controller: _passwordController,
               obscureText: true,
-              decoration: InputDecoration(labelText: 'Password'),
+              decoration: const InputDecoration(labelText: 'Password'),
             ),
-            SizedBox(height: 32.0),
-            ElevatedButton(
-              onPressed: () {
-                String username = _usernameController.text;
-                String password = _passwordController.text;
-                print('Username: $username, Password: $password');
-              },
-              child: Text('Login'),
+            const SizedBox(height: 32.0),
+            Consumer<LoginViewModel>(
+              builder: (context, viewModel, child) {
+                return ElevatedButton(
+                  onPressed: () async {
+                    bool isLogged = await viewModel.login(
+                      _loginController.text,
+                      _passwordController.text
+                    );
+                    if(isLogged) {
+                      Fluttertoast.showToast(
+                          msg: "Successful login",
+                          toastLength: Toast.LENGTH_SHORT
+                      );
+                      if(!context.mounted) return;
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const MenuPage())
+                      );
+                    }
+                  },
+                  child: const Text('Login')
+                );
+              }
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             TextButton(
               onPressed: () {
-                // do rejestracji
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Register()),
+                  MaterialPageRoute(builder: (context) => const RegisterPage()),
                 );
               },
-              child: Text('Register'),
+              child: const Text('Register'),
             ),
           ],
         ),

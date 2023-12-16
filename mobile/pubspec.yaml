@@ -1,5 +1,6 @@
 name: mobile
 description: A new Flutter project.
+
 publish_to: 'none'
 version: 0.1.0
 
@@ -9,8 +10,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  provider: ^6.1.1
   http: ^0.13.3
   web_socket_channel: ^2.1.0
+  fluttertoast: ^8.2.4
 
 dev_dependencies:
   flutter_test:
