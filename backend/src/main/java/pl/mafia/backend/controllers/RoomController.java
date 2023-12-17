@@ -1,8 +1,16 @@
 package pl.mafia.backend.controllers;
 
+import org.hibernate.mapping.Join;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.web.server.ResponseStatusException;
+import pl.mafia.backend.models.Account;
+import pl.mafia.backend.models.JoinRoomResponse;
 import pl.mafia.backend.repositories.RoomRepository;  // Assuming you have a RoomRepository
 import pl.mafia.backend.models.Room;  // Update import to Room
 import org.springframework.web.bind.annotation.*;
@@ -68,6 +76,17 @@ public class RoomController {
             throw new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage());
         } catch(Exception ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+        }
+    }
+
+    @MessageMapping("/room/{roomId}")
+    @SendTo("/topic/room/{roomId}")
+    public JoinRoomResponse joinRoom(@DestinationVariable Long roomId, SimpMessageHeaderAccessor headerAccessor) {
+        try {
+            //return roomService.joinRoom(roomId);
+            return null;
+        } catch(Exception ex) {
+            return new JoinRoomResponse(ex.getMessage());
         }
     }
 }

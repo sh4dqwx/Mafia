@@ -1,33 +1,42 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
-import 'package:web_socket_channel/io.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:stomp_dart_client/stomp.dart';
+import 'package:stomp_dart_client/stomp_config.dart';
+import 'package:stomp_dart_client/stomp_frame.dart';
 
 class WSTestService {
-  late WebSocketChannel _channel;
+  late StompClient _stompClient;
+  final Completer<void> _completer = Completer<void>();
 
   WSTestService();
 
-  Future<void> connect() async {
-    _channel = IOWebSocketChannel.connect("ws://175c-91-239-155-102.ngrok-free.app/ws-test");
+  void _onConnect(StompFrame frame) {
     debugPrint("Connected");
-    _channel.stream.listen((message) {
-      debugPrint("Received: $message");
+    _stompClient.subscribe(destination: "/topic/message", callback: (frame) {
+      dynamic result = jsonDecode(frame.body!);
     });
+    _completer.complete();
+  }
+
+
+  Future<void> connect() async {
+    _stompClient = StompClient(config: StompConfig(
+      url: "ws://e971-91-239-155-102.ngrok-free.app/ws",
+      onConnect: _onConnect,
+      beforeConnect: () async {
+        debugPrint("connecting...");
+      }
+    ));
+    _stompClient.activate();
+    await _completer.future;
   }
 
   void sendMessage() {
-    try {
-      _channel.sink.add(jsonEncode({ "action": "sendMessage", "message": "This is my message" }));
-      debugPrint("Sent message");
-    } catch(e) {
-      debugPrint("error: $e");
-    }
-  }
-
-  void close() {
-    _channel.sink.close();
-    debugPrint("Closed connection");
+    _stompClient.send(
+      destination: "/app/message",
+      body: jsonEncode({ "message": "Very cool message" })
+    );
   }
 }
