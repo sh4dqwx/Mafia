@@ -15,10 +15,14 @@ class RoomSettingsViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> saveGameSettings(dynamic data) async {
+  Future<void> saveGameSettings(bool _isPublic, int _numberOfPlayers) async {
     try {
       setLoading(true);
-      await _roomService.modifyRoomProperties(data);
+      Map<String, dynamic> data = {
+        '_isPublic': _isPublic,
+        '_numberOfPlayers': _numberOfPlayers,
+      };
+      //await _roomService.modifyRoomProperties(data); //POPRAWIC
 
     } catch (error) {
       _messageError = "Error saving game settings: $error";

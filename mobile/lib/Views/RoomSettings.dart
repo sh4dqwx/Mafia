@@ -71,9 +71,17 @@ class _RoomSettingsPageState extends State<RoomSettingsPage> {
             Text('$_numberOfPlayers Players'),
             SizedBox(height: 20.0),
             ElevatedButton(
-              // komentarz bo niepołączone branche
-              onPressed: () => {
-                context.read<RoomSettingsViewModel>().saveGameSettings(context)
+              onPressed: () async {
+                try {
+                  await context.read<RoomSettingsViewModel>().saveGameSettings(_isPublic, _numberOfPlayers);
+                } catch (error) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Error saving game settings: $error'),
+                      duration: Duration(seconds: 3),
+                    ),
+                  );
+                }
               },
               style: ElevatedButton.styleFrom(
                 minimumSize: Size(double.infinity, 60),
@@ -81,6 +89,7 @@ class _RoomSettingsPageState extends State<RoomSettingsPage> {
               ),
               child: Text('Save'),
             ),
+
           ],
 
         ),
