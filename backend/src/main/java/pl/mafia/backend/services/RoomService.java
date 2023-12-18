@@ -21,7 +21,8 @@ public class RoomService {
     private RoomRepository roomRepository;
 
     public List<Room> getPublicRooms() {
-        return roomRepository.findByIsPublicTrue();
+       List<Room> lista = roomRepository.findByIsPublicTrue();
+       return lista;
     }
 
     public Room getRoomByAccessCode(String accessCode) {
