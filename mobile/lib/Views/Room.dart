@@ -58,7 +58,7 @@ class RoomPageState extends State<RoomPage> {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    // if (viewModel.isHost)
+                    //if (viewModel.isHost)
                     ElevatedButton(
                       onPressed: () {
                         Navigator.push(
