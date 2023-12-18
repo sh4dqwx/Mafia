@@ -5,6 +5,7 @@ import 'package:mobile/viewModels/MenuViewModel.dart';
 import 'package:provider/provider.dart';
 import '../models/Room.dart';
 import 'JoinPrivateRoom.dart';
+import 'Room.dart';
 
 class MenuPage extends StatefulWidget {
   const MenuPage({super.key});
@@ -57,7 +58,7 @@ class MenuPageState extends State<MenuPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => PublicRoomsPage()),
+                          builder: (context) => const PublicRoomsPage()),
                     );
                   },
                   style: ElevatedButton.styleFrom(
@@ -69,7 +70,10 @@ class MenuPageState extends State<MenuPage> {
                 ),
                 const SizedBox(height: 20.0),
                 ElevatedButton(
-                  onPressed: () async {},
+                  onPressed: () async {
+
+                    context.read<MenuViewModel>().createRoom();
+                  },
                   style: ElevatedButton.styleFrom(
                     minimumSize: const Size(double.infinity, 60),
                     textStyle: const TextStyle(fontSize: 32.0),
