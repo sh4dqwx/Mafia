@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.server.ResponseStatusException;
 import pl.mafia.backend.models.Room;
+import pl.mafia.backend.models.RoomSettings;
 import pl.mafia.backend.repositories.RoomRepository;
 
 import java.util.List;
@@ -60,5 +61,16 @@ public class RoomService {
             throw new IllegalArgumentException("Room already exists.");
 
         return roomRepository.save(room);
+    }
+
+    @Transactional
+    public void updateProperties(RoomSettings roomSettings, String roomId) {
+        Optional<Room> room = roomRepository.findById(Long.parseLong(roomId));
+
+        if (room.isEmpty())
+            throw new IllegalArgumentException("Room does not exists.");
+
+        //Room.settings = roomSettings;
+        //roomRepository.save(room.get());
     }
 }
