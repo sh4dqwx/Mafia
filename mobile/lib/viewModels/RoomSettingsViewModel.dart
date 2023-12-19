@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:mobile/models/RoomSettings.dart';
 import 'package:mobile/services/network/RoomService.dart';
 
 class RoomSettingsViewModel with ChangeNotifier {
@@ -15,15 +16,10 @@ class RoomSettingsViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> saveGameSettings(bool _isPublic, int _numberOfPlayers) async {
+  Future<void> saveGameSettings(RoomSettings roomSettings) async {
     try {
       setLoading(true);
-      Map<String, dynamic> data = {
-        '_isPublic': _isPublic,
-        '_numberOfPlayers': _numberOfPlayers,
-      };
-      //await _roomService.modifyRoomProperties(data); //POPRAWIC
-
+      await _roomService.modifyRoomProperties(roomSettings);
     } catch (error) {
       _messageError = "Error saving game settings: $error";
     } finally {

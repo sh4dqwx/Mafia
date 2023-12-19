@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../models/RoomSettings.dart';
 import '../viewModels/RoomSettingsViewModel.dart';
 
 class RoomSettingsPage extends StatefulWidget {
@@ -72,16 +73,12 @@ class _RoomSettingsPageState extends State<RoomSettingsPage> {
             SizedBox(height: 20.0),
             ElevatedButton(
               onPressed: () async {
-                try {
-                  await context.read<RoomSettingsViewModel>().saveGameSettings(_isPublic, _numberOfPlayers);
-                } catch (error) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Error saving game settings: $error'),
-                      duration: Duration(seconds: 3),
-                    ),
-                  );
-                }
+                RoomSettings roomSettings = RoomSettings(
+                  isPublic: _isPublic,
+                  numberOfPlayers: _numberOfPlayers,
+                );
+                await context.read<RoomSettingsViewModel>().saveGameSettings(
+                    roomSettings);
               },
               style: ElevatedButton.styleFrom(
                 minimumSize: Size(double.infinity, 60),
@@ -97,3 +94,4 @@ class _RoomSettingsPageState extends State<RoomSettingsPage> {
     );
   }
 }
+
