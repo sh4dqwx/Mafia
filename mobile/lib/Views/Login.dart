@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mobile/Views/Register.dart';
-import 'package:mobile/services/network/WSTestService.dart';
 import 'package:provider/provider.dart';
 import '../viewModels/LoginViewModel.dart';
 import 'Menu.dart';
@@ -16,12 +15,6 @@ class LoginPage extends StatefulWidget {
 class LoginPageState extends State<LoginPage> with RouteAware {
   final TextEditingController _loginController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
-  final WSTestService _wsTestService = WSTestService();
-
-  LoginPageState() {
-    _wsTestService.connect();
-  }
 
   @override
   void didChangeDependencies() {
@@ -65,22 +58,21 @@ class LoginPageState extends State<LoginPage> with RouteAware {
               builder: (context, viewModel, child) {
                 return ElevatedButton(
                   onPressed: () async {
-                    // bool isLogged = await viewModel.login(
-                    //   _loginController.text,
-                    //   _passwordController.text
-                    // );
-                    // if(isLogged) {
-                    //   Fluttertoast.showToast(
-                    //       msg: "Successful login",
-                    //       toastLength: Toast.LENGTH_SHORT
-                    //   );
-                    //   if(!context.mounted) return;
-                    //   Navigator.push(
-                    //       context,
-                    //       MaterialPageRoute(builder: (context) => const MenuPage())
-                    //   );
-                    // }
-                    _wsTestService.sendMessage();
+                    bool isLogged = await viewModel.login(
+                      _loginController.text,
+                      _passwordController.text
+                    );
+                    if(isLogged) {
+                      Fluttertoast.showToast(
+                          msg: "Successful login",
+                          toastLength: Toast.LENGTH_SHORT
+                      );
+                      if(!context.mounted) return;
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const MenuPage())
+                      );
+                    }
                   },
                   child: const Text('Login')
                 );

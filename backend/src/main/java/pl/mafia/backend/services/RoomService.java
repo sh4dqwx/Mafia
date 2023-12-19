@@ -24,6 +24,7 @@ public class RoomService {
         return roomRepository.findByIsPublicTrue();
     }
 
+    @Transactional
     public RoomDTO joinRoomByAccessCode(String accessCode, String accountId) throws IllegalAccessException {
         Optional<Room> fetchedRoom = roomRepository.findByAccessCode(accessCode);
         if (fetchedRoom.isEmpty())
@@ -34,20 +35,14 @@ public class RoomService {
             throw new IllegalAccessException("Account does not exists.");
 
         Account updatedAccount = fetchedAccount.get();
-        Room room = fetchedRoom.get();
+        Room updatedRoom = fetchedRoom.get();
 
-        updatedAccount.setRoom(room);
+        updatedAccount.setRoom(updatedRoom);
+        updatedRoom.getAccounts().add(updatedAccount);
         accountRepository.save(updatedAccount);
+        updatedRoom = roomRepository.save(updatedRoom);
 
-        return new RoomDTO(
-                room.getId(),
-                room.getAccounts()
-                        .stream()
-                        .map(account -> new AccountDTO(account.getId(), account.getNickname()))
-                        .toList(),
-                room.getHost().getId(),
-                room.isPublic()
-        );
+        return new RoomDTO(updatedRoom);
     }
 
     @Transactional
@@ -61,20 +56,14 @@ public class RoomService {
             throw new IllegalAccessException("Account does not exists.");
 
         Account updatedAccount = fetchedAccount.get();
-        Room room = fetchedRoom.get();
+        Room updatedRoom = fetchedRoom.get();
 
-        updatedAccount.setRoom(room);
+        updatedAccount.setRoom(updatedRoom);
+        updatedRoom.getAccounts().add(updatedAccount);
         accountRepository.save(updatedAccount);
+        updatedRoom = roomRepository.save(updatedRoom);
 
-        return new RoomDTO(
-                room.getId(),
-                room.getAccounts()
-                        .stream()
-                        .map(account -> new AccountDTO(account.getId(), account.getNickname()))
-                        .toList(),
-                room.getHost().getId(),
-                room.isPublic()
-        );
+        return new RoomDTO(updatedRoom);
     }
 
     @Transactional
