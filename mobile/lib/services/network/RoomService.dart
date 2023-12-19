@@ -49,6 +49,7 @@ class RoomService {
 
   Future<void> createRoom(Room room) async {
     try {
+      room.idHost = 41;
       final response = await http.post(
         Uri.parse("$baseUrl/room"),
         headers: <String, String>{
