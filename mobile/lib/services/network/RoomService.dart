@@ -3,12 +3,12 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:mobile/services/network/AppException.dart';
 import 'package:mobile/models/Room.dart';
-
+import 'package:mobile/assets/constants.dart' as constants;
 import '../../models/RoomSettings.dart';
 
 class RoomService {
 
-  final String baseUrl = "http://localhost:8080";
+  final String baseUrl = constants.baseUrl;
 
   Future<Room> getRoom(int roomId) async {
     try {

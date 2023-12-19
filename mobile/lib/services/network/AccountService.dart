@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:mobile/services/network/AppException.dart';
 import 'package:mobile/models/Account.dart';
-
+import 'package:mobile/assets/constants.dart' as constants;
 class AccountService {
 
-  final String baseUrl = "http://localhost:8080";
+  final String baseUrl = constants.baseUrl;
 
   Future<Account> getAccount(int accountId) async {
     try {
