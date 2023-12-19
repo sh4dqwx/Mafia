@@ -50,17 +50,6 @@ public class RoomController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteRoomById(@PathVariable String id) {
-        try {
-            roomService.deleteRoomById(id);
-        } catch(IllegalArgumentException ex) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
-        } catch(Exception ex) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
-        }
-    }
-
     @PostMapping()
     public Room createRoom(@RequestBody Room room) {
         try {
