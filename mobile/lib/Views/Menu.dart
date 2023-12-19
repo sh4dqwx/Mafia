@@ -71,9 +71,21 @@ class MenuPageState extends State<MenuPage> {
                 const SizedBox(height: 20.0),
                 ElevatedButton(
                   onPressed: () async {
-
-                    context.read<MenuViewModel>().createRoom();
+                    await MenuViewModel().createRoom(
+                          () {
+                        // onSuccess - Tutaj możesz umieścić kod nawigacji po udanym zapytaniu
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => RoomPage(),
+                          ),
+                        );
+                      },
+                          () {
+                        // onError - Tutaj możesz umieścić kod obsługi błędu
+                      },
+                    );
                   },
+
                   style: ElevatedButton.styleFrom(
                     minimumSize: const Size(double.infinity, 60),
                     textStyle: const TextStyle(fontSize: 32.0),
