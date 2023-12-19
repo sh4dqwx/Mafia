@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
-
-//  tutaj impoert websocketa
-// import 'package:web_socket_channel/io.dart';
+//brak odpowiedniego viewmodela
+//import '../viewModels/RoomViewModel.dart';
 
 class RoomPage extends StatefulWidget {
+  //final RoomViewModel roomViewModel; BRAK VIEWMODELA
+
+ // RoomPage({required this.roomViewModel}); BRAK VIEWMODELA
+
   @override
   RoomPageState createState() => RoomPageState();
 }
 
 class RoomPageState extends State<RoomPage> {
-  //.* late IOWebSocketChannel channel;
   String hostNick = '';
   String accessCode = '';
   List<String> userList = [];
@@ -18,24 +20,11 @@ class RoomPageState extends State<RoomPage> {
   @override
   void initState() {
     super.initState();
-    // Zastąp 'ws://twój_adres_websocket' adresem Twojego serwera WebSocket
-    /* channel = IOWebSocketChannel.connect('ws://twój_adres_websocket');
-    channel.stream.listen((data) {
-      setState(() {
-        // Parsowanie danych z WebSocket (założenie: dane w formacie JSON)
-        Map<String, dynamic> decodedData = jsonDecode(data);
-        hostNick = decodedData['host'];
-        accessCode = decodedData['kodDostepu'];
-        userList = List<String>.from(decodedData['uzytkownicy']);
-        isPrivate = decodedData['czyPrywatny'];
-      });
-    });*/
-  }
-
-  @override
-  void dispose() {
-    //channel.sink.close();
-    super.dispose();
+    // Brak viewmodela
+    /*hostNick = widget.roomViewModel.getHostNick();
+    accessCode = widget.roomViewModel.getAccessCode();
+    userList = widget.roomViewModel.getUserList();
+    isPrivate = widget.roomViewModel.getIsPrivate();*/
   }
 
   @override
@@ -168,10 +157,10 @@ class RoomPageState extends State<RoomPage> {
               title: Row(
                 children: [
                   Text(hostNick),
-                    const Text(
-                      '👑', // Emotikona korony
-                      style: TextStyle(fontSize: 20),
-                    )
+                  const Text(
+                    '👑', // Emotikona korony
+                    style: TextStyle(fontSize: 20),
+                  )
                 ],
               ),
               onTap: () {
