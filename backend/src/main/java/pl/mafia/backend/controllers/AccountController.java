@@ -39,16 +39,6 @@ public class AccountController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteAccountById(@PathVariable String id) {
-        try {
-            accountService.deleteAccountById(id);
-        } catch(IllegalArgumentException ex) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
-        } catch(Exception ex) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
-        }
-    }
 
     @PostMapping()
     public Account createAccount(@RequestBody RegisterRequest registerRequest) {
@@ -60,17 +50,6 @@ public class AccountController {
             );
         } catch(IllegalArgumentException ex) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage());
-        } catch(Exception ex) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
-        }
-    }
-
-    @PutMapping("/{id}")
-    public Account updateAccountById(@RequestBody Account account, @PathVariable String id) {
-        try {
-            return accountService.updateAccountById(account, id);
-        } catch(IllegalArgumentException ex) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
         } catch(Exception ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
         }
