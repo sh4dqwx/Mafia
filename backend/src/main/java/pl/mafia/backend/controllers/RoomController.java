@@ -3,6 +3,7 @@ package pl.mafia.backend.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
+import pl.mafia.backend.models.RoomSettings;
 import pl.mafia.backend.repositories.RoomRepository;  // Assuming you have a RoomRepository
 import pl.mafia.backend.models.Room;  // Update import to Room
 import org.springframework.web.bind.annotation.*;
@@ -67,6 +68,17 @@ public class RoomController {
         } catch(IllegalArgumentException ex) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage());
         } catch(Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+        }
+    }
+
+    @PutMapping("/properties")
+    public void updateProperties(@RequestBody RoomSettings roomSettings, @PathVariable String id) {
+        try {
+            roomService.updateProperties(roomSettings, id);
+        } catch (IllegalArgumentException ex) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+        } catch (Exception ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
         }
     }
