@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../models/RoomSettings.dart';
+import '../viewModels/RoomSettingsViewModel.dart';
 
 class RoomSettingsPage extends StatefulWidget {
   @override
@@ -68,14 +72,21 @@ class _RoomSettingsPageState extends State<RoomSettingsPage> {
             Text('$_numberOfPlayers Players'),
             SizedBox(height: 20.0),
             ElevatedButton(
-              // komentarz bo niepołączone branche
-              onPressed: () => {}, //_viewModel.saveGameSettings(context),
+              onPressed: () async {
+                RoomSettings roomSettings = RoomSettings(
+                  isPublic: _isPublic,
+                  numberOfPlayers: _numberOfPlayers,
+                );
+                await context.read<RoomSettingsViewModel>().saveGameSettings(
+                    roomSettings);
+              },
               style: ElevatedButton.styleFrom(
                 minimumSize: Size(double.infinity, 60),
                 textStyle: TextStyle(fontSize: 32.0),
               ),
               child: Text('Save'),
             ),
+
           ],
 
         ),
@@ -83,3 +94,4 @@ class _RoomSettingsPageState extends State<RoomSettingsPage> {
     );
   }
 }
+
