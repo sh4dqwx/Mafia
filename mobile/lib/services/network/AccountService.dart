@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:mobile/services/network/AppException.dart';
 import 'package:mobile/models/Account.dart';
-import 'package:mobile/assets/constants.dart' as constants;
+import 'package:mobile/utils/Constants.dart' as constants;
 class AccountService {
 
   final String baseUrl = constants.baseUrl;
