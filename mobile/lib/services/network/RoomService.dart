@@ -3,10 +3,12 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:mobile/services/network/AppException.dart';
 import 'package:mobile/models/Room.dart';
+import 'package:mobile/utils/Constants.dart' as Constants;
+import '../../models/RoomSettings.dart';
 
 class RoomService {
 
-  final String baseUrl = "http://10.0.2.2:8080";
+  final String baseUrl = Constants.baseUrl;
 
   Future<Room> getRoom(int roomId) async {
     try {
@@ -65,17 +67,15 @@ class RoomService {
     }
   }
 
-  Future<void> modifyRoomProperties(Room room) async { //Logika zmiany ustawień jest jeszcze nie ustalona
+  Future<void> modifyRoomProperties(RoomSettings roomSettings) async {
     try {
       final response = await http.put(
         Uri.parse("$baseUrl/room/properties"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: jsonEncode(room.toJson()), //Może będzie trzeba stworzyć tabelę i obiekt ustawień
+        body: jsonEncode(roomSettings.toJson()),
       );
-
-      var responseJson = returnResponse(response);
     } catch (e) {
       if (e is SocketException) {
         throw FetchDataException('No Internet Connection');

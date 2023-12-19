@@ -5,7 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.server.ResponseStatusException;
-import pl.mafia.backend.models.db.Room;
+import pl.mafia.backend.models.db.RoomSettings;
+import pl.mafia.backend.models.db.Room;  // Update import to Room
 import org.springframework.web.bind.annotation.*;
 import pl.mafia.backend.models.dto.RoomDTO;
 import pl.mafia.backend.services.RoomService;
@@ -61,17 +62,6 @@ public class RoomController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteRoomById(@PathVariable String id) {
-        try {
-            roomService.deleteRoomById(id);
-        } catch(IllegalArgumentException ex) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
-        } catch(Exception ex) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
-        }
-    }
-
     @PostMapping()
     public Room createRoom(@RequestBody Room room) {
         try {
@@ -79,6 +69,17 @@ public class RoomController {
         } catch(IllegalArgumentException ex) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage());
         } catch(Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+        }
+    }
+
+    @PutMapping("/properties/{id}")
+    public void updateProperties(@RequestBody RoomSettings roomSettings, @PathVariable String id) {
+        try {
+            roomService.updateProperties(roomSettings, id);
+        } catch (IllegalArgumentException ex) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+        } catch (Exception ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
         }
     }
