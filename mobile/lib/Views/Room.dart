@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 //brak odpowiedniego viewmodela
 //import '../viewModels/RoomViewModel.dart';
+import 'RoomSettings.dart';
 
 class RoomPage extends StatefulWidget {
   //final RoomViewModel roomViewModel; BRAK VIEWMODELA
@@ -75,8 +76,15 @@ class RoomPageState extends State<RoomPage> {
                   ),
                 ),
                 const SizedBox(height: 10),
+               // if (viewModel.isHost)
                 ElevatedButton(
                   onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RoomSettingsPage(),
+                      ),
+                    );
                     //viewModel.openGameSettings;
                   },
                   child: const Text('Settings'),
@@ -126,7 +134,7 @@ class RoomPageState extends State<RoomPage> {
             child: GestureDetector(
               onTap: () {
                 // Otwieranie chatu
-                print('Otwórz czat');
+                print('Open chat');
               },
               child: const Icon(
                 Icons.chat,
