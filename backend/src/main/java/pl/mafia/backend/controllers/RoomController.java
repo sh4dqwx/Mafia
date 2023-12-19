@@ -72,7 +72,7 @@ public class RoomController {
         }
     }
 
-    @PutMapping("/properties")
+    @PutMapping("/properties/{id}")
     public void updateProperties(@RequestBody RoomSettings roomSettings, @PathVariable String id) {
         try {
             roomService.updateProperties(roomSettings, id);
