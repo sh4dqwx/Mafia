@@ -4,7 +4,7 @@ import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import pl.mafia.backend.models.Account;
+import pl.mafia.backend.models.db.Account;
 import pl.mafia.backend.repositories.AccountRepository;
 
 import java.util.List;

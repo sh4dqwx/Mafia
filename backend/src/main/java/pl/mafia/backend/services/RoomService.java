@@ -1,16 +1,12 @@
 package pl.mafia.backend.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.server.ResponseStatusException;
-import pl.mafia.backend.models.Account;
-import pl.mafia.backend.models.Room;
+import pl.mafia.backend.models.db.Account;
+import pl.mafia.backend.models.db.Room;
+import pl.mafia.backend.models.dto.AccountDTO;
+import pl.mafia.backend.models.dto.RoomDTO;
 import pl.mafia.backend.repositories.AccountRepository;
 import pl.mafia.backend.repositories.RoomRepository;
 
@@ -28,37 +24,57 @@ public class RoomService {
         return roomRepository.findByIsPublicTrue();
     }
 
-    public Room joinRoomByAccessCode(String accessCode, String accountId) throws IllegalAccessException {
-        Optional<Room> room = roomRepository.findByAccessCode(accessCode);
-        if (room.isEmpty())
+    public RoomDTO joinRoomByAccessCode(String accessCode, String accountId) throws IllegalAccessException {
+        Optional<Room> fetchedRoom = roomRepository.findByAccessCode(accessCode);
+        if (fetchedRoom.isEmpty())
             throw new IllegalArgumentException("Room does not exists.");
 
-        Optional<Account> account = accountRepository.findById(Long.parseLong(accountId));
-        if (account.isEmpty())
+        Optional<Account> fetchedAccount = accountRepository.findById(Long.parseLong(accountId));
+        if (fetchedAccount.isEmpty())
             throw new IllegalAccessException("Account does not exists.");
 
-        Account updatedAccount = account.get();
-        updatedAccount.setRoom(room.get());
+        Account updatedAccount = fetchedAccount.get();
+        Room room = fetchedRoom.get();
+
+        updatedAccount.setRoom(room);
         accountRepository.save(updatedAccount);
 
-        return room.get();
+        return new RoomDTO(
+                room.getId(),
+                room.getAccounts()
+                        .stream()
+                        .map(account -> new AccountDTO(account.getId(), account.getNickname()))
+                        .toList(),
+                room.getHost().getId(),
+                room.isPublic()
+        );
     }
 
     @Transactional
-    public Room joinRoomById(String id, String accountId) throws IllegalAccessException {
-        Optional<Room> room = roomRepository.findById(Long.parseLong(id));
-        if (room.isEmpty())
+    public RoomDTO joinRoomById(String id, String accountId) throws IllegalAccessException {
+        Optional<Room> fetchedRoom = roomRepository.findById(Long.parseLong(id));
+        if (fetchedRoom.isEmpty())
             throw new IllegalArgumentException("Room does not exists.");
 
-        Optional<Account> account = accountRepository.findById(Long.parseLong(accountId));
-        if (account.isEmpty())
+        Optional<Account> fetchedAccount = accountRepository.findById(Long.parseLong(accountId));
+        if (fetchedAccount.isEmpty())
             throw new IllegalAccessException("Account does not exists.");
 
-        Account updatedAccount = account.get();
-        updatedAccount.setRoom(room.get());
+        Account updatedAccount = fetchedAccount.get();
+        Room room = fetchedRoom.get();
+
+        updatedAccount.setRoom(room);
         accountRepository.save(updatedAccount);
 
-        return room.get();
+        return new RoomDTO(
+                room.getId(),
+                room.getAccounts()
+                        .stream()
+                        .map(account -> new AccountDTO(account.getId(), account.getNickname()))
+                        .toList(),
+                room.getHost().getId(),
+                room.isPublic()
+        );
     }
 
     @Transactional

@@ -1,12 +1,10 @@
 package pl.mafia.backend.controllers;
 
 import lombok.Data;
-import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
-import pl.mafia.backend.repositories.AccountRepository;
-import pl.mafia.backend.models.Account;
+import pl.mafia.backend.models.db.Account;
 import org.springframework.web.bind.annotation.*;
 import pl.mafia.backend.services.AccountService;
 
