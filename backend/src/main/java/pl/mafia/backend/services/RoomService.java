@@ -50,7 +50,15 @@ public class RoomService {
         if (roomByHost.isPresent())
             throw new IllegalArgumentException("Room already exists.");
 
-        return roomRepository.save(room);
+        Room createRoom = roomRepository.save(room);
+
+        int codeLength = 7;
+        String base26String = Long.toString(createRoom.getId(), 26).toUpperCase();
+        base26String = String.format("%" + codeLength + "s", base26String).replace(' ', '0');
+        base26String = base26String.substring(Math.max(0, base26String.length() - codeLength));
+
+        createRoom.setAccessCode(base26String);
+        return roomRepository.save(createRoom);
     }
 
     @Transactional
