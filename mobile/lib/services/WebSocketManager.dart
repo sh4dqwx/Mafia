@@ -3,12 +3,15 @@ import 'dart:convert';
 import 'package:stomp_dart_client/stomp.dart';
 import 'package:stomp_dart_client/stomp_config.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
+import 'package:mobile/utils/Constants.dart' as Constants;
 import '../models/Room.dart';
 
 class WebSocketManager {
   static WebSocketManager? _instance;
   late StompClient _stompClient;
   late int roomId;
+
+  final String baseUrl = "ws://${Constants.baseUrl}";
 
   final _roomUpdate = StreamController<Room>.broadcast();
   Stream<Room> get roomUpdate => _roomUpdate.stream;
@@ -32,7 +35,7 @@ class WebSocketManager {
   Future<void> connect(int roomId) async {
     this.roomId = roomId;
     _stompClient = StompClient(config: StompConfig(
-      url: "ws://10.0.2.2:8080/ws",
+      url: "$baseUrl/ws",
       onConnect: _onConnect
     ));
     _stompClient.activate();

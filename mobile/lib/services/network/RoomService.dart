@@ -8,7 +8,7 @@ import '../../models/RoomSettings.dart';
 
 class RoomService {
 
-  final String baseUrl = Constants.baseUrl;
+  final String baseUrl = "http://${Constants.baseUrl}";
 
   Future<Room> getRoom(int roomId) async {
     try {

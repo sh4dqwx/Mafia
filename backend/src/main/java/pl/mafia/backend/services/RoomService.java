@@ -67,16 +67,6 @@ public class RoomService {
     }
 
     @Transactional
-    public void deleteRoomById(String id) {
-        Optional<Room> room = roomRepository.findById(Long.parseLong(id));
-
-        if (room.isEmpty())
-            throw new IllegalArgumentException("Room does not exists.");
-
-        roomRepository.delete(room.get());
-    }
-
-    @Transactional
     public Room createRoom(Room room) {
         Optional<Room> roomByHost = roomRepository.findByHost(room.getHost());
 

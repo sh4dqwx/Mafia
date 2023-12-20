@@ -46,26 +46,6 @@ public class AccountService {
         return new AccountDTO(accountRepository.save(account));
     }
 
-    @Transactional
-    public void deleteAccountById(String id) {
-        Optional<Account> account = accountRepository.findById(Long.parseLong(id));
-
-        if(account.isEmpty())
-            throw new IllegalArgumentException("Account does not exist.");
-
-        accountRepository.delete(account.get());
-    }
-
-    @Transactional
-    public Account updateAccountById(Account newAccount, String id) {
-        Optional<Account> account = accountRepository.findById(Long.parseLong(id));
-
-        if(account.isEmpty())
-            throw new IllegalArgumentException("Account does not exist.");
-
-        return accountRepository.save(newAccount);
-    }
-
     public AccountDTO loginToAccount(String login, String password) throws IllegalAccessException {
         Optional<Account> accountByLogin = accountRepository.findByLogin(login);
 
