@@ -1,13 +1,12 @@
 package pl.mafia.backend.controllers;
 
 import lombok.Data;
-import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
-import pl.mafia.backend.repositories.AccountRepository;
-import pl.mafia.backend.models.Account;
+import pl.mafia.backend.models.db.Account;
 import org.springframework.web.bind.annotation.*;
+import pl.mafia.backend.models.dto.AccountDTO;
 import pl.mafia.backend.services.AccountService;
 
 import java.util.List;
@@ -41,7 +40,7 @@ public class AccountController {
 
 
     @PostMapping()
-    public Account createAccount(@RequestBody RegisterRequest registerRequest) {
+    public AccountDTO createAccount(@RequestBody RegisterRequest registerRequest) {
         try {
             return accountService.createAccount(
                     registerRequest.getEmail(),
@@ -56,7 +55,7 @@ public class AccountController {
     }
 
     @PostMapping("/login")
-    public Account loginToAccount(@RequestBody LoginRequest loginRequest) {
+    public AccountDTO loginToAccount(@RequestBody LoginRequest loginRequest) {
         try {
             return accountService.loginToAccount(
                     loginRequest.getLogin(),

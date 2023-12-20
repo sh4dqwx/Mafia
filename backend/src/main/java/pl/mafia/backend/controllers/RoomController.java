@@ -1,21 +1,23 @@
 package pl.mafia.backend.controllers;
 
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.server.ResponseStatusException;
-import pl.mafia.backend.models.RoomSettings;
-import pl.mafia.backend.repositories.RoomRepository;  // Assuming you have a RoomRepository
-import pl.mafia.backend.models.Room;  // Update import to Room
+import pl.mafia.backend.models.db.RoomSettings;
+import pl.mafia.backend.models.db.Room;  // Update import to Room
 import org.springframework.web.bind.annotation.*;
+import pl.mafia.backend.models.dto.RoomDTO;
 import pl.mafia.backend.services.RoomService;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/room")
 public class RoomController {
-
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
     @Autowired
     private RoomService roomService;
 
@@ -28,23 +30,33 @@ public class RoomController {
         }
     }
 
-    @GetMapping("/code/{accessCode}")
-    public Room getRoomByAccessCode(@PathVariable String accessCode) {
+    @PostMapping("/code/{accessCode}")
+    public RoomDTO joinRoomByAccessCode(@PathVariable String accessCode, @RequestBody JoinRoomRequest joinRoomRequest) {
         try {
-            return roomService.getRoomByAccessCode(accessCode);
+            String accountId = joinRoomRequest.getAccountId();
+            RoomDTO roomDTO = roomService.joinRoomByAccessCode(accessCode, accountId);
+            messagingTemplate.convertAndSend("/topic/room/" + roomDTO.getId(), roomDTO);
+            return roomDTO;
         } catch(IllegalArgumentException ex) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+        } catch(IllegalAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, ex.getMessage());
         } catch(Exception ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
         }
     }
 
-    @GetMapping("/{id}")
-    public Room getRoomById(@PathVariable String id) {
+    @PostMapping("/{id}")
+    public RoomDTO joinRoomById(@PathVariable String id, @RequestBody JoinRoomRequest joinRoomRequest) {
         try {
-            return roomService.getRoomById(id);
+            String accountId = joinRoomRequest.getAccountId();
+            RoomDTO roomDTO = roomService.joinRoomById(id, accountId);
+            messagingTemplate.convertAndSend("/topic/room/" + id, roomDTO);
+            return roomDTO;
         } catch(IllegalArgumentException ex) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+        } catch(IllegalAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, ex.getMessage());
         } catch(Exception ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
         }
@@ -70,5 +82,10 @@ public class RoomController {
         } catch (Exception ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
         }
+    }
+
+    @Data
+    static class JoinRoomRequest {
+        private String accountId;
     }
 }

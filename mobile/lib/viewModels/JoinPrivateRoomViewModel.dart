@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/services/WebSocketManager.dart';
 import '../services/network/RoomService.dart';
 import '../models/Room.dart';
 
@@ -12,6 +13,7 @@ class JoinPrivateRoomViewModel extends ChangeNotifier {
   }
 
   final RoomService roomService = RoomService();
+  final WebSocketManager webSocketManager = WebSocketManager();
 
   String inputCodeError = "";
   String messageError = "";
@@ -26,12 +28,13 @@ class JoinPrivateRoomViewModel extends ChangeNotifier {
         //tutaj ma być metoda z servisu, to co poniżej to placeholder żeby nie pluło błędami
        // bool roomIsFound = getRoom(accesCode);
         Room room = await roomService.getRoom(int.parse(accessCode));
+        webSocketManager.connect(room.id);
 
         // if (roomIsFound == true)
         if (room != null) {
           notifyListeners();
           return true;
-          }
+        }
 
         else {
           messageError = "Room not found.";

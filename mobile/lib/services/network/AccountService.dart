@@ -6,7 +6,7 @@ import 'package:mobile/models/Account.dart';
 import 'package:mobile/utils/Constants.dart' as Constants;
 class AccountService {
 
-  final String baseUrl = Constants.baseUrl;
+  final String baseUrl = "http://${Constants.baseUrl}";
 
   Future<Account> getAccount(int accountId) async {
     try {
