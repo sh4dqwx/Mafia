@@ -3,7 +3,7 @@ import 'Game.dart';
 
 class Room {
   final int id;
-  final Account host;
+  int idHost;
   final Game game;
   final String accessCode;
   final bool isPublic;
@@ -11,7 +11,7 @@ class Room {
 
   Room({
     required this.id,
-    required this.host,
+    required this.idHost,
     required this.game,
     required this.accessCode,
     required this.isPublic,
@@ -21,7 +21,7 @@ class Room {
   factory Room.fromJson(Map<String, dynamic> json) {
     return Room(
       id: json['id'],
-      host: Account.fromJson(json['host']),
+      idHost: json['idHost'],
       game: Game.fromJson(json['game']),
       accessCode: json['accessCode'],
       isPublic: json['isPublic'],
@@ -32,7 +32,7 @@ class Room {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'host': host.toJson(),
+      'idHost': idHost,
       'game': game.toJson(),
       'accessCode': accessCode,
       'isPublic': isPublic,
