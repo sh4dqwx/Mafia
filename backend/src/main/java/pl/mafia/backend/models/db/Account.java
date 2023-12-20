@@ -1,4 +1,4 @@
-package pl.mafia.backend.models;
+package pl.mafia.backend.models.db;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -30,28 +30,28 @@ public class Account {
     private String nickname;
 
     @ToString.Exclude
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_room")
     private Room room;
 
     @ToString.Exclude
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "GameAccount", joinColumns = @JoinColumn(name = "id_account"), inverseJoinColumns = @JoinColumn(name = "id_game"))
     private List<Game> games;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "account")
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
     private List<RoundMiniGame> roundMiniGames;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "account")
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
     private List<Voting> votings;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "voter")
+    @OneToMany(mappedBy = "voter", fetch = FetchType.LAZY)
     private List<Vote> votesAsVoter;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "voted")
+    @OneToMany(mappedBy = "voted", fetch = FetchType.LAZY)
     private List<Vote> votesAsVoted;
 }

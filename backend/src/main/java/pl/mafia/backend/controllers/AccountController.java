@@ -1,13 +1,12 @@
 package pl.mafia.backend.controllers;
 
 import lombok.Data;
-import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
-import pl.mafia.backend.repositories.AccountRepository;
-import pl.mafia.backend.models.Account;
+import pl.mafia.backend.models.db.Account;
 import org.springframework.web.bind.annotation.*;
+import pl.mafia.backend.models.dto.AccountDTO;
 import pl.mafia.backend.services.AccountService;
 
 import java.util.List;
@@ -39,19 +38,9 @@ public class AccountController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteAccountById(@PathVariable String id) {
-        try {
-            accountService.deleteAccountById(id);
-        } catch(IllegalArgumentException ex) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
-        } catch(Exception ex) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
-        }
-    }
 
     @PostMapping()
-    public Account createAccount(@RequestBody RegisterRequest registerRequest) {
+    public AccountDTO createAccount(@RequestBody RegisterRequest registerRequest) {
         try {
             return accountService.createAccount(
                     registerRequest.getEmail(),
@@ -65,19 +54,8 @@ public class AccountController {
         }
     }
 
-    @PutMapping("/{id}")
-    public Account updateAccountById(@RequestBody Account account, @PathVariable String id) {
-        try {
-            return accountService.updateAccountById(account, id);
-        } catch(IllegalArgumentException ex) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
-        } catch(Exception ex) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
-        }
-    }
-
     @PostMapping("/login")
-    public Account loginToAccount(@RequestBody LoginRequest loginRequest) {
+    public AccountDTO loginToAccount(@RequestBody LoginRequest loginRequest) {
         try {
             return accountService.loginToAccount(
                     loginRequest.getLogin(),

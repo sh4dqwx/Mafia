@@ -1,8 +1,8 @@
 package pl.mafia.backend.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import pl.mafia.backend.models.Account;
-import pl.mafia.backend.models.Room;
+import pl.mafia.backend.models.db.Account;
+import pl.mafia.backend.models.db.Room;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,4 +1,4 @@
-package pl.mafia.backend.models;
+package pl.mafia.backend.models.db;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -17,7 +17,7 @@ public class Room {
     private Long id;
 
     @ToString.Exclude
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_host")
     private Account host;
 
@@ -33,6 +33,6 @@ public class Room {
     private boolean isPublic;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "room")
+    @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
     private List<Account> accounts;
 }
