@@ -13,7 +13,7 @@ public class RoomDTO {
     @NonNull private List<AccountDTO> accounts;
     @NonNull private Long hostId;
     @NonNull private String accessCode;
-    @NonNull private Boolean isPublic;
+    @NonNull private RoomSettingsDTO roomSettings;
 
     public RoomDTO(Room room) {
         this.id = room.getId();
@@ -23,6 +23,6 @@ public class RoomDTO {
                 .toList();
         this.hostId = room.getHost().getId();
         this.accessCode = room.getAccessCode();
-        this.isPublic = room.isPublic();
+        this.roomSettings = new RoomSettingsDTO(room.getRoomSettings());
     }
 }
