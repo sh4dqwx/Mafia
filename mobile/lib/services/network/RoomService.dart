@@ -28,7 +28,7 @@ class RoomService {
   Future<List<Room>> getPublicRooms() async {
     try {
       final response = await http.get(
-          Uri.parse("$baseUrl/public"));
+          Uri.parse("$baseUrl/room/public"));
       if (response.statusCode == 200) {
         List<dynamic> roomsJson = jsonDecode(response.body);
         List<Room> rooms = roomsJson
