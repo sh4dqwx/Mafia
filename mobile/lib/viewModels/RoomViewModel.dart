@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import '../services/WebSocketManager.dart';
 import '../Views/RoomSettings.dart';
@@ -48,6 +50,16 @@ class RoomViewModel extends ChangeNotifier {
   // Example method to update the room data
   void updateRoom(Room newRoom) {
     _room = newRoom;
+    notifyListeners();
+  }
+
+  final _userListController = StreamController<List<String>>.broadcast();
+
+  // Expose the user list stream
+  Stream<List<String>> get userListStream => _userListController.stream;
+
+  void updateUserList(List<String> newList) {
+    _userListController.add(newList);
     notifyListeners();
   }
 
