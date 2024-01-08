@@ -4,6 +4,7 @@ import '../viewModels/RoomViewModel.dart';
 
 class RoomPage extends StatefulWidget {
   late final RoomViewModel roomViewModel;
+  late final RoomSettings roomSettings;
 
   RoomPage({required this.roomViewModel});
 
@@ -14,13 +15,14 @@ class RoomPage extends StatefulWidget {
 class RoomPageState extends State<RoomPage> {
   String hostNick = '';
   String accessCode = '';
-  bool isPrivate = false;
+  bool isPublic = true;
 
   @override
   void initState() {
     super.initState();
     hostNick = widget.roomViewModel.hostNick;
     accessCode = widget.roomViewModel.accessCode;
+    isPublic = widget.roomSettings.isPublic;
   }
 
   @override

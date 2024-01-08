@@ -1,3 +1,5 @@
+import 'package:mobile/models/RoomSettings.dart';
+
 import 'Account.dart';
 import 'Game.dart';
 
@@ -6,7 +8,7 @@ class Room {
   int idHost;
   final Game game;
   final String accessCode;
-  final bool isPublic;
+  final RoomSettings roomSettings;
   final List<Account> accounts;
 
   Room({
@@ -14,7 +16,7 @@ class Room {
     required this.idHost,
     required this.game,
     required this.accessCode,
-    required this.isPublic,
+    required this.roomSettings,
     required this.accounts,
   });
 
@@ -25,7 +27,7 @@ class Room {
       idHost: json['idHost'],
       game: Game.fromJson(json['game']),
       accessCode: json['accessCode'],
-      isPublic: json['isPublic'],
+      roomSettings: RoomSettings.fromJson(json['roomSettings']),
       accounts: (json['accounts'] as List).map((account) => Account.fromJson(account)).toList(),
     );
   }
@@ -36,7 +38,7 @@ class Room {
       'idHost': idHost,
       'game': game.toJson(),
       'accessCode': accessCode,
-      'isPublic': isPublic,
+      'roomSettings': roomSettings.toJson(),
       'accounts': accounts.map((account) => account.toJson()).toList(),
     };
   }
