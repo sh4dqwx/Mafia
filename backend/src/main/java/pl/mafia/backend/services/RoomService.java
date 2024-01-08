@@ -96,7 +96,8 @@ public class RoomService {
         if (room.isEmpty())
             throw new IllegalArgumentException("Room does not exists.");
 
-        //Room.settings = roomSettings;
-        //roomRepository.save(room.get());
+        Room updatedRoom = room.get();
+        updatedRoom.setRoomSettings(roomSettings);
+        roomRepository.save(updatedRoom);
     }
 }
