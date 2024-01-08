@@ -14,7 +14,7 @@ class WebSocketManager {
   final String baseUrl = "ws://${Constants.baseUrl}";
 
   final _roomUpdate = StreamController<Room>.broadcast();
-  Stream<Room> get roomUpdate => _roomUpdate.stream; // musze zrobic nasluchiwanie do tego w viewmodelu
+  Stream<Room> get roomUpdate => _roomUpdate.stream;
 
   WebSocketManager._internal();
   factory WebSocketManager() {
