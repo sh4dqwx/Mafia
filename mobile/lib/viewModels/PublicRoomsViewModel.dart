@@ -19,6 +19,10 @@ class PublicRoomsViewModel with ChangeNotifier {
     }
   }
 
+  Future<void> refreshPublicRooms() async {
+    await fetchPublicRooms();
+  }
+
   void pressed(BuildContext context, Room room) {
     /* Przekierowanie do pokoju
     Navigator.push(
