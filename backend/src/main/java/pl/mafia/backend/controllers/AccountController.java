@@ -10,6 +10,7 @@ import pl.mafia.backend.models.dto.AccountDTO;
 import pl.mafia.backend.services.AccountService;
 
 import java.util.List;
+import java.util.Locale;
 
 @RestController
 @RequestMapping("/account")
@@ -70,6 +71,37 @@ public class AccountController {
         }
     }
 
+    @PutMapping("/nickname")
+    public AccountDTO changeNickname(@PathVariable Long accountId, @RequestBody String newNickname) {
+        try {
+            return accountService.changeNickname(
+                    accountId,
+                    newNickname
+            );
+        } catch(IllegalArgumentException ex) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+        } catch(Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+        }
+    }
+
+    @PutMapping("/password")
+    public AccountDTO changePassword(@PathVariable Long accountId, @RequestBody PasswordRequest passwordRequest) {
+        try {
+            return accountService.changePassword(
+                    accountId,
+                    passwordRequest.previousPassword,
+                    passwordRequest.newPassword
+            );
+        } catch(IllegalArgumentException ex) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+        } catch(IllegalAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, ex.getMessage());
+        } catch(Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+        }
+    }
+
     @Data
     static class LoginRequest {
         private String login;
@@ -81,5 +113,11 @@ public class AccountController {
         private String login;
         private String password;
         private String email;
+    }
+
+    @Data
+    static class PasswordRequest {
+        private String previousPassword;
+        private String newPassword;
     }
 }

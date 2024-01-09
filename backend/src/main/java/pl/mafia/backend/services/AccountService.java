@@ -58,4 +58,34 @@ public class AccountService {
 
         return new AccountDTO(accountByLogin.get());
     }
+
+    @Transactional
+    public AccountDTO changeNickname(Long accountId, String newNickname) {
+        Optional<Account> accountById = accountRepository.findById(accountId);
+
+        if(accountById.isEmpty())
+            throw new IllegalArgumentException("Account does not exist.");
+
+        Account account = accountById.get();
+        account.setNickname(newNickname);
+        Account accountAfterUpdate = accountRepository.save(account);
+        return new AccountDTO(accountAfterUpdate);
+    }
+
+    @Transactional
+    public AccountDTO changePassword(Long accountId, String previousPassword, String newPassword) throws IllegalAccessException {
+        Optional<Account> accountById = accountRepository.findById(accountId);
+
+        if(accountById.isEmpty())
+            throw new IllegalArgumentException("Account does not exist.");
+
+        Account account = accountById.get();
+        if (!BCrypt.checkpw(previousPassword, account.getPassword()))
+            throw new IllegalAccessException("Wrong password.");
+
+        String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+        account.setPassword(hashedPassword);
+        Account accountAfterUpdate = accountRepository.save(account);
+        return new AccountDTO(accountAfterUpdate);
+    }
 }
