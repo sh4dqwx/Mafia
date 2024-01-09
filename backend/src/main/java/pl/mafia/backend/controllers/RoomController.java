@@ -8,6 +8,7 @@ import org.springframework.web.server.ResponseStatusException;
 //import pl.mafia.backend.models.db.RoomSettings;
 import pl.mafia.backend.models.db.Room;  // Update import to Room
 import org.springframework.web.bind.annotation.*;
+import pl.mafia.backend.models.db.RoomSettings;
 import pl.mafia.backend.models.dto.RoomDTO;
 import pl.mafia.backend.services.RoomService;
 
@@ -73,16 +74,16 @@ public class RoomController {
         }
     }
 
-//    @PutMapping("/properties/{id}")
-//    public void updateProperties(@RequestBody RoomSettings roomSettings, @PathVariable String id) {
-//        try {
-//            roomService.updateProperties(roomSettings, id);
-//        } catch (IllegalArgumentException ex) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
-//        } catch (Exception ex) {
-//            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
-//        }
-//    }
+    @PutMapping("/properties/{id}")
+    public void updateProperties(@RequestBody RoomSettings roomSettings, @PathVariable String id) {
+        try {
+            roomService.updateProperties(roomSettings, id);
+        } catch (IllegalArgumentException ex) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+        }
+    }
 
     @Data
     static class JoinRoomRequest {
