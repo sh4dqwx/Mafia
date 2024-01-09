@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../Views/RoomSettings.dart';
+import '../models/RoomSettings.dart';
 import '../viewModels/RoomViewModel.dart';
 
 class RoomPage extends StatefulWidget {
