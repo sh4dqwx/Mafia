@@ -17,6 +17,10 @@ class PublicRoomsPageState extends State<PublicRoomsPage> {
     context.read<PublicRoomsViewModel>().fetchPublicRooms();
   }
 
+  void _refreshRooms() {
+    context.read<PublicRoomsViewModel>().fetchPublicRooms();
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Room> publicRooms = context.watch<PublicRoomsViewModel>().publicRooms;
@@ -28,8 +32,14 @@ class PublicRoomsPageState extends State<PublicRoomsPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25.0),
-        child: ListView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            const SizedBox(height: 25.0),
+            ElevatedButton(
+              onPressed: _refreshRooms,
+              child: const Text('Refresh'),
+            ),
             const SizedBox(height: 25.0),
             const Text(
               'Choose a Public Room',
