@@ -21,11 +21,8 @@ public class RoomService {
     private AccountRepository accountRepository;
     @Autowired
     private RoomRepository roomRepository;
-    @Autowired
-    private SimpUserRegistry simpUserRegistry;
 
     public List<Room> getPublicRooms() {
-        List<SimpUser> users = simpUserRegistry.getUsers().stream().toList();
         List<Room> lista = roomRepository.findByIsPublicTrue();
         return lista;
     }
