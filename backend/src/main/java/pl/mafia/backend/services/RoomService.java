@@ -1,13 +1,15 @@
 package pl.mafia.backend.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.user.SimpUser;
+import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import pl.mafia.backend.models.db.Account;
 import pl.mafia.backend.models.db.Room;
 import pl.mafia.backend.models.dto.RoomDTO;
 import pl.mafia.backend.repositories.AccountRepository;
-import pl.mafia.backend.models.db.RoomSettings;
+//import pl.mafia.backend.models.db.RoomSettings;
 import pl.mafia.backend.repositories.RoomRepository;
 
 import java.util.List;
@@ -19,10 +21,13 @@ public class RoomService {
     private AccountRepository accountRepository;
     @Autowired
     private RoomRepository roomRepository;
+    @Autowired
+    private SimpUserRegistry simpUserRegistry;
 
     public List<Room> getPublicRooms() {
-       List<Room> lista = roomRepository.findByIsPublicTrue();
-       return lista;
+        List<SimpUser> users = simpUserRegistry.getUsers().stream().toList();
+        List<Room> lista = roomRepository.findByIsPublicTrue();
+        return lista;
     }
 
     @Transactional
@@ -85,14 +90,14 @@ public class RoomService {
         return roomRepository.save(createRoom);
     }
 
-    @Transactional
-    public void updateProperties(RoomSettings roomSettings, String roomId) {
-        Optional<Room> room = roomRepository.findById(Long.parseLong(roomId));
-
-        if (room.isEmpty())
-            throw new IllegalArgumentException("Room does not exists.");
-
-        //Room.settings = roomSettings;
-        //roomRepository.save(room.get());
-    }
+//    @Transactional
+//    public void updateProperties(RoomSettings roomSettings, String roomId) {
+//        Optional<Room> room = roomRepository.findById(Long.parseLong(roomId));
+//
+//        if (room.isEmpty())
+//            throw new IllegalArgumentException("Room does not exists.");
+//
+//        //Room.settings = roomSettings;
+//        //roomRepository.save(room.get());
+//    }
 }
