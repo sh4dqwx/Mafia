@@ -9,11 +9,13 @@ import pl.mafia.backend.models.db.Account;
 import pl.mafia.backend.models.db.Room;
 import pl.mafia.backend.models.dto.RoomDTO;
 import pl.mafia.backend.repositories.AccountRepository;
-//import pl.mafia.backend.models.db.RoomSettings;
+import pl.mafia.backend.models.db.RoomSettings;
 import pl.mafia.backend.repositories.RoomRepository;
 
 import java.util.List;
 import java.util.Optional;
+
+import static pl.mafia.backend.repositories.specifications.RoomSpecifications.isRoomPublic;
 
 @Component
 public class RoomService {
@@ -22,9 +24,11 @@ public class RoomService {
     @Autowired
     private RoomRepository roomRepository;
 
-    public List<Room> getPublicRooms() {
-        List<Room> lista = roomRepository.findByIsPublicTrue();
-        return lista;
+    public List<RoomDTO> getPublicRooms() {
+        return roomRepository.findAll(isRoomPublic())
+                .stream()
+                .map(RoomDTO::new)
+                .toList();
     }
 
     @Transactional
@@ -87,14 +91,15 @@ public class RoomService {
         return roomRepository.save(createRoom);
     }
 
-//    @Transactional
-//    public void updateProperties(RoomSettings roomSettings, String roomId) {
-//        Optional<Room> room = roomRepository.findById(Long.parseLong(roomId));
-//
-//        if (room.isEmpty())
-//            throw new IllegalArgumentException("Room does not exists.");
-//
-//        //Room.settings = roomSettings;
-//        //roomRepository.save(room.get());
-//    }
+    @Transactional
+    public void updateProperties(RoomSettings roomSettings, String roomId) {
+        Optional<Room> room = roomRepository.findById(Long.parseLong(roomId));
+
+        if (room.isEmpty())
+            throw new IllegalArgumentException("Room does not exists.");
+
+        Room updatedRoom = room.get();
+        updatedRoom.setRoomSettings(roomSettings);
+        roomRepository.save(updatedRoom);
+    }
 }

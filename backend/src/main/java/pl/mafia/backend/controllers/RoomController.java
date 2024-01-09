@@ -22,7 +22,7 @@ public class RoomController {
     private RoomService roomService;
 
     @GetMapping("/public")
-    public List<Room> getPublicRooms() {
+    public List<RoomDTO> getPublicRooms() {
         try {
             return roomService.getPublicRooms();
         } catch(Exception ex) {

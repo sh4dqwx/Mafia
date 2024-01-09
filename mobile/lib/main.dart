@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/Views/GameHistory.dart';
 import 'package:mobile/viewModels/JoinPrivateRoomViewModel.dart';
 import 'package:mobile/viewModels/MenuViewModel.dart';
 import 'package:mobile/viewModels/RoomSettingsViewModel.dart';
@@ -8,6 +9,7 @@ import '../viewModels/RegisterViewModel.dart';
 import 'Views/Login.dart';
 import '../viewModels/PublicRoomsViewModel.dart';
 import 'Views/Register.dart';
+import '../viewModels/GameHistoryViewModel.dart';
 
 void main() {
   runApp(const MyApp());
@@ -25,7 +27,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => MenuViewModel()),
         ChangeNotifierProvider(create: (context) => JoinPrivateRoomViewModel()),
         ChangeNotifierProvider(create: (context) => PublicRoomsViewModel()),
-        ChangeNotifierProvider(create: (context) => RoomSettingsViewModel())
+        ChangeNotifierProvider(create: (context) => RoomSettingsViewModel()),
+        ChangeNotifierProvider(create: (context) => GameHistoryViewModel())
       ],
       child: const MaterialApp(
         title: 'MAFIA+',
