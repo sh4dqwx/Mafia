@@ -1,18 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-class Game {
-  final DateTime date;
-  final bool won; // true - wygrana, false - przegrana
-
-  Game({required this.date, required this.won});
-}
+import '../models/GameResult.dart';
 
 class GameHistoryViewModel extends ChangeNotifier {
  // final GameService _gameService = GameService();
-  List<Game> _gameHistory = [];
+  List<GameResult> _gameHistory = [];
 
-  List<Game> get gameHistory => _gameHistory;
+  List<GameResult> get gameHistory => _gameHistory;
 
   Future<void> fetchGameHistory() async {
     try{
@@ -20,8 +14,8 @@ class GameHistoryViewModel extends ChangeNotifier {
        // List <Game> games = await _gameHistory.getGames();
        // jakiea prkladowe nizej
       _gameHistory = [
-        Game(date: DateTime(2024, 1, 1), won: true),
-        Game(date: DateTime(2024, 1, 5), won: false),
+        GameResult(date: DateTime(2024, 1, 1), won: true),
+        GameResult(date: DateTime(2024, 1, 5), won: false),
       ];
         notifyListeners();
       } catch (e) {
