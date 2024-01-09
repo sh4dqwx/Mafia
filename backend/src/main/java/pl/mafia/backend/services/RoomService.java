@@ -13,6 +13,8 @@ import pl.mafia.backend.repositories.RoomRepository;
 import java.util.List;
 import java.util.Optional;
 
+import static pl.mafia.backend.repositories.specifications.RoomSpecifications.isRoomPublic;
+
 @Component
 public class RoomService {
     @Autowired
@@ -20,9 +22,11 @@ public class RoomService {
     @Autowired
     private RoomRepository roomRepository;
 
-    public List<Room> getPublicRooms() {
-       List<Room> lista = roomRepository.findByIsPublicTrue();
-       return lista;
+    public List<RoomDTO> getPublicRooms() {
+        return roomRepository.findAll(isRoomPublic())
+                .stream()
+                .map(RoomDTO::new)
+                .toList();
     }
 
     @Transactional
@@ -92,7 +96,8 @@ public class RoomService {
         if (room.isEmpty())
             throw new IllegalArgumentException("Room does not exists.");
 
-        //Room.settings = roomSettings;
-        //roomRepository.save(room.get());
+        Room updatedRoom = room.get();
+        updatedRoom.setRoomSettings(roomSettings);
+        roomRepository.save(updatedRoom);
     }
 }
