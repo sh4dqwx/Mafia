@@ -2,10 +2,15 @@ package pl.mafia.backend.services;
 
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import pl.mafia.backend.models.db.Account;
-import pl.mafia.backend.models.dto.AccountDTO;
+import pl.mafia.backend.models.dto.AccountDetails;
 import pl.mafia.backend.repositories.AccountRepository;
 
 import java.util.List;
@@ -15,47 +20,36 @@ import java.util.Optional;
 public class AccountService {
     @Autowired
     private AccountRepository accountRepository;
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    @Autowired
+    private UserDetailsManager userDetailsManager;
 
-    public List<Account> getAllAccounts() { return accountRepository.findAll(); }
+    @Transactional(readOnly = true)
+    public List<AccountDetails> getAllAccounts() {
+        return accountRepository.findAll()
+                .stream()
+                .map(AccountDetails::new)
+                .toList();
+    }
 
-    public Account getAccountById(String id) {
+    @Transactional(readOnly = true)
+    public AccountDetails getAccountById(String id) {
         Optional<Account> account = accountRepository.findById(Long.parseLong(id));
 
         if(account.isEmpty())
             throw new IllegalArgumentException("Account does not exist.");
 
-        return account.get();
+        return new AccountDetails(account.get());
     }
 
-    @Transactional
-    public AccountDTO createAccount(String email, String login, String password) {
-        Optional<Account> accountByLogin = accountRepository.findByLogin(login);
-        Optional<Account> accountByEmail = accountRepository.findByEmail(email);
-
-        if(accountByLogin.isPresent() || accountByEmail.isPresent()) {
-            throw new IllegalArgumentException("Account already exists.");
-        }
-
-        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-        Account account = new Account();
-        account.setEmail(email);
-        account.setLogin(login);
-        account.setPassword(hashedPassword);
-        account.setNickname(login);
-
-        return new AccountDTO(accountRepository.save(account));
+    public void loginToAccount(AccountDetails loginRequest) {
+        Authentication authenticationRequest =
+                UsernamePasswordAuthenticationToken.unauthenticated(loginRequest.getUsername(), loginRequest.getPassword());
+        authenticationManager.authenticate(authenticationRequest);
     }
 
-    public AccountDTO loginToAccount(String login, String password) throws IllegalAccessException {
-        Optional<Account> accountByLogin = accountRepository.findByLogin(login);
-
-        if(accountByLogin.isEmpty())
-            throw new IllegalArgumentException("Account does not exist.");
-
-        if (!BCrypt.checkpw(password, accountByLogin.get().getPassword())) {
-            throw new IllegalAccessException("Wrong password.");
-        }
-
-        return new AccountDTO(accountByLogin.get());
+    public void createAccount(AccountDetails registerRequest) {
+        userDetailsManager.createUser(registerRequest);
     }
 }

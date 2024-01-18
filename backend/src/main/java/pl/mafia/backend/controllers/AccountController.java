@@ -2,11 +2,17 @@ package pl.mafia.backend.controllers;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.server.ResponseStatusException;
 import pl.mafia.backend.models.db.Account;
 import org.springframework.web.bind.annotation.*;
-import pl.mafia.backend.models.dto.AccountDTO;
+import pl.mafia.backend.models.dto.AccountDetails;
 import pl.mafia.backend.services.AccountService;
 
 import java.util.List;
@@ -14,12 +20,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/account")
 public class AccountController {
-
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     @GetMapping()
-    public List<Account> getAllAccounts() {
+    public List<AccountDetails> getAllAccounts() {
         try {
             return accountService.getAllAccounts();
         } catch(Exception ex) {
@@ -28,7 +35,7 @@ public class AccountController {
     }
 
     @GetMapping("/{id}")
-    public Account getAccountById(@PathVariable String id) {
+    public AccountDetails getAccountById(@PathVariable String id) {
         try {
             return accountService.getAccountById(id);
         } catch(IllegalArgumentException ex) {
@@ -40,13 +47,10 @@ public class AccountController {
 
 
     @PostMapping()
-    public AccountDTO createAccount(@RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<Void> createAccount(@RequestBody AccountDetails registerRequest) {
         try {
-            return accountService.createAccount(
-                    registerRequest.getEmail(),
-                    registerRequest.getLogin(),
-                    registerRequest.getPassword()
-            );
+            accountService.createAccount(registerRequest);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch(IllegalArgumentException ex) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage());
         } catch(Exception ex) {
@@ -55,31 +59,16 @@ public class AccountController {
     }
 
     @PostMapping("/login")
-    public AccountDTO loginToAccount(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<Void> loginToAccount(@RequestBody AccountDetails loginRequest) {
         try {
-            return accountService.loginToAccount(
-                    loginRequest.getLogin(),
-                    loginRequest.getPassword()
-            );
+            accountService.loginToAccount(loginRequest);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch(IllegalArgumentException ex) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
-        } catch(IllegalAccessException ex) {
+        } catch(BadCredentialsException ex) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, ex.getMessage());
         } catch(Exception ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
         }
-    }
-
-    @Data
-    static class LoginRequest {
-        private String login;
-        private String password;
-    }
-
-    @Data
-    static class RegisterRequest {
-        private String login;
-        private String password;
-        private String email;
     }
 }

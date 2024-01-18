@@ -3,7 +3,6 @@ package pl.mafia.backend.models.db;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
-
 import java.util.List;
 
 @Entity
@@ -17,7 +16,7 @@ public class Account {
     private Long id;
 
     @Column(unique = true, nullable = false)
-    private String login;
+    private String username;
 
     @ToString.Exclude
     @Column(nullable = false)
@@ -25,9 +24,6 @@ public class Account {
 
     @Column(unique = true, nullable = false)
     private String email;
-
-    @Column(nullable = false)
-    private String nickname;
 
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)

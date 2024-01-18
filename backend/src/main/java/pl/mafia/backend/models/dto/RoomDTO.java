@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 public class RoomDTO {
     @NonNull private Long id;
-    @NonNull private List<AccountDTO> accounts;
+    @NonNull private List<AccountDetails> accounts;
     @NonNull private Long hostId;
     @NonNull private String accessCode;
     @NonNull private RoomSettingsDTO roomSettings;
@@ -19,7 +19,7 @@ public class RoomDTO {
         this.id = room.getId();
         this.accounts = room.getAccounts()
                 .stream()
-                .map(AccountDTO::new)
+                .map(AccountDetails::new)
                 .toList();
         this.hostId = room.getHost().getId();
         this.accessCode = room.getAccessCode();
