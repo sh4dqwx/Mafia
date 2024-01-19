@@ -1,5 +1,7 @@
 package pl.mafia.backend.controllers;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
@@ -45,9 +47,9 @@ public class AccountController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<?> createAccount(@RequestBody AccountDetails registerRequest) {
+    public ResponseEntity<?> register(@RequestBody AccountDetails registerRequest) {
         try {
-            accountService.createAccount(registerRequest);
+            accountService.register(registerRequest);
             return ResponseEntity.noContent().build();
         } catch(IllegalArgumentException ex) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
@@ -57,14 +59,24 @@ public class AccountController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginToAccount(@RequestBody AccountDetails loginRequest) {
+    public ResponseEntity<?> login(@RequestBody AccountDetails loginRequest, HttpServletRequest request, HttpServletResponse response) {
         try {
-            accountService.loginToAccount(loginRequest);
+            accountService.login(loginRequest, request, response);
             return ResponseEntity.noContent().build();
         } catch(IllegalArgumentException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch(BadCredentialsException ex) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
+        } catch(Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+        }
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(Authentication authentication, HttpServletRequest request, HttpServletResponse response) {
+        try {
+            accountService.logout(authentication, request, response);
+            return ResponseEntity.noContent().build();
         } catch(Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }
