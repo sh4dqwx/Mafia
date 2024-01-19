@@ -7,6 +7,7 @@ import pl.mafia.backend.models.db.Account;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 public class AccountDetails implements UserDetails {

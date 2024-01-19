@@ -10,11 +10,6 @@ import java.util.List;
 @Data
 public class Account {
     @Id
-    @ToString.Exclude
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "account_sequence")
-    @SequenceGenerator(name = "account_sequence", sequenceName = "ACCOUNT_SEQ", allocationSize = 1)
-    private Long id;
-
     @Column(unique = true, nullable = false)
     private String username;
 
