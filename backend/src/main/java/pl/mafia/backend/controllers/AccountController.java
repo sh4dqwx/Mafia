@@ -22,53 +22,51 @@ import java.util.List;
 public class AccountController {
     @Autowired
     private AccountService accountService;
-    @Autowired
-    private AuthenticationManager authenticationManager;
 
     @GetMapping()
-    public List<AccountDetails> getAllAccounts() {
+    public ResponseEntity<?> getAllAccounts() {
         try {
-            return accountService.getAllAccounts();
+            return ResponseEntity.ok(accountService.getAllAccounts());
         } catch(Exception ex) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }
     }
 
     @GetMapping("/{id}")
-    public AccountDetails getAccountById(@PathVariable String id) {
+    public ResponseEntity<?> getAccountById(@PathVariable String id) {
         try {
-            return accountService.getAccountById(id);
+            return ResponseEntity.ok(accountService.getAccountById(id));
         } catch(IllegalArgumentException ex) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch(Exception ex) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }
     }
 
 
-    @PostMapping()
-    public ResponseEntity<Void> createAccount(@RequestBody AccountDetails registerRequest) {
+    @PostMapping("/register")
+    public ResponseEntity<?> createAccount(@RequestBody AccountDetails registerRequest) {
         try {
             accountService.createAccount(registerRequest);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return ResponseEntity.noContent().build();
         } catch(IllegalArgumentException ex) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
         } catch(Exception ex) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Void> loginToAccount(@RequestBody AccountDetails loginRequest) {
+    public ResponseEntity<?> loginToAccount(@RequestBody AccountDetails loginRequest) {
         try {
             accountService.loginToAccount(loginRequest);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return ResponseEntity.noContent().build();
         } catch(IllegalArgumentException ex) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch(BadCredentialsException ex) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, ex.getMessage());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
         } catch(Exception ex) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }
     }
 }
