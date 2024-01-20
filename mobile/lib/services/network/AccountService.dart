@@ -1,106 +1,86 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'package:mobile/services/network/AppException.dart';
+import 'package:mobile/services/network/NetworkException.dart';
 import 'package:mobile/models/Account.dart';
 import 'package:mobile/utils/Constants.dart' as Constants;
+import 'package:mobile/utils/NetworkUtils.dart';
 class AccountService {
 
   final String baseUrl = "http://${Constants.baseUrl}";
 
-  Future<Account> getAccount(int accountId) async {
+  Future<Account> getAccount(String username) async {
     try {
       final response = await http.get(
-          Uri.parse("$baseUrl/account/$accountId"));
-      return Account.fromJson(
-          jsonDecode(response.body) as Map<String, dynamic>);
+        Uri.parse("$baseUrl/account/$username")
+      );
+      return handleResponse(response);
     } catch (e) {
       if (e is SocketException) {
-        throw FetchDataException('No Internet Connection');
+        throw FetchDataException(e.message);
       } else {
-        throw e;
+        rethrow;
       }
     }
   }
 
-  Future<dynamic> login(String login, String password) async {
+  Future<void> login(String username, String password) async {
     try {
-      final http.Response response = await http.post(
+      final response = await http.post(
         Uri.parse("$baseUrl/account/login"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode(<String, String>{
-          'login': login,
+          'username': username,
           'password': password
         }),
       );
-
-      if (response.statusCode == 200) {
-        var responseJson = jsonDecode(response.body);
-        return responseJson;
-      } else {
-        throw FetchDataException(
-            'Error occured while communication with server with status code : ${response
-                .statusCode}');
-      }
+      return handleResponse(response);
     } catch (e) {
       if (e is SocketException) {
-        throw FetchDataException('No Internet Connection');
+        throw FetchDataException(e.message);
       } else {
-        throw e;
+        rethrow;
       }
     }
   }
 
-  Future<dynamic> register(String login, String email, String password) async {
+  Future<void> register(String username, String email, String password) async {
     try {
-      final http.Response response = await http.post(
-        Uri.parse("$baseUrl/account"),
+      final response = await http.post(
+        Uri.parse("$baseUrl/account/register"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode(<String, String>{
-          'login': login,
+          'username': username,
+          'password': password,
           'email': email,
-          'password': password
         }),
       );
-      if (response.statusCode == 200) {
-        var responseJson = jsonDecode(response.body);
-        return responseJson;
-      } else {
-        throw FetchDataException(
-            'Error occured while communication with server with status code : ${response
-                .statusCode}');
-      }
+      return handleResponse(response);
     } catch (e) {
        if (e is SocketException) {
-         throw FetchDataException('No Internet Connection');
+         throw FetchDataException(e.message);
        } else {
-         throw e;
+         rethrow;
       }
     }
   }
 
-  dynamic returnResponse(http.Response response) {
-    switch (response.statusCode) {
-      case 200:
-        dynamic responseJson = jsonDecode(response.body);
-        return responseJson;
-      case 400:
-        throw BadRequestException(response.toString());
-      case 401:
-        throw UnauthorisedException('Invalid login credentials');
-      case 403:
-        throw UnauthorisedException(response.body.toString());
-      case 404:
-        throw UnauthorisedException(response.body.toString());
-      case 500:
-      default:
-        throw FetchDataException(
-            'Error occured while communication with server' +
-                ' with status code : ${response.statusCode}');
+  Future<void> logout() async {
+    try {
+      final response = await http.post(
+        Uri.parse("$baseUrl/account/logout")
+      );
+      return handleResponse(response);
+    } catch (e) {
+      if (e is SocketException) {
+        throw FetchDataException(e.message);
+      } else {
+        rethrow;
+      }
     }
   }
 }

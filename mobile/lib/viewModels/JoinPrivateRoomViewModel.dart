@@ -27,20 +27,20 @@ class JoinPrivateRoomViewModel extends ChangeNotifier {
       try {
         //tutaj ma być metoda z servisu, to co poniżej to placeholder żeby nie pluło błędami
        // bool roomIsFound = getRoom(accesCode);
-        Room room = await roomService.getRoom(int.parse(accessCode));
+        Room room = await roomService.joinRoomByAccessCode(accessCode);
         webSocketManager.connect(room.id);
-
+        return true;
         // if (roomIsFound == true)
-        if (room != null) {
-          notifyListeners();
-          return true;
-        }
-
-        else {
-          messageError = "Room not found.";
-          notifyListeners();
-          return false;
-        }
+        // if (room != null) {
+        //   notifyListeners();
+        //   return true;
+        // }
+        //
+        // else {
+        //   messageError = "Room not found.";
+        //   notifyListeners();
+        //   return false;
+        // }
 
       }
       catch (e) {
@@ -51,6 +51,7 @@ class JoinPrivateRoomViewModel extends ChangeNotifier {
     }
     else {
       inputCodeError = "Code is empty.";
+      notifyListeners();
       return false;
     }
   }

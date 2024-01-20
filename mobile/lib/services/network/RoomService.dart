@@ -1,34 +1,19 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'package:mobile/services/network/AppException.dart';
+import 'package:mobile/services/network/NetworkException.dart';
 import 'package:mobile/models/Room.dart';
 import 'package:mobile/utils/Constants.dart' as Constants;
+import 'package:mobile/utils/NetworkUtils.dart';
 import '../../models/RoomSettings.dart';
 
 class RoomService {
 
   final String baseUrl = "http://${Constants.baseUrl}";
 
-  Future<Room> getRoom(int roomId) async {
-    try {
-      final response = await http.get(
-          Uri.parse("$baseUrl/room/$roomId"));
-      return Room.fromJson(
-          jsonDecode(response.body) as Map<String, dynamic>);
-    } catch (e) {
-      if (e is SocketException) {
-        throw FetchDataException('No Internet Connection');
-      } else {
-        throw e;
-      }
-    }
-  }
-
   Future<List<Room>> getPublicRooms() async {
     try {
-      final response = await http.get(
-          Uri.parse("$baseUrl/room/public"));
+      final response = await http.get(Uri.parse("$baseUrl/room/public"));
       if (response.statusCode == 200) {
         List<dynamic> roomsJson = jsonDecode(response.body);
         List<Room> rooms = roomsJson
@@ -42,28 +27,46 @@ class RoomService {
       if (e is SocketException) {
         throw FetchDataException('No Internet Connection');
       } else {
-        throw e;
+        rethrow;
       }
     }
   }
 
-  Future<void> createRoom(Room room) async {
+  Future<Room> joinRoomById(int roomId) async {
     try {
-      room.idHost = 41;
-      final response = await http.post(
-        Uri.parse("$baseUrl/room"),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(room.toJson()),
-      );
-
-      var responseJson = returnResponse(response);
+      final response = await http.post(Uri.parse("$baseUrl/room/$roomId"));
+      return handleResponse(response);
     } catch (e) {
       if (e is SocketException) {
         throw FetchDataException('No Internet Connection');
       } else {
-        throw e;
+        rethrow;
+      }
+    }
+  }
+
+  Future<Room> joinRoomByAccessCode(String accessCode) async {
+    try {
+      final response = await http.post(Uri.parse("$baseUrl/room/code/$accessCode"));
+      return handleResponse(response);
+    } catch (e) {
+      if (e is SocketException) {
+        throw FetchDataException('No Internet Connection');
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  Future<Room> createRoom() async {
+    try {
+      final response = await http.post(Uri.parse("$baseUrl/room"));
+      return handleResponse(response);
+    } catch (e) {
+      if (e is SocketException) {
+        throw FetchDataException('No Internet Connection');
+      } else {
+        rethrow;
       }
     }
   }
@@ -77,32 +80,13 @@ class RoomService {
         },
         body: jsonEncode(roomSettings.toJson()),
       );
+      return handleResponse(response);
     } catch (e) {
       if (e is SocketException) {
         throw FetchDataException('No Internet Connection');
       } else {
-        throw e;
+        rethrow;
       }
-    }
-  }
-
-  dynamic returnResponse(http.Response response) {
-    switch (response.statusCode) {
-      case 200:
-        dynamic responseJson = jsonDecode(response.body);
-        return responseJson;
-      case 400:
-        throw BadRequestException(response.toString());
-      case 401:
-      case 403:
-        throw UnauthorisedException(response.body.toString());
-      case 404:
-        throw UnauthorisedException(response.body.toString());
-      case 500:
-      default:
-        throw FetchDataException(
-            'Error occured while communication with server' +
-                ' with status code : ${response.statusCode}');
     }
   }
 }

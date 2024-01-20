@@ -1,39 +1,43 @@
-class AppException implements Exception {
+class NetworkException implements Exception {
   final _message;
   final _prefix;
 
-  AppException([this._message, this._prefix]);
+  NetworkException([this._message, this._prefix]);
 
   String toString() {
     return "$_prefix$_message";
   }
 }
 
-class FetchDataException extends AppException {
+class FetchDataException extends NetworkException {
   FetchDataException([String? message])
       : super(message, "Error During Communication: ");
 }
 
-class BadRequestException extends AppException {
-  BadRequestException([message]) : super(message, "Invalid (400): ");
+class BadRequestException extends NetworkException {
+  BadRequestException([message]) : super(message, "(400) Invalid: ");
 }
 
-class UnauthorisedException extends AppException {
-  UnauthorisedException([message]) : super(message, "Unauthorised (401): ");
+class UnauthorisedException extends NetworkException {
+  UnauthorisedException([message]) : super(message, "(401) Unauthorised: ");
 }
 
-class ForbiddenException extends AppException {
-  ForbiddenException([message]) : super(message, "Forbidden (403): ");
+class ForbiddenException extends NetworkException {
+  ForbiddenException([message]) : super(message, "(403) Forbidden: ");
 }
 
-class NotFoundException extends AppException {
-  NotFoundException([message]) : super(message, "Not found (404): ");
+class NotFoundException extends NetworkException {
+  NotFoundException([message]) : super(message, "(404) Not found: ");
 }
 
-class InternalServerErrorException extends AppException {
-  InternalServerErrorException([message]) : super(message, "Internal server error (500): ");
+class ConflictException extends NetworkException {
+  ConflictException([message]) : super(message, "(409) Conflict: ");
 }
 
-class InvalidInputException extends AppException {
+class InternalServerErrorException extends NetworkException {
+  InternalServerErrorException([message]) : super(message, "(500) Internal server error: ");
+}
+
+class InvalidInputException extends NetworkException {
   InvalidInputException([String? message]) : super(message, "Invalid Input: ");
 }

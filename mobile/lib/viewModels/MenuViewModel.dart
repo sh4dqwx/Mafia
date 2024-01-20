@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/services/WebSocketManager.dart';
+import '../services/network/AccountService.dart';
 import '../services/network/RoomService.dart';
 import '../models/Room.dart';
 
 class MenuViewModel extends ChangeNotifier {
+  final AccountService _accountService = AccountService();
   final RoomService _roomService = RoomService();
+  final WebSocketManager _webSocketManager = WebSocketManager();
   String _nickname = "Testowy123";
 
   String get nickname => _nickname;
@@ -20,10 +24,8 @@ class MenuViewModel extends ChangeNotifier {
 
   Future<void> createRoom(void Function() onSuccess, void Function() onError) async {
     try {
-      // Tutaj możesz wykonać odpowiednie akcje przed wysłaniem żądania, np. pokazać ładowanie
-      Room room = Room(id: 0, idHost: 41, idGame: 0, accessCode: "ABC123", isPublic: false);
-      await _roomService.createRoom(room);
-
+      Room room = await _roomService.createRoom();
+      _webSocketManager.connect(room.id);
       // Tutaj możesz wykonać odpowiednie akcje po udanym zapytaniu, np. ukryć ładowanie
       // lub zaktualizować stan ViewModel, jeśli to konieczne
       onSuccess.call(); // Wywołaj funkcję onSuccess, jeśli została dostarczona
@@ -46,8 +48,13 @@ class MenuViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void logout() {
-
+  Future<void> logout(void Function() onSuccess, void Function(Exception e) onError) async {
+    try {
+      _accountService.logout();
+      onSuccess.call();
+    } on Exception catch (e) {
+      onError.call(e);
+    }
     notifyListeners();
   }
 }
