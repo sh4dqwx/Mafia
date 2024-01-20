@@ -9,6 +9,7 @@ import pl.mafia.backend.models.dto.RoomDTO;
 import pl.mafia.backend.repositories.AccountRepository;
 import pl.mafia.backend.models.db.RoomSettings;
 import pl.mafia.backend.repositories.RoomRepository;
+import pl.mafia.backend.repositories.RoomSettingsRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +22,8 @@ public class RoomService {
     private AccountRepository accountRepository;
     @Autowired
     private RoomRepository roomRepository;
+    @Autowired
+    private RoomSettingsRepository roomSettingsRepository;
 
     public List<RoomDTO> getPublicRooms() {
         return roomRepository.findAll(isRoomPublic())
@@ -30,12 +33,12 @@ public class RoomService {
     }
 
     @Transactional
-    public RoomDTO joinRoomByAccessCode(String accessCode, String accountId) throws IllegalAccessException {
+    public RoomDTO joinRoomByAccessCode(String accessCode, String username) throws IllegalAccessException {
         Optional<Room> fetchedRoom = roomRepository.findByAccessCode(accessCode);
         if (fetchedRoom.isEmpty())
             throw new IllegalArgumentException("Room does not exists.");
 
-        Optional<Account> fetchedAccount = accountRepository.findById(Long.parseLong(accountId));
+        Optional<Account> fetchedAccount = accountRepository.findByUsername(username);
         if (fetchedAccount.isEmpty())
             throw new IllegalAccessException("Account does not exists.");
 
@@ -51,12 +54,12 @@ public class RoomService {
     }
 
     @Transactional
-    public RoomDTO joinRoomById(String id, String accountId) throws IllegalAccessException {
-        Optional<Room> fetchedRoom = roomRepository.findById(Long.parseLong(id));
+    public RoomDTO joinRoomById(Long id, String username) throws IllegalAccessException {
+        Optional<Room> fetchedRoom = roomRepository.findById(id);
         if (fetchedRoom.isEmpty())
             throw new IllegalArgumentException("Room does not exists.");
 
-        Optional<Account> fetchedAccount = accountRepository.findById(Long.parseLong(accountId));
+        Optional<Account> fetchedAccount = accountRepository.findByUsername(username);
         if (fetchedAccount.isEmpty())
             throw new IllegalAccessException("Account does not exists.");
 
@@ -72,32 +75,50 @@ public class RoomService {
     }
 
     @Transactional
-    public Room createRoom(Room room) {
-        Optional<Room> roomByHost = roomRepository.findByHost(room.getHost());
+    public RoomDTO createRoom(String hostUsername) {
+        Optional<Account> host = accountRepository.findByUsername(hostUsername);
+        if(host.isEmpty())
+            throw new IllegalArgumentException("Account doesn't exists.");
 
+        Optional<Room> roomByHost = roomRepository.findByHost(host.get());
         if (roomByHost.isPresent())
             throw new IllegalArgumentException("Room already exists.");
 
-        Room createRoom = roomRepository.save(room);
+        Room createdRoom = new Room();
+        createdRoom.setHost(host.get());
+        createdRoom.getAccounts().add(host.get());
+        createdRoom.setAccessCode("");
+
+        RoomSettings createdRoomSettings = new RoomSettings();
+        createdRoomSettings.setRoom(createdRoom);
+        createdRoomSettings.setPublic(true);
+        createdRoomSettings.setNumberOfPlayers(10);
+        createdRoomSettings = roomSettingsRepository.save(createdRoomSettings);
+
+        createdRoom.setRoomSettings(createdRoomSettings);
+        createdRoom = roomRepository.save(createdRoom);
 
         int codeLength = 7;
-        String base26String = Long.toString(createRoom.getId(), 26).toUpperCase();
+        String base26String = Long.toString(createdRoom.getId(), 26).toUpperCase();
         base26String = String.format("%" + codeLength + "s", base26String).replace(' ', '0');
         base26String = base26String.substring(Math.max(0, base26String.length() - codeLength));
 
-        createRoom.setAccessCode(base26String);
-        return roomRepository.save(createRoom);
+        createdRoom.setAccessCode(base26String);
+        createdRoom = roomRepository.save(createdRoom);
+
+        return new RoomDTO(createdRoom);
     }
 
     @Transactional
-    public void updateProperties(RoomSettings roomSettings, String roomId) {
-        Optional<Room> room = roomRepository.findById(Long.parseLong(roomId));
+    public RoomDTO updateProperties(RoomSettings roomSettings, Long roomId) {
+        Optional<Room> room = roomRepository.findById(roomId);
 
         if (room.isEmpty())
             throw new IllegalArgumentException("Room does not exists.");
 
         Room updatedRoom = room.get();
         updatedRoom.setRoomSettings(roomSettings);
-        roomRepository.save(updatedRoom);
+
+        return new RoomDTO(roomRepository.save(updatedRoom));
     }
 }

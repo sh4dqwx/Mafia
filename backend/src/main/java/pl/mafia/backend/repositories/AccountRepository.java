@@ -6,8 +6,6 @@ import pl.mafia.backend.models.db.Account;
 import java.util.Optional;
 
 public interface AccountRepository extends JpaRepository<Account, Long> {
-
-    Optional<Account> findById(long id);
     Optional<Account> findByUsername(String username);
     Optional<Account> findByEmail(String email);
 }

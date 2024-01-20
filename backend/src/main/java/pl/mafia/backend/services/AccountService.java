@@ -37,16 +37,8 @@ public class AccountService {
     private SecurityContextLogoutHandler securityContextLogoutHandler;
 
     @Transactional(readOnly = true)
-    public List<AccountDetails> getAllAccounts() {
-        return accountRepository.findAll()
-                .stream()
-                .map(AccountDetails::new)
-                .toList();
-    }
-
-    @Transactional(readOnly = true)
-    public AccountDetails getAccountById(String id) {
-        Optional<Account> account = accountRepository.findById(Long.parseLong(id));
+    public AccountDetails getAccountByUsername(String username) {
+        Optional<Account> account = accountRepository.findByUsername(username);
 
         if(account.isEmpty())
             throw new IllegalArgumentException("Account does not exist.");
@@ -65,8 +57,9 @@ public class AccountService {
         securityContextRepository.saveContext(context, request, response);
     }
 
-    public void register(AccountDetails registerRequest) {
+    public void register(AccountDetails registerRequest, HttpServletRequest request, HttpServletResponse response) {
         userDetailsManager.createUser(registerRequest);
+        login(registerRequest, request, response);
     }
 
     public void logout(Authentication authentication, HttpServletRequest request, HttpServletResponse response) {

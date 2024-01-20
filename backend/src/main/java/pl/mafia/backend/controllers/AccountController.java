@@ -25,19 +25,10 @@ public class AccountController {
     @Autowired
     private AccountService accountService;
 
-    @GetMapping()
-    public ResponseEntity<?> getAllAccounts() {
+    @GetMapping("/{username}")
+    public ResponseEntity<?> getAccountByUsername(@PathVariable String username) {
         try {
-            return ResponseEntity.ok(accountService.getAllAccounts());
-        } catch(Exception ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
-        }
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getAccountById(@PathVariable String id) {
-        try {
-            return ResponseEntity.ok(accountService.getAccountById(id));
+            return ResponseEntity.ok(accountService.getAccountByUsername(username));
         } catch(IllegalArgumentException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch(Exception ex) {
@@ -47,9 +38,9 @@ public class AccountController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody AccountDetails registerRequest) {
+    public ResponseEntity<?> register(@RequestBody AccountDetails registerRequest, HttpServletRequest request, HttpServletResponse response) {
         try {
-            accountService.register(registerRequest);
+            accountService.register(registerRequest, request, response);
             return ResponseEntity.noContent().build();
         } catch(IllegalArgumentException ex) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());

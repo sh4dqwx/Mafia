@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -34,5 +35,5 @@ public class Room {
 
     @ToString.Exclude
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
-    private List<Account> accounts;
+    private List<Account> accounts = new ArrayList<>();
 }
