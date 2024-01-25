@@ -4,16 +4,18 @@ import 'package:http/http.dart' as http;
 import 'package:mobile/services/network/NetworkException.dart';
 import 'package:mobile/models/Room.dart';
 import 'package:mobile/utils/Constants.dart' as Constants;
+import 'package:mobile/utils/CustomHttpClient.dart';
 import 'package:mobile/utils/NetworkUtils.dart';
 import '../../models/RoomSettings.dart';
 
 class RoomService {
 
   final String baseUrl = "http://${Constants.baseUrl}";
+  final CustomHttpClient httpClient = CustomHttpClient();
 
   Future<List<Room>> getPublicRooms() async {
     try {
-      final response = await http.get(Uri.parse("$baseUrl/room/public"));
+      final response = await httpClient.get(Uri.parse("$baseUrl/room/public"));
       if (response.statusCode == 200) {
         List<dynamic> roomsJson = jsonDecode(response.body);
         List<Room> rooms = roomsJson
@@ -34,7 +36,7 @@ class RoomService {
 
   Future<Room> joinRoomById(int roomId) async {
     try {
-      final response = await http.post(Uri.parse("$baseUrl/room/$roomId"));
+      final response = await httpClient.post(Uri.parse("$baseUrl/room/$roomId"));
       return handleResponse(response);
     } catch (e) {
       if (e is SocketException) {
@@ -47,7 +49,7 @@ class RoomService {
 
   Future<Room> joinRoomByAccessCode(String accessCode) async {
     try {
-      final response = await http.post(Uri.parse("$baseUrl/room/code/$accessCode"));
+      final response = await httpClient.post(Uri.parse("$baseUrl/room/code/$accessCode"));
       return handleResponse(response);
     } catch (e) {
       if (e is SocketException) {
@@ -60,8 +62,12 @@ class RoomService {
 
   Future<Room> createRoom() async {
     try {
-      final response = await http.post(Uri.parse("$baseUrl/room"));
-      return handleResponse(response);
+      final response = await httpClient.post(Uri.parse("$baseUrl/room"));
+      if(response.statusCode == 200) {
+        Map<String, dynamic> json = jsonDecode(response.body);
+        Room room = Room.fromJson(json);
+        return room;
+      } else return handleResponse(response);
     } catch (e) {
       if (e is SocketException) {
         throw FetchDataException('No Internet Connection');
@@ -73,11 +79,8 @@ class RoomService {
 
   Future<void> modifyRoomProperties(RoomSettings roomSettings) async {
     try {
-      final response = await http.put(
+      final response = await httpClient.put(
         Uri.parse("$baseUrl/room/properties"),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
         body: jsonEncode(roomSettings.toJson()),
       );
       return handleResponse(response);

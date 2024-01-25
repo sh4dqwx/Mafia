@@ -1,42 +1,38 @@
-import 'Account.dart';
-import 'Game.dart';
+import 'dart:ffi';
+import 'RoomSettings.dart';
 
 class Room {
   final int id;
-  int idHost;
-  final Game game;
+  final List<String> accountUsernames;
+  final String hostUsername;
   final String accessCode;
-  final bool isPublic;
-  final List<Account> accounts;
+  final RoomSettings roomSettings;
 
   Room({
     required this.id,
-    required this.idHost,
-    required this.game,
+    required this.accountUsernames,
+    required this.hostUsername,
     required this.accessCode,
-    required this.isPublic,
-    required this.accounts,
+    required this.roomSettings
   });
 
   factory Room.fromJson(Map<String, dynamic> json) {
     return Room(
       id: json['id'],
-      idHost: json['idHost'],
-      game: Game.fromJson(json['game']),
+      accountUsernames: List<String>.from(json['accountUsernames']),
+      hostUsername: json['hostUsername'],
       accessCode: json['accessCode'],
-      isPublic: json['isPublic'],
-      accounts: (json['accounts'] as List).map((account) => Account.fromJson(account)).toList(),
+      roomSettings: RoomSettings.fromJson(json['roomSettings'])
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'idHost': idHost,
-      'game': game.toJson(),
+      'accountUsernames': accountUsernames,
+      'hostUsername': hostUsername,
       'accessCode': accessCode,
-      'isPublic': isPublic,
-      'accounts': accounts.map((account) => account.toJson()).toList(),
+      'roomSettings': roomSettings.toJson()
     };
   }
 }
