@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import '../Views/RoomSettings.dart';
-import '../models/RoomSettings.dart';
+//brak odpowiedniego viewmodela
+//import '../viewModels/RoomViewModel.dart';
+import 'RoomSettings.dart';
 
 class RoomPage extends StatefulWidget {
-  const RoomPage({super.key});
+  //final RoomViewModel roomViewModel; BRAK VIEWMODELA
+
+  // RoomPage({required this.roomViewModel}); BRAK VIEWMODELA
 
   @override
   RoomPageState createState() => RoomPageState();
@@ -12,11 +15,17 @@ class RoomPage extends StatefulWidget {
 class RoomPageState extends State<RoomPage> {
   String hostNick = '';
   String accessCode = '';
-  bool isPublic = true;
+  List<String> userList = [];
+  bool isPrivate = false;
 
   @override
   void initState() {
     super.initState();
+    // Brak viewmodela
+    /*hostNick = widget.roomViewModel.getHostNick();
+    accessCode = widget.roomViewModel.getAccessCode();
+    userList = widget.roomViewModel.getUserList();
+    isPrivate = widget.roomViewModel.getIsPrivate();*/
   }
 
   @override
@@ -35,6 +44,102 @@ class RoomPageState extends State<RoomPage> {
               child: const Icon(
                 Icons.settings,
                 size: 30,
+              ),
+            ),
+          ),
+        ],
+      ),
+      body: Column(
+        children: [
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(height: 20),
+                Text(
+                  'Players: ${userList.length}',
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    //viewModel.startGame;
+                  },
+                  child: const Text('Start game'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.orange,
+                    foregroundColor: Colors.white,
+                    textStyle: const TextStyle(fontSize: 18),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 10),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                // if (viewModel.isHost)
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RoomSettingsPage(),
+                      ),
+                    );
+                    //viewModel.openGameSettings;
+                  },
+                  child: const Text('Settings'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    foregroundColor: Colors.white,
+                    textStyle: const TextStyle(fontSize: 18),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 10),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'AccesCode: $accessCode',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 20),
+                if (isPrivate)
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Room is PRIVATE 🔐',
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      )
+                    ],
+                  ),
+                if (!isPrivate)
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Room is PUBLIC 🔓',
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                const SizedBox(height: 20),
+              ],
+            ),
+          ),
+          Positioned(
+            top: 20,
+            right: 20,
+            child: GestureDetector(
+              onTap: () {
+                // Otwieranie chatu
+                print('Open chat');
+              },
+              child: const Icon(
+                Icons.chat,
+                size: 40,
+                color: Colors.blue,
               ),
             ),
           ),
@@ -70,95 +175,16 @@ class RoomPageState extends State<RoomPage> {
                 // Obsługa naciśnięcia na gospodarza
               },
             ),
-            // for (String uzytkownik in userList)
-            //   ListTile(
-            //     title: Text(uzytkownik),
-            //     onTap: () {
-            //       // Obsługa naciśnięcia na innych graczy
-            //     },
-            //   ),
+            for (String uzytkownik in userList)
+              ListTile(
+                title: Text(uzytkownik),
+                onTap: () {
+                  // Obsługa naciśnięcia na innych graczy
+                },
+              ),
           ],
         ),
       ),
-      body: Column(
-        children: [
-          // ... existing code ...
-          // Display the updated user count
-          Text(
-            'Players: 5',
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () {
-              //viewModel.startGame;
-            },
-            child: const Text('Start game'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.orange,
-              foregroundColor: Colors.white,
-              textStyle: const TextStyle(fontSize: 18),
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 20, vertical: 10),
-            ),
-          ),
-          const SizedBox(height: 10),
-          // if (viewModel.isHost)
-          ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => RoomSettingsPage(),
-                ),
-              );
-              //viewModel.openGameSettings;
-            },
-            child: const Text('Settings'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue,
-              foregroundColor: Colors.white,
-              textStyle: const TextStyle(fontSize: 18),
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 20, vertical: 10),
-            ),
-          ),
-          const SizedBox(height: 20),
-          Text(
-            'AccesCode: $accessCode',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 20),
-          if (!isPublic)
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Room is PRIVATE 🔐',
-                  style: TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.bold),
-                )
-              ],
-            ),
-          if (isPublic)
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Room is PUBLIC 🔓',
-                  style: TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.bold),
-                )
-              ]
-            )
-          // ... existing code ...
-          // Display the user list in the Drawer
-          // ... existing code ...
-        ],
-      )
     );
   }
 }
