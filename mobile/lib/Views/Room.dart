@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-//brak odpowiedniego viewmodela
-//import '../viewModels/RoomViewModel.dart';
-import 'RoomSettings.dart';
+import '../Views/RoomSettings.dart';
+import '../models/RoomSettings.dart';
+import '../viewModels/RoomViewModel.dart';
 
 class RoomPage extends StatefulWidget {
-  //final RoomViewModel roomViewModel; BRAK VIEWMODELA
+  const RoomPage({super.key})
 
- // RoomPage({required this.roomViewModel}); BRAK VIEWMODELA
+  //final RoomViewModel roomViewModel;
+  //final RoomSettings roomSettings;
 
   @override
   RoomPageState createState() => RoomPageState();
@@ -15,17 +16,14 @@ class RoomPage extends StatefulWidget {
 class RoomPageState extends State<RoomPage> {
   String hostNick = '';
   String accessCode = '';
-  List<String> userList = [];
-  bool isPrivate = false;
+  bool isPublic = true;
 
   @override
   void initState() {
     super.initState();
-    // Brak viewmodela
-    /*hostNick = widget.roomViewModel.getHostNick();
-    accessCode = widget.roomViewModel.getAccessCode();
-    userList = widget.roomViewModel.getUserList();
-    isPrivate = widget.roomViewModel.getIsPrivate();*/
+    // hostNick = widget.roomViewModel.hostNick;
+    // accessCode = widget.roomViewModel.accessCode;
+    // isPublic = widget.roomSettings.isPublic;
   }
 
   @override
@@ -49,141 +47,78 @@ class RoomPageState extends State<RoomPage> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+      body: StreamBuilder<List<String>>(
+        stream: widget.roomViewModel.userListStream,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            List<String> userList = snapshot.data!;
+
+            return Column(
               children: [
-                const SizedBox(height: 20),
+                // ... existing code ...
+
+                // Display the updated user count
                 Text(
                   'Players: ${userList.length}',
                   style: const TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    //viewModel.startGame;
-                  },
-                  child: const Text('Start game'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.orange,
-                    foregroundColor: Colors.white,
-                    textStyle: const TextStyle(fontSize: 18),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 10),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 10),
-               // if (viewModel.isHost)
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => RoomSettingsPage(),
-                      ),
-                    );
-                    //viewModel.openGameSettings;
-                  },
-                  child: const Text('Settings'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    foregroundColor: Colors.white,
-                    textStyle: const TextStyle(fontSize: 18),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 10),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Text(
-                  'AccesCode: $accessCode',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 20),
-                if (isPrivate)
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+
+                // ... existing code ...
+
+                // Display the user list in the Drawer
+                Drawer(
+                  child: ListView(
+                    padding: EdgeInsets.zero,
                     children: [
-                      Text(
-                        'Room is PRIVATE 🔐',
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      )
+                      const DrawerHeader(
+                        decoration: BoxDecoration(
+                          color: Colors.blue,
+                        ),
+                        child: Text(
+                          'Players in room',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 24,
+                          ),
+                        ),
+                      ),
+                      ListTile(
+                        title: Row(
+                          children: [
+                            Text(hostNick),
+                            const Text(
+                              '👑', // Emotikona korony
+                              style: TextStyle(fontSize: 20),
+                            )
+                          ],
+                        ),
+                        onTap: () {
+                          // Obsługa naciśnięcia na gospodarza
+                        },
+                      ),
+                      for (String uzytkownik in userList)
+                        ListTile(
+                          title: Text(uzytkownik),
+                          onTap: () {
+                            // Obsługa naciśnięcia na innych graczy
+                          },
+                        ),
                     ],
                   ),
-                if (!isPrivate)
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Room is PUBLIC 🔓',
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                const SizedBox(height: 20),
+                ),
+
+                // ... existing code ...
               ],
-            ),
-          ),
-          Positioned(
-            top: 20,
-            right: 20,
-            child: GestureDetector(
-              onTap: () {
-                // Otwieranie chatu
-                print('Open chat');
-              },
-              child: const Icon(
-                Icons.chat,
-                size: 40,
-                color: Colors.blue,
-              ),
-            ),
-          ),
-        ],
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
-              child: Text(
-                'Players in room',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                ),
-              ),
-            ),
-            ListTile(
-              title: Row(
-                children: [
-                  Text(hostNick),
-                  const Text(
-                    '👑', // Emotikona korony
-                    style: TextStyle(fontSize: 20),
-                  )
-                ],
-              ),
-              onTap: () {
-                // Obsługa naciśnięcia na gospodarza
-              },
-            ),
-            for (String uzytkownik in userList)
-              ListTile(
-                title: Text(uzytkownik),
-                onTap: () {
-                  // Obsługa naciśnięcia na innych graczy
-                },
-              ),
-          ],
-        ),
+            );
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else {
+            return CircularProgressIndicator(); // Loading indicator
+          }
+        },
       ),
     );
   }

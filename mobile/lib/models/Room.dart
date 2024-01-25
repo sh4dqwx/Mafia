@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'RoomSettings.dart';
 
 class Room {
@@ -15,6 +14,7 @@ class Room {
     required this.accessCode,
     required this.roomSettings
   });
+
 
   factory Room.fromJson(Map<String, dynamic> json) {
     return Room(

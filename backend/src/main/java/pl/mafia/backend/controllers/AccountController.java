@@ -18,6 +18,7 @@ import pl.mafia.backend.models.dto.AccountDetails;
 import pl.mafia.backend.services.AccountService;
 
 import java.util.List;
+import java.util.Locale;
 
 @RestController
 @RequestMapping("/account")
@@ -71,5 +72,35 @@ public class AccountController {
         } catch(Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }
+    }
+
+    @PutMapping("/nickname")
+    public ResponseEntity<?> changeUsername(@PathVariable Long accountId, @RequestBody String username) {
+        try {
+            return ResponseEntity.ok(accountService.changeNickname(accountId, username));
+        } catch(IllegalArgumentException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        } catch(Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+        }
+    }
+
+    @PutMapping("/password")
+    public ResponseEntity<?> changePassword(@PathVariable Long accountId, @RequestBody PasswordRequest passwordRequest) {
+        try {
+            return ResponseEntity.ok(accountService.changePassword(accountId, passwordRequest.previousPassword, passwordRequest.newPassword));
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        } catch (BadCredentialsException ex) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+        }
+    }
+
+    @Data
+    static class PasswordRequest {
+        private String previousPassword;
+        private String newPassword;
     }
 }

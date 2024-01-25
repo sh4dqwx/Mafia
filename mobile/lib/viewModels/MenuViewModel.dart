@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/services/WebSocketManager.dart';
-import '../services/network/AccountService.dart';
+import 'package:mobile/services/network/AccountService.dart';
 import '../services/network/RoomService.dart';
 import '../models/Room.dart';
 

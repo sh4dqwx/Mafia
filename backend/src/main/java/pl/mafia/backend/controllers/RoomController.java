@@ -9,10 +9,10 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.server.ResponseStatusException;
-import pl.mafia.backend.models.db.RoomSettings;
 import pl.mafia.backend.models.db.Room;  // Update import to Room
 import org.springframework.web.bind.annotation.*;
 import pl.mafia.backend.models.dto.AccountDetails;
+import pl.mafia.backend.models.db.RoomSettings;
 import pl.mafia.backend.models.dto.RoomDTO;
 import pl.mafia.backend.services.RoomService;
 

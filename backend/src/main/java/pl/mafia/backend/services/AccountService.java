@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -64,5 +65,35 @@ public class AccountService {
 
     public void logout(Authentication authentication, HttpServletRequest request, HttpServletResponse response) {
         securityContextLogoutHandler.logout(request, response, authentication);
+    }
+
+    @Transactional
+    public AccountDetails changeNickname(Long accountId, String username) {
+        Optional<Account> accountById = accountRepository.findById(accountId);
+
+        if(accountById.isEmpty())
+            throw new IllegalArgumentException("Account does not exist.");
+
+        Account account = accountById.get();
+        account.setUsername(username);
+        Account accountAfterUpdate = accountRepository.save(account);
+        return new AccountDetails(accountAfterUpdate);
+    }
+
+    @Transactional
+    public AccountDetails changePassword(Long accountId, String previousPassword, String newPassword) {
+        Optional<Account> accountById = accountRepository.findById(accountId);
+
+        if(accountById.isEmpty())
+            throw new IllegalArgumentException("Account does not exist.");
+
+        Account account = accountById.get();
+        if (!BCrypt.checkpw(previousPassword, account.getPassword()))
+            throw new BadCredentialsException("Wrong password.");
+
+        String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+        account.setPassword(hashedPassword);
+        Account accountAfterUpdate = accountRepository.save(account);
+        return new AccountDetails(accountAfterUpdate);
     }
 }
