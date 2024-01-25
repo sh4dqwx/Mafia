@@ -6,10 +6,7 @@ import org.springframework.messaging.simp.SimpAttributesContextHolder;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.user.SimpSession;
 import org.springframework.stereotype.Component;
-import org.springframework.web.socket.messaging.SessionConnectEvent;
-import org.springframework.web.socket.messaging.SessionDisconnectEvent;
-import org.springframework.web.socket.messaging.SessionSubscribeEvent;
-import org.springframework.web.socket.messaging.SessionUnsubscribeEvent;
+import org.springframework.web.socket.messaging.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,6 +24,11 @@ public class WebSocketListener {
     @EventListener
     public void handleConnectEvent(SessionConnectEvent event) {
         System.out.println("New connection: " + SimpAttributesContextHolder.currentAttributes().getSessionId());
+    }
+
+    @EventListener
+    public void handleConnectedEvent(SessionConnectedEvent event) {
+        System.out.println("Conntected: " + SimpAttributesContextHolder.currentAttributes().getSessionId());
     }
 
     @EventListener

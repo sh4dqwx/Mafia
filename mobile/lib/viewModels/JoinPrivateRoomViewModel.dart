@@ -26,7 +26,7 @@ class JoinPrivateRoomViewModel extends ChangeNotifier {
     if (accessCode.isNotEmpty) {
       try {
         Room room = await _roomService.joinRoomByAccessCode(accessCode);
-        _webSocketClient.connect(room.id);
+        await _webSocketClient.connect(room.id);
         onSuccess.call();
       }
       catch (e) {

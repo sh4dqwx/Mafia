@@ -47,9 +47,14 @@ class WebSocketClient {
     }
 
     this.roomId = roomId;
+    Completer<void> connectionCompleter = Completer<void>();
+
     StompConfig config = StompConfig(
         url: "$baseUrl/ws",
-        onConnect: _onConnect,
+        onConnect: (StompFrame frame) {
+          _onConnect(frame);
+          connectionCompleter.complete();
+        },
         onDisconnect: (StompFrame frame) {
           print("disconnected");
         },
@@ -60,6 +65,8 @@ class WebSocketClient {
     );
     _stompClient = StompClient(config: config);
     _stompClient?.activate();
+
+    return connectionCompleter.future;
   }
 
   void dispose() {

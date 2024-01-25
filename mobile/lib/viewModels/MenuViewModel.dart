@@ -25,7 +25,7 @@ class MenuViewModel extends ChangeNotifier {
   Future<void> createRoom(void Function() onSuccess, void Function() onError) async {
     try {
       Room room = await _roomService.createRoom();
-      _webSocketClient.connect(room.id);
+      await _webSocketClient.connect(room.id);
       // Tutaj możesz wykonać odpowiednie akcje po udanym zapytaniu, np. ukryć ładowanie
       // lub zaktualizować stan ViewModel, jeśli to konieczne
       onSuccess.call(); // Wywołaj funkcję onSuccess, jeśli została dostarczona
