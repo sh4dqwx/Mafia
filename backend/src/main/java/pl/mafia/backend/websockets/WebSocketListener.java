@@ -1,4 +1,4 @@
-package pl.mafia.backend;
+package pl.mafia.backend.websockets;
 
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.EventListener;

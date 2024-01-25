@@ -35,7 +35,8 @@ public class SecurityConfig {
                         .requestMatchers(
                                 new AntPathRequestMatcher("/account/login"),
                                 new AntPathRequestMatcher("/account/register"),
-                                new AntPathRequestMatcher("/h2-console/**")
+                                new AntPathRequestMatcher("/h2-console/**"),
+                                new AntPathRequestMatcher("/ws")
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

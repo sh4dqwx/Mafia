@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import pl.mafia.backend.WebSocketListener;
+import pl.mafia.backend.websockets.WebSocketListener;
 import pl.mafia.backend.models.dto.GameStartDTO;
 
 import java.util.Random;
