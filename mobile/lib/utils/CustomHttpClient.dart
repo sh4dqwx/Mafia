@@ -21,6 +21,10 @@ class CustomHttpClient {
     headers['cookie'] = (index == -1) ? newSessionId : newSessionId.substring(0, index);
   }
 
+  String? getSessionId() {
+    return headers['cookie'];
+  }
+
   Future<http.Response> get(Uri url) async {
     http.Response response = await http.get(url, headers: headers);
     _updateSessionId(response);

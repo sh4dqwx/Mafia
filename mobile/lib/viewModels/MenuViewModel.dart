@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/services/WebSocketManager.dart';
+import 'package:mobile/services/WebSocketClient.dart';
 import 'package:mobile/services/network/AccountService.dart';
 import '../services/network/RoomService.dart';
 import '../models/Room.dart';
@@ -7,7 +7,7 @@ import '../models/Room.dart';
 class MenuViewModel extends ChangeNotifier {
   final AccountService _accountService = AccountService();
   final RoomService _roomService = RoomService();
-  final WebSocketManager _webSocketManager = WebSocketManager();
+  final WebSocketClient _webSocketClient = WebSocketClient();
   String _nickname = "Testowy123";
 
   String get nickname => _nickname;
@@ -25,7 +25,7 @@ class MenuViewModel extends ChangeNotifier {
   Future<void> createRoom(void Function() onSuccess, void Function() onError) async {
     try {
       Room room = await _roomService.createRoom();
-      _webSocketManager.connect(room.id);
+      _webSocketClient.connect(room.id);
       // Tutaj możesz wykonać odpowiednie akcje po udanym zapytaniu, np. ukryć ładowanie
       // lub zaktualizować stan ViewModel, jeśli to konieczne
       onSuccess.call(); // Wywołaj funkcję onSuccess, jeśli została dostarczona

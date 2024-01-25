@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import '../Views/RoomSettings.dart';
 import '../models/RoomSettings.dart';
-import '../viewModels/RoomViewModel.dart';
 
 class RoomPage extends StatefulWidget {
-  const RoomPage({super.key})
-
-  //final RoomViewModel roomViewModel;
-  //final RoomSettings roomSettings;
+  const RoomPage({super.key});
 
   @override
   RoomPageState createState() => RoomPageState();
@@ -21,9 +17,6 @@ class RoomPageState extends State<RoomPage> {
   @override
   void initState() {
     super.initState();
-    // hostNick = widget.roomViewModel.hostNick;
-    // accessCode = widget.roomViewModel.accessCode;
-    // isPublic = widget.roomSettings.isPublic;
   }
 
   @override
@@ -47,79 +40,62 @@ class RoomPageState extends State<RoomPage> {
           ),
         ],
       ),
-      body: StreamBuilder<List<String>>(
-        stream: widget.roomViewModel.userListStream,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            List<String> userList = snapshot.data!;
-
-            return Column(
+      body: Column(
+        children: [
+          // ... existing code ...
+          // Display the updated user count
+          Text(
+            'Players: 5',
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          // ... existing code ...
+          // Display the user list in the Drawer
+          Drawer(
+            child: ListView(
+              padding: EdgeInsets.zero,
               children: [
-                // ... existing code ...
-
-                // Display the updated user count
-                Text(
-                  'Players: ${userList.length}',
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+                const DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                  ),
+                  child: Text(
+                    'Players in room',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                    ),
                   ),
                 ),
-
-                // ... existing code ...
-
-                // Display the user list in the Drawer
-                Drawer(
-                  child: ListView(
-                    padding: EdgeInsets.zero,
+                ListTile(
+                  title: Row(
                     children: [
-                      const DrawerHeader(
-                        decoration: BoxDecoration(
-                          color: Colors.blue,
-                        ),
-                        child: Text(
-                          'Players in room',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
-                          ),
-                        ),
-                      ),
-                      ListTile(
-                        title: Row(
-                          children: [
-                            Text(hostNick),
-                            const Text(
-                              '👑', // Emotikona korony
-                              style: TextStyle(fontSize: 20),
-                            )
-                          ],
-                        ),
-                        onTap: () {
-                          // Obsługa naciśnięcia na gospodarza
-                        },
-                      ),
-                      for (String uzytkownik in userList)
-                        ListTile(
-                          title: Text(uzytkownik),
-                          onTap: () {
-                            // Obsługa naciśnięcia na innych graczy
-                          },
-                        ),
+                      Text(hostNick),
+                      const Text(
+                        '👑', // Emotikona korony
+                        style: TextStyle(fontSize: 20),
+                      )
                     ],
                   ),
+                  onTap: () {
+                    // Obsługa naciśnięcia na gospodarza
+                  },
                 ),
-
-                // ... existing code ...
+                // for (String uzytkownik in userList)
+                //   ListTile(
+                //     title: Text(uzytkownik),
+                //     onTap: () {
+                //       // Obsługa naciśnięcia na innych graczy
+                //     },
+                //   ),
               ],
-            );
-          } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          } else {
-            return CircularProgressIndicator(); // Loading indicator
-          }
-        },
-      ),
+            ),
+          ),
+          // ... existing code ...
+        ],
+      )
     );
   }
 }

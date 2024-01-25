@@ -37,7 +37,11 @@ class RoomService {
   Future<Room> joinRoomById(int roomId) async {
     try {
       final response = await httpClient.post(Uri.parse("$baseUrl/room/$roomId"));
-      return handleResponse(response);
+      if(response.statusCode == 200) {
+        Map<String, dynamic> json = jsonDecode(response.body);
+        Room room = Room.fromJson(json);
+        return room;
+      } else return handleResponse(response);
     } catch (e) {
       if (e is SocketException) {
         throw FetchDataException('No Internet Connection');
@@ -50,7 +54,11 @@ class RoomService {
   Future<Room> joinRoomByAccessCode(String accessCode) async {
     try {
       final response = await httpClient.post(Uri.parse("$baseUrl/room/code/$accessCode"));
-      return handleResponse(response);
+      if(response.statusCode == 200) {
+        Map<String, dynamic> json = jsonDecode(response.body);
+        Room room = Room.fromJson(json);
+        return room;
+      } else return handleResponse(response);
     } catch (e) {
       if (e is SocketException) {
         throw FetchDataException('No Internet Connection');

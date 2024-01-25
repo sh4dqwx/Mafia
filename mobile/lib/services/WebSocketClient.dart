@@ -8,24 +8,31 @@ import 'package:stomp_dart_client/stomp_frame.dart';
 import 'package:mobile/utils/Constants.dart' as Constants;
 import '../models/Room.dart';
 
-class WebSocketManager {
-  static WebSocketManager? _instance;
-  late StompClient _stompClient;
+class WebSocketClient {
+  static WebSocketClient? _instance;
+  StompClient? _stompClient;
   late int roomId;
+  late String username;
+  late String password;
 
   final String baseUrl = "ws://${Constants.baseUrl}";
 
   final _roomUpdate = StreamController<Room>.broadcast();
   Stream<Room> get roomUpdate => _roomUpdate.stream;
 
-  WebSocketManager._internal();
-  factory WebSocketManager() {
-    _instance ??= WebSocketManager._internal();
+  WebSocketClient._internal();
+  factory WebSocketClient() {
+    _instance ??= WebSocketClient._internal();
     return _instance!;
   }
 
+  void setCredentials(String username, String password) {
+    this.username = username;
+    this.password = password;
+  }
+
   void _onConnect(StompFrame frame) {
-    _stompClient.subscribe(
+    _stompClient?.subscribe(
       destination: "/topic/room/$roomId",
       callback: (frame) {
         Map<String, dynamic> roomJson = jsonDecode(frame.body!);
@@ -35,20 +42,28 @@ class WebSocketManager {
   }
 
   Future<void> connect(int roomId) async {
+    if (_stompClient != null && _stompClient!.connected) {
+      return;
+    }
+
     this.roomId = roomId;
     StompConfig config = StompConfig(
-      url: "$baseUrl/ws",
-      onConnect: _onConnect,
-      stompConnectHeaders: {}
+        url: "$baseUrl/ws",
+        onConnect: _onConnect,
+        onDisconnect: (StompFrame frame) {
+          print("disconnected");
+        },
+        stompConnectHeaders: {
+          'login': username,
+          'passcode': password
+        }
     );
-    String? sessionId = httpClient.getSessionId();
-    if(sessionId != null) config.stompConnectHeaders?.addAll({ 'sessionId': sessionId });
     _stompClient = StompClient(config: config);
-    _stompClient.activate();
+    _stompClient?.activate();
   }
 
   void dispose() {
     _roomUpdate.close();
-    _stompClient.deactivate();
+    _stompClient?.deactivate();
   }
 }
