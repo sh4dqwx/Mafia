@@ -1,38 +1,29 @@
 import 'package:flutter/cupertino.dart';
 
 class Account {
-  int id;
-  String login;
+  String username;
   String password;
   String email;
-  String nickname;
-
 
   Account({
-    required this.id,
-    required this.login,
+    required this.username,
     required this.password,
     required this.email,
-    required this.nickname
   });
 
   factory Account.fromJson(Map<String, dynamic> json) {
     return Account(
-        id: json['id'],
-        login: json['login'],
-        password: json['password'],
-        email: json['email'],
-        nickname: json['nickname']
+      username: json['username'],
+      password: json['password'],
+      email: json['email'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
-      'login': login,
+      'username': username,
       'password': password,
-      'email': email,
-      'nickname': nickname
+      'email': email
     };
   }
 }

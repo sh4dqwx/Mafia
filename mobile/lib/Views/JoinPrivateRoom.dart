@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../viewModels/JoinPrivateRoomViewModel.dart';
+import 'Room.dart';
 
 class JoinPrivateRoomPage extends StatefulWidget {
   TextEditingController lobbyCodeController = TextEditingController();
@@ -40,14 +41,22 @@ class _JoinPrivateRoomState extends State<JoinPrivateRoomPage> {
               onPressed: () async {
                 String accessCode = widget.lobbyCodeController.text;
                 final viewModel = context.read<JoinPrivateRoomViewModel>();
-                await viewModel.joinRoom(accessCode);
-                if (viewModel.messageError.isNotEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(viewModel.messageError),
-                    ),
-                  );
-                }
+                await viewModel.joinRoom(accessCode,
+                    () {
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => RoomPage())
+                      );
+                    },
+                    () {
+                      if (viewModel.messageError.isNotEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(viewModel.messageError),
+                          ),
+                        );
+                      }
+                    }
+                );
               },
               child: Text('Join'),
             ),

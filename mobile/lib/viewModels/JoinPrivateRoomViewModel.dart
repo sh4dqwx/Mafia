@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/services/WebSocketManager.dart';
+import 'package:mobile/services/WebSocketClient.dart';
 import '../services/network/RoomService.dart';
 import '../models/Room.dart';
 
@@ -12,46 +12,33 @@ class JoinPrivateRoomViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  final RoomService roomService = RoomService();
-  final WebSocketManager webSocketManager = WebSocketManager();
+  final RoomService _roomService = RoomService();
+  final WebSocketClient _webSocketClient = WebSocketClient();
 
   String inputCodeError = "";
   String messageError = "";
 
-  Future<bool> joinRoom(String accessCode) async {
+  Future<void> joinRoom(String accessCode, void Function() onSuccess, void Function() onError) async {
     _setLoading(true);
     inputCodeError = "";
     messageError = "";
 
     if (accessCode.isNotEmpty) {
       try {
-        //tutaj ma być metoda z servisu, to co poniżej to placeholder żeby nie pluło błędami
-       // bool roomIsFound = getRoom(accesCode);
-        Room room = await roomService.getRoom(int.parse(accessCode));
-        webSocketManager.connect(room.id);
-
-        // if (roomIsFound == true)
-        if (room != null) {
-          notifyListeners();
-          return true;
-        }
-
-        else {
-          messageError = "Room not found.";
-          notifyListeners();
-          return false;
-        }
-
+        Room room = await _roomService.joinRoomByAccessCode(accessCode);
+        await _webSocketClient.connect(room.id);
+        onSuccess.call();
       }
       catch (e) {
         messageError = "Wrong code";
         notifyListeners();
-        return false;
+        onError.call();
       }
     }
     else {
       inputCodeError = "Code is empty.";
-      return false;
+      notifyListeners();
+      onError.call();
     }
   }
 }

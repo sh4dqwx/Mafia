@@ -70,22 +70,16 @@ class MenuPageState extends State<MenuPage> {
                 ),
                 const SizedBox(height: 20.0),
                 ElevatedButton(
-                  onPressed: () async {
-                    await MenuViewModel().createRoom(
-                          () {
-                        // onSuccess - Tutaj możesz umieścić kod nawigacji po udanym zapytaniu
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => RoomPage(),
-                          ),
-                        );
-                      },
-                          () {
-                        // onError - Tutaj możesz umieścić kod obsługi błędu
-                      },
+                  onPressed: () {
+                    context.read<MenuViewModel>().createRoom(
+                        () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) => RoomPage())
+                          );
+                        },
+                        () { print("Error"); }
                     );
                   },
-
                   style: ElevatedButton.styleFrom(
                     minimumSize: const Size(double.infinity, 60),
                     textStyle: const TextStyle(fontSize: 32.0),
@@ -117,7 +111,10 @@ class MenuPageState extends State<MenuPage> {
                 const SizedBox(height: 20.0),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    context.read<MenuViewModel>().logout(
+                        () { Navigator.pop(context); },
+                        (Exception e) { print("Logout error: $e"); }
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     minimumSize: const Size(double.infinity, 60),

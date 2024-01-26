@@ -18,7 +18,7 @@ class _GameHistoryPageState extends State<GameHistoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    List<Game> gameHistory = context.watch<GameHistoryViewModel>().gameHistory;
+    //List<Game> gameHistory = context.watch<GameHistoryViewModel>().gameHistory;
 
     return Scaffold(
       appBar: AppBar(
@@ -37,11 +37,11 @@ class _GameHistoryPageState extends State<GameHistoryPage> {
               ),
             ),
             const SizedBox(height: 25.0),
-            for (Game game in gameHistory)
-              ListTile(
-                title: Text('Game - ${game.date.toString()}'),
-                subtitle: Text(game.won ? 'Won' : 'Lost'),
-              ),
+            // for (Game game in gameHistory)
+            //   ListTile(
+            //     title: Text('Game - ${game.date.toString()}'),
+            //     subtitle: Text(game.won ? 'Won' : 'Lost'),
+            //   ),
           ],
         ),
       ),
