@@ -72,9 +72,9 @@ class MenuPageState extends State<MenuPage> {
                 ElevatedButton(
                   onPressed: () {
                     context.read<MenuViewModel>().createRoom(
-                        () {
+                        (room) {
                           Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => RoomPage())
+                            MaterialPageRoute(builder: (context) => RoomPage(room))
                           );
                         },
                         () { print("Error"); }

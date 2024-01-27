@@ -1,31 +1,29 @@
 import 'package:flutter/material.dart';
-//brak odpowiedniego viewmodela
-//import '../viewModels/RoomViewModel.dart';
+import 'package:provider/provider.dart';
+import '../models/Room.dart';
 import 'RoomSettings.dart';
+import '../viewModels/RoomViewModel.dart';
 
 class RoomPage extends StatefulWidget {
-  //final RoomViewModel roomViewModel; BRAK VIEWMODELA
+  final Room room;
 
-  // RoomPage({required this.roomViewModel}); BRAK VIEWMODELA
+  RoomPage(this.room);
 
   @override
   RoomPageState createState() => RoomPageState();
 }
 
 class RoomPageState extends State<RoomPage> {
-  String hostNick = '';
-  String accessCode = '';
-  List<String> userList = [];
-  bool isPrivate = false;
 
   @override
   void initState() {
     super.initState();
-    // Brak viewmodela
-    /*hostNick = widget.roomViewModel.getHostNick();
-    accessCode = widget.roomViewModel.getAccessCode();
-    userList = widget.roomViewModel.getUserList();
-    isPrivate = widget.roomViewModel.getIsPrivate();*/
+  }
+  @override
+  void didChangeDependencies()
+  {
+    super.didChangeDependencies();
+    context.read<RoomViewModel>().setRoom(widget.room);
   }
 
   @override
@@ -57,26 +55,40 @@ class RoomPageState extends State<RoomPage> {
               children: [
                 const SizedBox(height: 20),
                 Text(
-                  'Players: ${userList.length}',
+                  'Players: ${context.watch<RoomViewModel>().room?.accountUsernames.length}',
                   style: const TextStyle(
                       fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    //viewModel.startGame;
-                  },
-                  child: const Text('Start game'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.orange,
-                    foregroundColor: Colors.white,
-                    textStyle: const TextStyle(fontSize: 18),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 10),
+                if (context.watch<RoomViewModel>().isHost)
+                  ElevatedButton(
+                    onPressed: () {
+                      context.read<RoomViewModel>().startGame(
+                          (){
+
+                          },
+                          (){
+                            if (context.read<RoomViewModel>().messageError.isNotEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(context.watch<RoomViewModel>().messageError),
+                                ),
+                              );
+                            }
+                          }
+                      );
+                    },
+                    child: const Text('Start game'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.orange,
+                      foregroundColor: Colors.white,
+                      textStyle: const TextStyle(fontSize: 18),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
+                    ),
                   ),
-                ),
                 const SizedBox(height: 10),
-                // if (viewModel.isHost)
+                if (context.watch<RoomViewModel>().isHost)
                 ElevatedButton(
                   onPressed: () {
                     Navigator.push(
@@ -85,7 +97,6 @@ class RoomPageState extends State<RoomPage> {
                         builder: (context) => RoomSettingsPage(),
                       ),
                     );
-                    //viewModel.openGameSettings;
                   },
                   child: const Text('Settings'),
                   style: ElevatedButton.styleFrom(
@@ -98,11 +109,11 @@ class RoomPageState extends State<RoomPage> {
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  'AccesCode: $accessCode',
+                  'AccesCode: ${context.read<RoomViewModel>().room?.accessCode}',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 20),
-                if (isPrivate)
+                if (context.read<RoomViewModel>().room?.roomSettings.isPublic == false)
                   const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -113,7 +124,7 @@ class RoomPageState extends State<RoomPage> {
                       )
                     ],
                   ),
-                if (!isPrivate)
+                if (context.read<RoomViewModel>().room?.roomSettings.isPublic == true)
                   const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -164,7 +175,7 @@ class RoomPageState extends State<RoomPage> {
             ListTile(
               title: Row(
                 children: [
-                  Text(hostNick),
+                  Text(context.watch<RoomViewModel>().room!.hostUsername),
                   const Text(
                     '👑', // Emotikona korony
                     style: TextStyle(fontSize: 20),
@@ -175,7 +186,7 @@ class RoomPageState extends State<RoomPage> {
                 // Obsługa naciśnięcia na gospodarza
               },
             ),
-            for (String uzytkownik in userList)
+            for (String uzytkownik in context.watch<RoomViewModel>().room!.accountUsernames)
               ListTile(
                 title: Text(uzytkownik),
                 onTap: () {
