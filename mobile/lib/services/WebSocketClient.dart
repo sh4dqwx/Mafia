@@ -33,7 +33,7 @@ class WebSocketClient {
 
   void _onConnect(StompFrame frame) {
     _stompClient?.subscribe(
-      destination: "/topic/room/$roomId",
+      destination: "/topic/$roomId/room",
       callback: (frame) {
         Map<String, dynamic> roomJson = jsonDecode(frame.body!);
         _roomUpdate.add(Room.fromJson(roomJson));
