@@ -40,7 +40,7 @@ public class RoomController {
         try {
             String username = accountDetails.getUsername();
             RoomDTO roomDTO = roomService.joinRoomById(Long.parseLong(id), username);
-            messagingTemplate.convertAndSend("/topic/room/" + id, roomDTO);
+            messagingTemplate.convertAndSend("/topic/" + id + "/room", roomDTO);
             return ResponseEntity.ok(roomDTO);
         } catch(IllegalArgumentException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
@@ -56,7 +56,7 @@ public class RoomController {
         try {
             String username = accountDetails.getUsername();
             RoomDTO roomDTO = roomService.joinRoomByAccessCode(accessCode, username);
-            messagingTemplate.convertAndSend("/topic/room/" + roomDTO.getId(), roomDTO);
+            messagingTemplate.convertAndSend("/topic/" + roomDTO.getId() + "/room", roomDTO);
             return ResponseEntity.ok(roomDTO);
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
@@ -83,7 +83,7 @@ public class RoomController {
     public ResponseEntity<?> updateProperties(@PathVariable String roomId, @RequestBody RoomSettings roomSettings) {
         try {
             RoomDTO roomDTO = roomService.updateProperties(roomSettings, Long.parseLong(roomId));
-            messagingTemplate.convertAndSend("/topic/room/" + roomId, roomDTO);
+            messagingTemplate.convertAndSend("/topic/" + roomId + "/room", roomDTO);
             return ResponseEntity.noContent().build();
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());

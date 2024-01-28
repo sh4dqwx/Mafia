@@ -18,7 +18,7 @@ class JoinPrivateRoomViewModel extends ChangeNotifier {
   String inputCodeError = "";
   String messageError = "";
 
-  Future<void> joinRoom(String accessCode, void Function() onSuccess, void Function() onError) async {
+  Future<void> joinRoom(String accessCode, void Function(Room room) onSuccess, void Function() onError) async {
     _setLoading(true);
     inputCodeError = "";
     messageError = "";
@@ -27,7 +27,7 @@ class JoinPrivateRoomViewModel extends ChangeNotifier {
       try {
         Room room = await _roomService.joinRoomByAccessCode(accessCode);
         await _webSocketClient.connect(room.id);
-        onSuccess.call();
+        onSuccess.call(room);
       }
       catch (e) {
         messageError = "Wrong code";

@@ -87,6 +87,8 @@ public class RoomService {
             throw new IllegalArgumentException("Room already exists.");
 
         Room createdRoom = new Room();
+        Account updatedHost = host.get();
+
         createdRoom.setHost(host.get());
         createdRoom.getAccounts().add(host.get());
         createdRoom.setAccessCode("");
@@ -99,6 +101,9 @@ public class RoomService {
 
         createdRoom.setRoomSettings(createdRoomSettings);
         createdRoom = roomRepository.save(createdRoom);
+
+        updatedHost.setRoom(createdRoom);
+        accountRepository.save(updatedHost);
 
         int codeLength = 7;
         String base26String = Long.toString(createdRoom.getId(), 26).toUpperCase();
