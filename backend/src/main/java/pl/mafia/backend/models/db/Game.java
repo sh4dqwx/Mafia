@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.ToString;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -22,9 +23,9 @@ public class Game {
 
     @ToString.Exclude
     @ManyToMany(mappedBy = "games")
-    private List<Account> accounts;
+    private List<Account> accounts = new ArrayList<>();
 
     @ToString.Exclude
     @OneToMany(mappedBy = "game")
-    private List<Round> rounds;
+    private List<Round> rounds = new ArrayList<>();
 }

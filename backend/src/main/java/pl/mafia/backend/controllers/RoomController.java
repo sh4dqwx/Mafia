@@ -68,9 +68,9 @@ public class RoomController {
     }
 
     @PostMapping()
-    public ResponseEntity<?> createRoom() {
+    public ResponseEntity<?> createRoom(@AuthenticationPrincipal AccountDetails accountDetails) {
         try {
-            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            String username = accountDetails.getUsername();
             return ResponseEntity.ok(roomService.createRoom(username));
         } catch(IllegalArgumentException ex) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
