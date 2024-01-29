@@ -1,5 +1,6 @@
 package pl.mafia.backend.websockets;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpAttributesContextHolder;
@@ -7,7 +8,10 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.user.SimpSession;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.*;
+import pl.mafia.backend.models.dto.AccountDetails;
+import pl.mafia.backend.services.RoomService;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +19,15 @@ import java.util.Map;
 
 @Component
 public class WebSocketListener {
-    private final Map<String, List<String>> activeSubscriptions;
+    @Autowired
+    private RoomService roomService;
+
+    private final Map<Long, List<String>> activeSubscriptions;
+
+    private Long getRoomId(String destination) throws NumberFormatException {
+        String[] destinationParts = destination.split("/");
+        return Long.valueOf(destinationParts[2]);
+    }
 
     public WebSocketListener() {
         activeSubscriptions = new HashMap<>();
@@ -33,7 +45,14 @@ public class WebSocketListener {
 
     @EventListener
     public void handleDisconnectEvent(SessionDisconnectEvent event) {
-        System.out.println("Disconnected: " + SimpAttributesContextHolder.currentAttributes().getSessionId());
+        if(event.getUser() == null) return;
+
+        try {
+            roomService.leaveRoom(event.getUser().getName());
+            System.out.println("Disconnected: " + SimpAttributesContextHolder.currentAttributes().getSessionId());
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     @EventListener
@@ -41,10 +60,19 @@ public class WebSocketListener {
         if(event.getUser() == null) return;
 
         String destination = (String)event.getMessage().getHeaders().get("simpDestination");
-        if(!activeSubscriptions.containsKey(destination)) activeSubscriptions.put(destination, new ArrayList<>());
-        activeSubscriptions.get(destination).add(event.getUser().getName());
+        if(destination == null) return;
 
-        System.out.println("Subscribed: " + event.getMessage().getHeaders().get("simpDestination"));
+        try {
+            Long roomId = getRoomId(destination);
+            if(activeSubscriptions.get(roomId).contains(event.getUser().getName())) return;
+
+            if(!activeSubscriptions.containsKey(roomId)) activeSubscriptions.put(roomId, new ArrayList<>());
+            activeSubscriptions.get(roomId).add(event.getUser().getName());
+
+            System.out.println("Subscribed: " + roomId);
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     @EventListener
@@ -52,10 +80,24 @@ public class WebSocketListener {
         if(event.getUser() == null) return;
 
         String destination = (String)event.getMessage().getHeaders().get("simpDestination");
-        activeSubscriptions.get(destination).remove(event.getUser().getName());
+        if(destination == null) return;
 
-        System.out.println("Unsubscribed: " + event.getMessage().getHeaders().get("simpDestination"));
+        try {
+            Long roomId = getRoomId(destination);
+            if(!activeSubscriptions.containsKey(roomId)) return;
+            if(!activeSubscriptions.get(roomId).contains(event.getUser().getName())) return;
+
+            activeSubscriptions.get(roomId).remove(event.getUser().getName());
+            if(activeSubscriptions.get(roomId).size() == 0) activeSubscriptions.remove(roomId);
+
+            System.out.println("Unsubscribed: " + roomId);
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
-    public List<String> getSubscriptions(String destination) { return activeSubscriptions.get(destination); }
+    public List<String> getSubscriptions(String destination) {
+        Long roomId = getRoomId(destination);
+        return activeSubscriptions.get(roomId);
+    }
 }

@@ -3,6 +3,8 @@ package pl.mafia.backend.models.db;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -28,21 +30,21 @@ public class Account {
     @ToString.Exclude
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "GameAccount", joinColumns = @JoinColumn(name = "id_account"), inverseJoinColumns = @JoinColumn(name = "id_game"))
-    private List<Game> games;
+    private List<Game> games = new ArrayList<>();
 
     @ToString.Exclude
     @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
-    private List<RoundMiniGame> roundMiniGames;
+    private List<RoundMiniGame> roundMiniGames = new ArrayList<>();
 
     @ToString.Exclude
     @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
-    private List<Voting> votings;
+    private List<Voting> votings = new ArrayList<>();
 
     @ToString.Exclude
     @OneToMany(mappedBy = "voter", fetch = FetchType.LAZY)
-    private List<Vote> votesAsVoter;
+    private List<Vote> votesAsVoter = new ArrayList<>();
 
     @ToString.Exclude
     @OneToMany(mappedBy = "voted", fetch = FetchType.LAZY)
-    private List<Vote> votesAsVoted;
+    private List<Vote> votesAsVoted = new ArrayList<>();
 }
