@@ -5,5 +5,6 @@ import lombok.NonNull;
 
 @Data
 public class GameStartDTO {
+    @NonNull Long id;
     @NonNull String role;
 }
