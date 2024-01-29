@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -43,5 +44,5 @@ public class Round {
 
     @ToString.Exclude
     @OneToMany(mappedBy = "round")
-    private List<RoundMiniGame> roundMiniGames;
+    private List<RoundMiniGame> roundMiniGames = new ArrayList<>();
 }
