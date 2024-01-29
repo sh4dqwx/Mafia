@@ -29,23 +29,6 @@ class RoomViewModel extends ChangeNotifier{
     notifyListeners();
   }
 
-  // String getHostNick() {
-  //   return _room.hostUsername;
-  // }
-  //
-  // String getAccessCode() {
-  //   return _room.accessCode;
-  // }
-  //
-  // List<String> getUserList() {
-  //   return _room.accountUsernames;
-  // }
-  //
-  // bool getIsPublic() {
-  //   return _room.roomSettings.isPublic;
-  // }
-
-
   Future<void> startGame(void Function() onSuccess, void Function() onError) async {
     try {
       await gameService.startGame();
@@ -64,8 +47,7 @@ class RoomViewModel extends ChangeNotifier{
   }
 
   void connectWebSocket() {
-    webSocketClient.roomUpdate.listen((room) {
-      setRoom(room);
-    });
+    webSocketClient.roomUpdate.listen((room) { setRoom(room); });
+    webSocketClient.gameStartUpdate.listen((gameStart) { print(gameStart.role); });
   }
 }

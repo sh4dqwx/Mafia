@@ -6,6 +6,7 @@ import 'package:stomp_dart_client/stomp.dart';
 import 'package:stomp_dart_client/stomp_config.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
 import 'package:mobile/utils/Constants.dart' as Constants;
+import '../models/GameStart.dart';
 import '../models/Room.dart';
 
 class WebSocketClient {
@@ -19,6 +20,9 @@ class WebSocketClient {
 
   final _roomUpdate = StreamController<Room>.broadcast();
   Stream<Room> get roomUpdate => _roomUpdate.stream;
+
+  final _gameStartUpdate = StreamController<GameStart>.broadcast();
+  Stream<GameStart> get gameStartUpdate => _gameStartUpdate.stream;
 
   WebSocketClient._internal();
   factory WebSocketClient() {
@@ -38,6 +42,13 @@ class WebSocketClient {
         Map<String, dynamic> roomJson = jsonDecode(frame.body!);
         _roomUpdate.add(Room.fromJson(roomJson));
       }
+    );
+    _stompClient?.subscribe(
+        destination: "/topic/$roomId/game",
+        callback: (frame) {
+          Map<String, dynamic> gameStartJson = jsonDecode(frame.body!);
+          _gameStartUpdate.add(GameStart.fromJson(gameStartJson));
+        }
     );
   }
 

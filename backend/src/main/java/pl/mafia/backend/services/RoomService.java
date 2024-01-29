@@ -77,6 +77,15 @@ public class RoomService {
     }
 
     @Transactional
+    public void leaveRoom(String username) throws IllegalAccessException {
+        Optional<Account> fetchedAccount = accountRepository.findByUsername(username);
+        if(fetchedAccount.isEmpty())
+            throw new IllegalAccessException("Account does not exists.");
+
+        Account updatedAccount = fetchedAccount.get();
+    }
+
+    @Transactional
     public RoomDTO createRoom(String hostUsername) {
         Optional<Account> host = accountRepository.findByUsername(hostUsername);
         if(host.isEmpty())
