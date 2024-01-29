@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:html';
 import 'dart:io';
 
@@ -13,11 +14,28 @@ class GameService {
   final WebSocketClient webSocketClient = WebSocketClient();
 
 
-  Future<void> startGame(int roomId) async
-  {
+  Future<void> startGame(int roomId) async {
     try {
       final response = await httpClient.post(
           Uri.parse("$baseUrl/game/start/${roomId}"));
+      return handleResponse(response);
+    } catch (e) {
+      if (e is SocketException) {
+        throw FetchDataException('No Internet Connection');
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  Future<void> addVote (int gameId, int votingId, String votedName) async {
+    try {
+      final response = await httpClient.post(
+        Uri.parse("$baseUrl/game/$gameId/voting/$votingId/vote"),
+        body: jsonEncode(<String, String>{
+          'voted': votedName,
+        }),
+      );
       return handleResponse(response);
     } catch (e) {
       if (e is SocketException) {
