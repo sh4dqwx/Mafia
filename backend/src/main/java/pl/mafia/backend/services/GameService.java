@@ -62,7 +62,10 @@ public class GameService {
 
         String destination = "/topic/" + roomId + "/game";
         for(String user : webSocketListener.getSubscriptions(destination)) {
-            GameStartDTO gameStartDTO = new GameStartDTO(getRandomRole());
+            GameStartDTO gameStartDTO = new GameStartDTO(
+                    createdGame.getId(),
+                    getRandomRole()
+            );
             simpMessagingTemplate.convertAndSendToUser(user, destination, gameStartDTO);
         }
     }
