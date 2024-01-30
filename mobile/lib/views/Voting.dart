@@ -2,11 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../viewModels/VotingViewModel.dart';
 
-class VotingView extends StatelessWidget {
+class VotingPage extends StatefulWidget {
+  @override
+  _VotingPageState createState() => _VotingPageState();
+}
+
+class _VotingPageState extends State<VotingPage> {
+  late VotingViewModel viewModel;
+
+  @override
+  void initState() {
+    super.initState();
+    viewModel = VotingViewModel();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => VotingViewModel(),
+      create: (context) => viewModel,
       child: Scaffold(
         appBar: AppBar(
           title: Text('Głosowanie'),
@@ -16,14 +29,15 @@ class VotingView extends StatelessWidget {
     );
   }
 }
+
 class VotingBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<VotingViewModel>(
       builder: (context, viewModel, child) {
         List<Player> players = viewModel.getPlayers();
-        Map<int, String> roles = viewModel.getRoles();
-        Map<int, int> votesCount = viewModel.getVotesCount();
+        Map<String, String> roles = viewModel.getRoles();
+        Map<String, int> votesCount = viewModel.getVotesCount();
 
         return Padding(
           padding: const EdgeInsets.all(16.0),
@@ -34,8 +48,8 @@ class VotingBody extends StatelessWidget {
               for (Player player in players)
                 PlayerButton(
                   player: player,
-                  onPressed: () => vote(context, viewModel, player.id),
-                  votesCount: votesCount[player.id] ?? 0,
+                  onPressed: () => vote(context, viewModel, player.nickname),
+                  votesCount: votesCount[player.nickname] ?? 0,
                 ),
             ],
           ),
@@ -44,8 +58,8 @@ class VotingBody extends StatelessWidget {
     );
   }
 
-  void vote(BuildContext context, VotingViewModel viewModel, int playerId) {
-    viewModel.vote(playerId);
+  void vote(BuildContext context, VotingViewModel viewModel, String playerNickname) {
+    viewModel.vote(playerNickname);
   }
 }
 

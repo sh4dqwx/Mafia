@@ -1,52 +1,53 @@
 import 'package:flutter/material.dart';
+
 class VotingViewModel extends ChangeNotifier {
   late List<Player> _players;
-  late Map<int, String> _roles;
-  late Map<int, int> _votesCount;
+  late Map<String, String> _roles; // Change key type to String
+  late Map<String, int> _votesCount; // Change key type to String
 
   VotingViewModel() {
     //pobieranie graczy, tymczasowo utworzono kilku
     _players = [
-      Player(id: 1, nickname: 'Gracz 1', canVote: true),
-      Player(id: 2, nickname: 'Gracz 2', canVote: true),
-      Player(id: 3, nickname: 'Gracz 3', canVote: true),
+      Player(nickname: 'Gracz 1', canVote: true),
+      Player(nickname: 'Gracz 2', canVote: true),
+      Player(nickname: 'Gracz 3', canVote: true),
     ];
 
     _roles = {
-      1: 'miasto',
-      2: 'mafia',
-      3: 'miasto',
+      'Gracz 1': 'miasto',
+      'Gracz 2': 'mafia',
+      'Gracz 3': 'miasto',
     };
 
-    _votesCount = Map<int, int>.fromIterable(_players, key: (player) => player.id, value: (player) => 0);
+    _votesCount = Map<String, int>.fromIterable(_players, key: (player) => player.nickname, value: (player) => 0);
   }
 
   List<Player> getPlayers() {
     return _players;
   }
 
-  Map<int, String> getRoles() {
+  Map<String, String> getRoles() {
     return _roles;
   }
 
-  Map<int, int> getVotesCount() {
+  Map<String, int> getVotesCount() {
     return _votesCount;
   }
 
-  void vote(int playerId) {
-    Player? player = _players.firstWhere((p) => p.id == playerId, orElse: () => Player(id: -1, nickname: '', canVote: false));
+  void vote(String playerNickname) {
+    Player? player = _players.firstWhere((p) => p.nickname == playerNickname, orElse: () => Player(nickname: '', canVote: false));
 
     if (player?.canVote ?? false) {
-      print('Głos oddany na gracza o ID: $playerId');
-      _votesCount[playerId] = (_votesCount[playerId] ?? 0) + 1;
+      print('Głos oddany na gracza: $playerNickname');
+      _votesCount[playerNickname] = (_votesCount[playerNickname] ?? 0) + 1;
       notifyListeners();
     } else {
-      print('Nie można głosować na ${player?.nickname} (${player?.id})');
+      print('Nie można głosować na $playerNickname');
     }
   }
 
-  int getVotesForPlayer(int playerId) {
-    return _votesCount[playerId] ?? 0;
+  int getVotesForPlayer(String playerNickname) {
+    return _votesCount[playerNickname] ?? 0;
   }
 
   //tutaj metoda do wyniku glosowania
@@ -55,7 +56,7 @@ class VotingViewModel extends ChangeNotifier {
     Player? playerWithMostVotes;
 
     for (Player player in _players) {
-      int votes = _votesCount[player.id] ?? 0;
+      int votes = _votesCount[player.nickname] ?? 0; // Change key to player.nickname
       if (votes > maxVotes) {
         maxVotes = votes;
         playerWithMostVotes = player;
@@ -67,9 +68,8 @@ class VotingViewModel extends ChangeNotifier {
 }
 
 class Player {
-  final int id;
   final String nickname;
   final bool canVote;
 
-  Player({required this.id, required this.nickname, required this.canVote});
+  Player({required this.nickname, required this.canVote});
 }
