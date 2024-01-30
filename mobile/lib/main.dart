@@ -11,6 +11,7 @@ import 'Views/Login.dart';
 import '../viewModels/PublicRoomsViewModel.dart';
 import 'Views/Register.dart';
 import '../viewModels/GameHistoryViewModel.dart';
+import '../viewModels/VotingViewModel.dart';
 
 void main() {
   runApp(const MyApp());
@@ -30,12 +31,13 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => PublicRoomsViewModel()),
         ChangeNotifierProvider(create: (context) => RoomSettingsViewModel()),
         ChangeNotifierProvider(create: (context) => GameHistoryViewModel()),
-        ChangeNotifierProvider(create: (context)=> RoomViewModel())
+        ChangeNotifierProvider(create: (context) => RoomViewModel()),
+        ChangeNotifierProvider(create: (context) => VotingViewModel())
       ],
       child: const MaterialApp(
         title: 'MAFIA+',
         home: LoginPage(),
-      )
+      ),
     );
   }
 }

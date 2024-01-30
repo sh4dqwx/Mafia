@@ -19,11 +19,16 @@ class RoomPageState extends State<RoomPage> {
   void initState() {
     super.initState();
   }
+
   @override
   void didChangeDependencies()
   {
     super.didChangeDependencies();
-    context.read<RoomViewModel>().setRoom(widget.room);
+    final RoomViewModel viewModel = context.read<RoomViewModel>();
+    if(viewModel.room == null) {
+      viewModel.setRoom(widget.room);
+      viewModel.connectWebSocket();
+    }
   }
 
   @override

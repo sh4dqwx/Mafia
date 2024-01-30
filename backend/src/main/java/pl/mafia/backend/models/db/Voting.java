@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -23,5 +24,5 @@ public class Voting {
 
     @ToString.Exclude
     @OneToMany(mappedBy = "voting")
-    private List<Vote> votes;
+    private List<Vote> votes = new ArrayList<>();
 }

@@ -77,6 +77,15 @@ public class RoomService {
     }
 
     @Transactional
+    public void leaveRoom(String username) throws IllegalAccessException {
+        Optional<Account> fetchedAccount = accountRepository.findByUsername(username);
+        if(fetchedAccount.isEmpty())
+            throw new IllegalAccessException("Account does not exists.");
+
+        Account updatedAccount = fetchedAccount.get();
+    }
+
+    @Transactional
     public RoomDTO createRoom(String hostUsername) {
         Optional<Account> host = accountRepository.findByUsername(hostUsername);
         if(host.isEmpty())
@@ -87,6 +96,8 @@ public class RoomService {
             throw new IllegalArgumentException("Room already exists.");
 
         Room createdRoom = new Room();
+        Account updatedHost = host.get();
+
         createdRoom.setHost(host.get());
         createdRoom.getAccounts().add(host.get());
         createdRoom.setAccessCode("");
@@ -99,6 +110,9 @@ public class RoomService {
 
         createdRoom.setRoomSettings(createdRoomSettings);
         createdRoom = roomRepository.save(createdRoom);
+
+        updatedHost.setRoom(createdRoom);
+        accountRepository.save(updatedHost);
 
         int codeLength = 7;
         String base26String = Long.toString(createdRoom.getId(), 26).toUpperCase();
