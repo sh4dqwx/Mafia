@@ -29,9 +29,9 @@ class RoomViewModel extends ChangeNotifier{
     notifyListeners();
   }
 
-  Future<void> startGame(void Function() onSuccess, void Function() onError) async {
+  Future<void> startGame(int roomId, void Function() onSuccess, void Function() onError) async {
     try {
-      await gameService.startGame();
+      await gameService.startGame(roomId);
       onSuccess.call();
     }
     catch(e)

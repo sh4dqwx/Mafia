@@ -68,8 +68,13 @@ class RoomPageState extends State<RoomPage> {
                 if (context.watch<RoomViewModel>().isHost)
                   ElevatedButton(
                     onPressed: () {
+                      int roomId = context.read<RoomViewModel>().room?.id ?? 0;
                       context.read<RoomViewModel>().startGame(
+                        roomId,
                           (){
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) => UserRolePage(roomId: roomId))
+                          );
 
                           },
                           (){
