@@ -68,7 +68,7 @@ class RoomPageState extends State<RoomPage> {
                         roomId,
                           (){
                           Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => Game(roomId: roomId))
+                            MaterialPageRoute(builder: (context) => UserRolePage(roomId: roomId))
                           );
 
                           },
