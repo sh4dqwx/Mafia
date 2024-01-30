@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../viewModels/WinnerRoleViewModel.dart';
 
 class WinnerPage extends StatefulWidget {
   @override
@@ -13,7 +16,8 @@ class _WinnerPageState extends State<WinnerPage> {
     return Container(
       alignment: Alignment.center,
       child: Text(
-        'Winner: $_winner',
+        'Your role is: ${_winner}',
+            // '${context.watch<WinnerRoleViewModel>().userRole}',
         style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
       ),
     );

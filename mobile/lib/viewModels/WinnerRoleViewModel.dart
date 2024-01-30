@@ -5,13 +5,15 @@ import '../models/Room.dart';
 import '../services/WebSocketClient.dart';
 
 class WinnerRoleViewModel extends ChangeNotifier{
-  final WebSocketClient webSocketClient = WebSocketClient();
-  String role = "City";
+  String _userRole = '';
+  WebSocketClient webSocketClient = WebSocketClient();
 
-
-  void connectWebSocket() {
-    webSocketClient.roomUpdate.listen((room) {
-
+  WinnerRoleViewModel() {
+    webSocketClient.gameStartUpdate.listen((gameStart) {
+      _userRole = gameStart.role;
+      notifyListeners(); // Notify listeners when the role is updated
     });
   }
+
+  String get userRole => _userRole;
 }
