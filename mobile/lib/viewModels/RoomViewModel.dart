@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/services/network/GameService.dart';
+import 'package:mobile/services/network/RoomService.dart';
 
 import '../models/Room.dart';
 import '../models/RoomSettings.dart';
@@ -9,6 +10,7 @@ class RoomViewModel extends ChangeNotifier{
   final WebSocketClient webSocketClient = WebSocketClient();
   Room? _room;
   bool _isHost = false;
+  final RoomService roomService = RoomService();
   final GameService gameService = GameService();
   String messageError = "";
 
@@ -42,12 +44,25 @@ class RoomViewModel extends ChangeNotifier{
     }
   }
 
+  Future<void> leaveRoom(void Function() onSuccess, void Function() onError) async {
+    try {
+      await roomService.leaveRoom();
+      onSuccess.call();
+    } catch(e) {
+      messageError = "Leaving room error";
+      notifyListeners();
+      onError.call();
+    }
+  }
+
   void openGameSettings() {
     // Implement the logic for opening game settings
   }
 
   void connectWebSocket() {
     webSocketClient.roomUpdate.listen((room) { setRoom(room); });
-    webSocketClient.gameStartUpdate.listen((gameStart) { print(gameStart.role); });
+    webSocketClient.gameStartUpdate.listen((gameStart) {
+      print(gameStart.role);
+    });
   }
 }

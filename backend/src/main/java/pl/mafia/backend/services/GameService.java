@@ -61,7 +61,7 @@ public class GameService {
         room = roomRepository.save(room);
 
         String destination = "/topic/" + roomId + "/game";
-        for(String user : webSocketListener.getSubscriptions(destination)) {
+        for(String user : webSocketListener.getSubscriptions(roomId)) {
             GameStartDTO gameStartDTO = new GameStartDTO(
                     createdGame.getId(),
                     getRandomRole()

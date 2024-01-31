@@ -67,6 +67,21 @@ public class RoomController {
         }
     }
 
+    @PostMapping("/leave")
+    public ResponseEntity<?> leaveRoom(@AuthenticationPrincipal AccountDetails accountDetails) {
+        try {
+            String username = accountDetails.getUsername();
+            roomService.leaveRoom(username);
+            return ResponseEntity.noContent().build();
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        } catch (IllegalAccessException ex) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+        }
+    }
+
     @PostMapping()
     public ResponseEntity<?> createRoom(@AuthenticationPrincipal AccountDetails accountDetails) {
         try {

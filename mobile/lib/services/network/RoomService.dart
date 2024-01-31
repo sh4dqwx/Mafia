@@ -68,6 +68,19 @@ class RoomService {
     }
   }
 
+  Future<void> leaveRoom() async {
+    try {
+      final response = await httpClient.post(Uri.parse("$baseUrl/room/leave"));
+      return handleResponse(response);
+    } catch(e) {
+      if(e is SocketException) {
+        throw FetchDataException('No Internet Connection');
+      } else {
+        rethrow;
+      }
+    }
+  }
+  
   Future<Room> createRoom() async {
     try {
       final response = await httpClient.post(Uri.parse("$baseUrl/room"));

@@ -64,9 +64,8 @@ public class WebSocketListener {
 
         try {
             Long roomId = getRoomId(destination);
-            if(activeSubscriptions.get(roomId).contains(event.getUser().getName())) return;
-
             if(!activeSubscriptions.containsKey(roomId)) activeSubscriptions.put(roomId, new ArrayList<>());
+            if(activeSubscriptions.get(roomId).contains(event.getUser().getName())) return;
             activeSubscriptions.get(roomId).add(event.getUser().getName());
 
             System.out.println("Subscribed: " + roomId);
@@ -96,8 +95,7 @@ public class WebSocketListener {
         }
     }
 
-    public List<String> getSubscriptions(String destination) {
-        Long roomId = getRoomId(destination);
+    public List<String> getSubscriptions(Long roomId) {
         return activeSubscriptions.get(roomId);
     }
 }

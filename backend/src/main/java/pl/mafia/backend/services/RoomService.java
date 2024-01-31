@@ -1,6 +1,7 @@
 package pl.mafia.backend.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.user.SimpUser;
 import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.stereotype.Component;
@@ -26,6 +27,8 @@ public class RoomService {
     private RoomRepository roomRepository;
     @Autowired
     private RoomSettingsRepository roomSettingsRepository;
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
     public List<RoomDTO> getPublicRooms() {
         return roomRepository.findAll(isRoomPublic())
@@ -83,6 +86,28 @@ public class RoomService {
             throw new IllegalAccessException("Account does not exists.");
 
         Account updatedAccount = fetchedAccount.get();
+        if(updatedAccount.getRoom() == null)
+            throw new IllegalAccessException("Account is not in any room.");
+
+        Room room = updatedAccount.getRoom();
+        if(room.getAccounts().size() == 1) {
+            updatedAccount.setRoom(null);
+            roomSettingsRepository.delete(room.getRoomSettings());
+            roomRepository.delete(room);
+            accountRepository.save(updatedAccount);
+            return;
+        }
+
+        updatedAccount.setRoom(null);
+        room.getAccounts().remove(updatedAccount);
+        if(room.getHost().equals(updatedAccount)) {
+            room.setHost(room.getAccounts().get(0));
+        }
+        roomRepository.save(room);
+        accountRepository.save(updatedAccount);
+
+        RoomDTO roomDTO = new RoomDTO(room);
+        messagingTemplate.convertAndSend("/topic/" + roomDTO.getId() + "/room", roomDTO);
     }
 
     @Transactional
