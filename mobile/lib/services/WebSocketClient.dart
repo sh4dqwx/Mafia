@@ -18,10 +18,10 @@ class WebSocketClient {
 
   final String baseUrl = "ws://${Constants.baseUrl}";
 
-  final _roomUpdate = StreamController<Room>.broadcast();
+  final _roomUpdate = StreamController<Room>();
   Stream<Room> get roomUpdate => _roomUpdate.stream;
 
-  final _gameStartUpdate = StreamController<GameStart>.broadcast();
+  final _gameStartUpdate = StreamController<GameStart>();
   Stream<GameStart> get gameStartUpdate => _gameStartUpdate.stream;
 
   WebSocketClient._internal();
@@ -44,7 +44,7 @@ class WebSocketClient {
       }
     );
     _stompClient?.subscribe(
-        destination: "/topic/$roomId/game",
+        destination: "/user/queue/game-start",
         callback: (frame) {
           Map<String, dynamic> gameStartJson = jsonDecode(frame.body!);
           _gameStartUpdate.add(GameStart.fromJson(gameStartJson));

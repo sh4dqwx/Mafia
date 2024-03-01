@@ -60,7 +60,7 @@ public class GameService {
         room.setGame(createdGame);
         room = roomRepository.save(room);
 
-        String destination = "/topic/" + roomId + "/game";
+        String destination = "/queue/game-start";
         for(String user : webSocketListener.getSubscriptions(roomId)) {
             GameStartDTO gameStartDTO = new GameStartDTO(
                     createdGame.getId(),
