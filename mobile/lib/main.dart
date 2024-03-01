@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/Views/GameHistory.dart';
+import 'package:mobile/views/GameHistory.dart';
 import 'package:mobile/viewModels/JoinPrivateRoomViewModel.dart';
 import 'package:mobile/viewModels/MenuViewModel.dart';
 import 'package:mobile/viewModels/RoomSettingsViewModel.dart';
 import 'package:mobile/viewModels/RoomViewModel.dart';
 import 'package:provider/provider.dart';
-import '../viewModels/LoginViewModel.dart';
-import '../viewModels/RegisterViewModel.dart';
-import 'Views/Login.dart';
-import '../viewModels/PublicRoomsViewModel.dart';
-import 'Views/Register.dart';
-import '../viewModels/GameHistoryViewModel.dart';
-import '../viewModels/VotingViewModel.dart';
+import 'package:mobile/viewModels/LoginViewModel.dart';
+import 'package:mobile/viewModels/RegisterViewModel.dart';
+import 'package:mobile/views/Login.dart';
+import 'package:mobile/viewModels/PublicRoomsViewModel.dart';
+import 'package:mobile/views/Register.dart';
+import 'package:mobile/viewModels/GameHistoryViewModel.dart';
+import 'package:mobile/viewModels/VotingViewModel.dart';
 
 void main() {
   runApp(const MyApp());

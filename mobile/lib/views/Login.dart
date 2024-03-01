@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:mobile/Views/Register.dart';
 import 'package:provider/provider.dart';
-import '../viewModels/LoginViewModel.dart';
+import 'package:mobile/viewModels/LoginViewModel.dart';
 import 'Menu.dart';
+import 'Register.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});

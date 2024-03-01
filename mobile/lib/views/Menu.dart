@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/Views/Login.dart';
-import 'package:mobile/Views/PublicRooms.dart';
-import 'package:mobile/viewModels/MenuViewModel.dart';
-import 'package:provider/provider.dart';
-import '../models/Room.dart';
+import 'Login.dart';
+import 'PublicRooms.dart';
 import 'JoinPrivateRoom.dart';
 import 'Room.dart';
+import 'package:mobile/viewModels/MenuViewModel.dart';
+import 'package:provider/provider.dart';
+import 'package:mobile/models/Room.dart';
 
 class MenuPage extends StatefulWidget {
   const MenuPage({super.key});

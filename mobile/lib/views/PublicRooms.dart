@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../models/Room.dart';
-import '../viewModels/PublicRoomsViewModel.dart';
+import 'package:mobile/models/Room.dart';
+import 'package:mobile/viewModels/PublicRoomsViewModel.dart';
 
 class PublicRoomsPage extends StatefulWidget {
   const PublicRoomsPage({super.key});

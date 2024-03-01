@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/RoomSettings.dart';
-import '../viewModels/RoomSettingsViewModel.dart';
+import 'package:mobile/models/RoomSettings.dart';
+import 'package:mobile/viewModels/RoomSettingsViewModel.dart';
 
 class RoomSettingsPage extends StatefulWidget {
   @override

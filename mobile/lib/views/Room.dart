@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../models/Room.dart';
+import 'package:mobile/models/Room.dart';
 import 'RoomSettings.dart';
-import '../viewModels/RoomViewModel.dart';
+import 'package:mobile/viewModels/RoomViewModel.dart';
 import 'UserRole.dart';
 
 class RoomPage extends StatefulWidget {

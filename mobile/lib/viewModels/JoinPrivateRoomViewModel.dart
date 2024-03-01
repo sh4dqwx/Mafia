@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/services/WebSocketClient.dart';
-import '../services/network/RoomService.dart';
-import '../models/Room.dart';
+import 'package:mobile/services/network/RoomService.dart';
+import 'package:mobile/models/Room.dart';
 
 class JoinPrivateRoomViewModel extends ChangeNotifier {
 

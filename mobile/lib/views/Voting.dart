@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../viewModels/VotingViewModel.dart';
+import 'package:mobile/viewModels/VotingViewModel.dart';
 
 class VotingPage extends StatefulWidget {
   @override

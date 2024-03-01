@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../viewModels/GameHistoryViewModel.dart';
-
+import 'package:provider/provider.dart'; 
+import 'package:mobile/viewModels/GameHistoryViewModel.dart';
+ 
 class GameHistoryPage extends StatefulWidget {
   const GameHistoryPage({Key? key}) : super(key: key);
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../viewModels/JoinPrivateRoomViewModel.dart';
+import 'package:mobile/viewModels/JoinPrivateRoomViewModel.dart';
 import 'Room.dart';
 
 class JoinPrivateRoomPage extends StatefulWidget {

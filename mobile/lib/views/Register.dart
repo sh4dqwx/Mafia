@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import '../viewModels/RegisterViewModel.dart';
+import 'package:mobile/viewModels/RegisterViewModel.dart';
 import 'Menu.dart';
 
 class RegisterPage extends StatefulWidget {

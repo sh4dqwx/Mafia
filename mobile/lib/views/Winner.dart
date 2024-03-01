@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../viewModels/WinnerRoleViewModel.dart';
+import 'package:mobile/viewModels/WinnerRoleViewModel.dart';
 
 class WinnerPage extends StatefulWidget {
   @override

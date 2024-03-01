@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../models/GameResult.dart';
+import 'package:mobile/models/GameResult.dart';
 
 class GameHistoryViewModel extends ChangeNotifier {
  // final GameService _gameService = GameService();
