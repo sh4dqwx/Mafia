@@ -7,9 +7,11 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.mafia.backend.models.db.Account;
 import pl.mafia.backend.models.db.Game;
 import pl.mafia.backend.models.db.Room;
+import pl.mafia.backend.models.db.Round;
 import pl.mafia.backend.repositories.AccountRepository;
 import pl.mafia.backend.repositories.GameRepository;
 import pl.mafia.backend.repositories.RoomRepository;
+import pl.mafia.backend.repositories.RoundRepository;
 import pl.mafia.backend.websockets.WebSocketListener;
 import pl.mafia.backend.models.dto.GameStartDTO;
 
@@ -27,6 +29,8 @@ public class GameService {
     private RoomRepository roomRepository;
     @Autowired
     private GameRepository gameRepository;
+    @Autowired
+    private RoundRepository roundRepository;
     @Autowired
     private WebSocketListener webSocketListener;
     @Autowired
@@ -68,5 +72,20 @@ public class GameService {
             );
             simpMessagingTemplate.convertAndSendToUser(user, destination, gameStartDTO);
         }
+    }
+
+    @Transactional
+    public void startRound(Long gameId) throws IllegalAccessException {
+        Optional<Game> fetchedGame = gameRepository.findById(gameId);
+        if (fetchedGame.isEmpty())
+            throw new IllegalAccessException("Game does not exist.");
+
+        Game game = fetchedGame.get();
+
+        Round createdRound = new Round();
+        createdRound.setGame(game);
+        createdRound = roundRepository.save(createdRound);
+
+        game.getRounds().add(createdRound);
     }
 }
