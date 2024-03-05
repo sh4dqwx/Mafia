@@ -77,6 +77,25 @@ public class GameService {
     }
 
     @Transactional
+    public void endGame(Long gameId) throws IllegalAccessException {
+
+        Optional<Game> fetchedGame = gameRepository.findById(gameId);
+        if (fetchedGame.isEmpty())
+            throw new IllegalAccessException("Game does not exist.");
+
+        Game game = fetchedGame.get();
+
+        Optional<Room> fetchedRoom = roomRepository.findByGameId(gameId);
+        if (fetchedRoom.isEmpty())
+            throw new IllegalAccessException("Room does not exist.");
+
+        Room room = fetchedRoom.get();
+
+        room.setGame(null);
+        roomRepository.save(room);
+    }
+
+    @Transactional
     public void startRound(Long gameId) throws IllegalAccessException {
         Optional<Game> fetchedGame = gameRepository.findById(gameId);
         if (fetchedGame.isEmpty())
