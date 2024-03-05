@@ -108,5 +108,6 @@ public class GameService {
         createdRound = roundRepository.save(createdRound);
 
         game.getRounds().add(createdRound);
+        gameRepository.save(game);
     }
 }
