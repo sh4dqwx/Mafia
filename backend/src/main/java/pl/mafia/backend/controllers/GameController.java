@@ -23,7 +23,8 @@ public class GameController {
         try {
             String username = accountDetails.getUsername();
             long gameId = gameService.startGame(username, roomId);
-            gameService.startRound(gameId);
+            long roundId = gameService.startRound(gameId);
+            gameService.createVoting(roundId);
             return ResponseEntity.noContent().build();
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());

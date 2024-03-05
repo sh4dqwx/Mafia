@@ -4,14 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import pl.mafia.backend.models.db.Account;
-import pl.mafia.backend.models.db.Game;
-import pl.mafia.backend.models.db.Room;
-import pl.mafia.backend.models.db.Round;
-import pl.mafia.backend.repositories.AccountRepository;
-import pl.mafia.backend.repositories.GameRepository;
-import pl.mafia.backend.repositories.RoomRepository;
-import pl.mafia.backend.repositories.RoundRepository;
+import pl.mafia.backend.models.db.*;
+import pl.mafia.backend.repositories.*;
 import pl.mafia.backend.websockets.WebSocketListener;
 import pl.mafia.backend.models.dto.GameStartDTO;
 
@@ -31,6 +25,8 @@ public class GameService {
     private GameRepository gameRepository;
     @Autowired
     private RoundRepository roundRepository;
+    @Autowired
+    private VotingRepository votingRepository;
     @Autowired
     private WebSocketListener webSocketListener;
     @Autowired
@@ -96,7 +92,7 @@ public class GameService {
     }
 
     @Transactional
-    public void startRound(Long gameId) throws IllegalAccessException {
+    public long startRound(Long gameId) throws IllegalAccessException {
         Optional<Game> fetchedGame = gameRepository.findById(gameId);
         if (fetchedGame.isEmpty())
             throw new IllegalAccessException("Game does not exist.");
@@ -109,5 +105,24 @@ public class GameService {
 
         game.getRounds().add(createdRound);
         gameRepository.save(game);
+
+        return createdRound.getId();
+    }
+
+    @Transactional
+    public void createVoting(Long roundId) throws IllegalAccessException
+    {
+        Optional<Round> fetchedRound = roundRepository.findById(roundId);
+        if (fetchedRound.isEmpty())
+            throw new IllegalAccessException("Round does not exist.");
+
+        Round round = fetchedRound.get();
+
+        Voting createdVoting = new Voting();
+        createdVoting = votingRepository.save(createdVoting);
+        round.setVotingCity(createdVoting);
+
+        roundRepository.save(round);
+
     }
 }
