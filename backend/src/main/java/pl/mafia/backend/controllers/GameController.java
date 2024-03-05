@@ -22,7 +22,8 @@ public class GameController {
     public ResponseEntity<?> startGame(@PathVariable Long roomId, @AuthenticationPrincipal AccountDetails accountDetails) {
         try {
             String username = accountDetails.getUsername();
-            gameService.startGame(username, roomId);
+            long gameId = gameService.startGame(username, roomId);
+            gameService.startRound(gameId);
             return ResponseEntity.noContent().build();
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());

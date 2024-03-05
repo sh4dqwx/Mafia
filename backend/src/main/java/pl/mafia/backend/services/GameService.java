@@ -42,7 +42,7 @@ public class GameService {
     }
 
     @Transactional
-    public void startGame(String username, Long roomId) throws IllegalAccessException {
+    public long startGame(String username, Long roomId) throws IllegalAccessException {
         Optional<Room> fetchedRoom = roomRepository.findById(roomId);
         if (fetchedRoom.isEmpty())
             throw new IllegalArgumentException("Room does not exists.");
@@ -72,6 +72,8 @@ public class GameService {
             );
             simpMessagingTemplate.convertAndSendToUser(user, destination, gameStartDTO);
         }
+
+        return createdGame.getId();
     }
 
     @Transactional
