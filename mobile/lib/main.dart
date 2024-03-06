@@ -4,6 +4,7 @@ import 'package:mobile/viewModels/JoinPrivateRoomViewModel.dart';
 import 'package:mobile/viewModels/MenuViewModel.dart';
 import 'package:mobile/viewModels/RoomSettingsViewModel.dart';
 import 'package:mobile/viewModels/RoomViewModel.dart';
+import 'package:mobile/views/VotingResults.dart';
 import 'package:provider/provider.dart';
 import 'package:mobile/viewModels/LoginViewModel.dart';
 import 'package:mobile/viewModels/RegisterViewModel.dart';

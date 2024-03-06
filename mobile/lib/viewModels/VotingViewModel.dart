@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 
+
 class VotingViewModel extends ChangeNotifier {
   late List<Player> _players;
   late Map<String, String> _roles; // Change key type to String
-  late Map<String, int> _votesCount; // Change key type to String
+  late Map<String, int> _votesCount; // Change key type to
+  late List<Map<String, dynamic>> _votesList = [];
+
+  List<Map<String, dynamic>> get votesList => _votesList;
 
   VotingViewModel() {
     //pobieranie graczy, tymczasowo utworzono kilku
@@ -45,6 +49,20 @@ class VotingViewModel extends ChangeNotifier {
       print('Nie można głosować na $playerNickname');
     }
   }
+
+    void getVotesList() {
+      try {
+        List<Map<String, dynamic>> votesListData = [
+          {'nickname': 'Gracz 1', 'votes': 5},
+          {'nickname': 'Gracz 2', 'votes': 3},
+          {'nickname': 'Gracz 3', 'votes': 7},
+        ];
+        _votesList = votesListData;
+        notifyListeners();
+      } catch (e) {
+        print('Error fetching votes list: $e');
+      }
+    }
 
   int getVotesForPlayer(String playerNickname) {
     return _votesCount[playerNickname] ?? 0;
