@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:ffi';
+import 'package:mobile/models/VotingSummary.dart';
 import 'package:mobile/utils/CustomHttpClient.dart';
 import 'package:stomp_dart_client/stomp.dart';
 import 'package:stomp_dart_client/stomp_config.dart';
@@ -24,6 +25,9 @@ class WebSocketClient {
   final _gameStartUpdate = StreamController<GameStart>();
   Stream<GameStart> get gameStartUpdate => _gameStartUpdate.stream;
 
+  final _votingSummaryUpdate = StreamController<VotingSummary>();
+  Stream<VotingSummary> get votingSummaryUpdate => _votingSummaryUpdate.stream;
+
   WebSocketClient._internal();
   factory WebSocketClient() {
     _instance ??= WebSocketClient._internal();
@@ -35,35 +39,36 @@ class WebSocketClient {
     this.password = password;
   }
 
-  void _onConnect(StompFrame frame) {
-    _stompClient?.subscribe(
-      destination: "/topic/$roomId/room",
-      callback: (frame) {
-        Map<String, dynamic> roomJson = jsonDecode(frame.body!);
-        _roomUpdate.add(Room.fromJson(roomJson));
-      }
-    );
-    _stompClient?.subscribe(
-        destination: "/user/queue/game-start",
-        callback: (frame) {
-          Map<String, dynamic> gameStartJson = jsonDecode(frame.body!);
-          _gameStartUpdate.add(GameStart.fromJson(gameStartJson));
-        }
-    );
-  }
-
   Future<void> connect(int roomId) async {
     if (_stompClient != null && _stompClient!.connected) {
       return;
     }
 
-    this.roomId = roomId;
     Completer<void> connectionCompleter = Completer<void>();
-
     StompConfig config = StompConfig(
         url: "$baseUrl/ws",
         onConnect: (StompFrame frame) {
-          _onConnect(frame);
+          _stompClient?.subscribe(
+            destination: "/topic/$roomId/room",
+            callback: (frame) {
+              Map<String, dynamic> roomJson = jsonDecode(frame.body!);
+              _roomUpdate.add(Room.fromJson(roomJson));
+            }
+          );
+          _stompClient?.subscribe(
+              destination: "/user/queue/game-start",
+              callback: (frame) {
+                Map<String, dynamic> gameStartJson = jsonDecode(frame.body!);
+                _gameStartUpdate.add(GameStart.fromJson(gameStartJson));
+              }
+          );
+          _stompClient?.subscribe(
+            destination: "/topic/$roomId/voting-summary",
+            callback: (frame) {
+              Map<String, dynamic> votingSummaryJson = jsonDecode(frame.body!);
+              _votingSummaryUpdate.add(VotingSummary.fromJson(votingSummaryJson));
+            }
+          );
           connectionCompleter.complete();
         },
         onDisconnect: (StompFrame frame) {
