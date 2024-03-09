@@ -10,6 +10,21 @@ class UserRolePage extends StatefulWidget {
 }
 
 class _UserRolePageState extends State<UserRolePage> {
+  bool buttonPressed = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Start a timer to automatically navigate to the voting page after 3 seconds
+    Future.delayed(Duration(seconds: 3), () {
+      if (!buttonPressed) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => VotingPage()),
+        );
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,13 +37,15 @@ class _UserRolePageState extends State<UserRolePage> {
               builder: (context, winnerRoleViewModel, child) {
                 return Text(
                   'Your role is: '
-                  '${context.watch<WinnerRoleViewModel>().userRole}',
+                      '${context.watch<WinnerRoleViewModel>().userRole}',
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 );
               },
             ),
             ElevatedButton(
               onPressed: () {
+                // Set the buttonPressed flag to true when the button is pressed
+                buttonPressed = true;
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => VotingPage()),
