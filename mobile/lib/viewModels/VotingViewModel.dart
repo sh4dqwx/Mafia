@@ -9,13 +9,19 @@ class VotingViewModel extends ChangeNotifier {
   VotingSummary? get votingSummary => _votingSummary;
   late Room _room;
   late List<Player> _players;
-  late Map<String, String> _roles; // Change key type to String
-  late Map<String, int> _votesCount; // Change key type to String
+  late Map<String, String> _roles;
+  late Map<String, int> _votesCount;
+
+  void setRoom(Room value)
+  {
+    _room = value;
+    notifyListeners();
+  }
 
   VotingViewModel() {
-
     _votesCount = Map<String, int>.fromIterable(_players, key: (player) => player.nickname, value: (player) => 0);
   }
+
 
   List<Player> getPlayers() {
     List<Player> players = _room.accountUsernames
