@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/Room.dart';
 import '../services/WebSocketClient.dart';
+import '../models/VotingSummary.dart';
 
 class VotingViewModel extends ChangeNotifier {
   final WebSocketClient webSocketClient = WebSocketClient();
