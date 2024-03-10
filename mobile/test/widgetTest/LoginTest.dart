@@ -1,4 +1,3 @@
-import 'package:mobile/views/Login.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mobile/views/RoomSettings.dart';
 
