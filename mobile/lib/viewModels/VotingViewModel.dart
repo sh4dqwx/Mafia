@@ -1,30 +1,28 @@
 import 'package:flutter/material.dart';
+import '../models/Room.dart';
+import '../services/WebSocketClient.dart';
 
 class VotingViewModel extends ChangeNotifier {
+  final WebSocketClient webSocketClient = WebSocketClient();
+  VotingSummary? _votingSummary;
+  VotingSummary? get votingSummary => _votingSummary;
+  late Room _room;
   late List<Player> _players;
   late Map<String, String> _roles; // Change key type to String
   late Map<String, int> _votesCount; // Change key type to String
 
   VotingViewModel() {
-    //pobieranie graczy, tymczasowo utworzono kilku
-    _players = [
-      Player(nickname: 'Gracz 1', canVote: true),
-      Player(nickname: 'Gracz 2', canVote: true),
-      Player(nickname: 'Gracz 3', canVote: true),
-    ];
-
-    _roles = {
-      'Gracz 1': 'miasto',
-      'Gracz 2': 'mafia',
-      'Gracz 3': 'miasto',
-    };
 
     _votesCount = Map<String, int>.fromIterable(_players, key: (player) => player.nickname, value: (player) => 0);
   }
 
   List<Player> getPlayers() {
-    return _players;
+    List<Player> players = _room.accountUsernames
+        .map((username) => Player(nickname: username, canVote: true))
+        .toList();
+    return players;
   }
+
 
   Map<String, String> getRoles() {
     return _roles;
@@ -65,6 +63,15 @@ class VotingViewModel extends ChangeNotifier {
 
     return playerWithMostVotes;
   }
+  void setVotingResults(VotingSummary value)
+  {
+    _votingSummary = value;
+    notifyListeners();
+  }
+  void connectWebSocket() {
+    webSocketClient.votingSummaryUpdate.listen((votingSummary) { setVotingResults(votingSummary); });
+  }
+
 }
 
 class Player {
