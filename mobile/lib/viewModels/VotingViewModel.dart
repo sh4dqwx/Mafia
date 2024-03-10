@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 
+import '../models/VotingSummary.dart';
+import '../services/WebSocketClient.dart';
+
 
 class VotingViewModel extends ChangeNotifier {
+  final WebSocketClient webSocketClient = WebSocketClient();
+  VotingSummary? _votingSummary;
+  VotingSummary? get votingSummary => _votingSummary;
   late List<Player> _players;
   late Map<String, String> _roles; // Change key type to String
   late Map<String, int> _votesCount; // Change key type to
   late List<Map<String, dynamic>> _votesList = [];
+
 
   List<Map<String, dynamic>> get votesList => _votesList;
 
@@ -50,20 +57,6 @@ class VotingViewModel extends ChangeNotifier {
     }
   }
 
-    void getVotesList() {
-      try {
-        List<Map<String, dynamic>> votesListData = [
-          {'nickname': 'Gracz 1', 'votes': 5},
-          {'nickname': 'Gracz 2', 'votes': 3},
-          {'nickname': 'Gracz 3', 'votes': 7},
-        ];
-        _votesList = votesListData;
-        notifyListeners();
-      } catch (e) {
-        print('Error fetching votes list: $e');
-      }
-    }
-
   int getVotesForPlayer(String playerNickname) {
     return _votesCount[playerNickname] ?? 0;
   }
@@ -82,6 +75,16 @@ class VotingViewModel extends ChangeNotifier {
     }
 
     return playerWithMostVotes;
+  }
+  void setVotingResults(VotingSummary value)
+  {
+    _votingSummary = value;
+    notifyListeners();
+  }
+
+  void connectWebSocket() {
+    webSocketClient.votingSummaryUpdate.listen((votingSummary) { setVotingResults(votingSummary); });
+    webSocketClient.Test();
   }
 }
 

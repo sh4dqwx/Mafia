@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:ffi';
+import 'package:mobile/models/VotingResult.dart';
 import 'package:mobile/models/VotingSummary.dart';
 import 'package:mobile/utils/CustomHttpClient.dart';
 import 'package:stomp_dart_client/stomp.dart';
@@ -29,6 +30,12 @@ class WebSocketClient {
   Stream<VotingSummary> get votingSummaryUpdate => _votingSummaryUpdate.stream;
 
   WebSocketClient._internal();
+  void Test()
+  {
+    VotingResult result = VotingResult(username: 'uczytkownik', voteCount: 3);
+    VotingSummary sum = VotingSummary(results: [result]);
+    _votingSummaryUpdate.add(sum);
+  }
   factory WebSocketClient() {
     _instance ??= WebSocketClient._internal();
     return _instance!;

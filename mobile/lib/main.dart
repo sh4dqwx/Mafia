@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:mobile/viewModels/LoginViewModel.dart';
 import 'package:mobile/viewModels/RegisterViewModel.dart';
 import 'package:mobile/views/Login.dart';
+import 'package:mobile/views/VotingResults.dart';
 import 'package:mobile/viewModels/PublicRoomsViewModel.dart';
 import 'package:mobile/views/Register.dart';
 import 'package:mobile/viewModels/GameHistoryViewModel.dart';
@@ -37,7 +38,7 @@ class MyApp extends StatelessWidget {
       ],
       child: const MaterialApp(
         title: 'MAFIA+',
-        home: LoginPage(),
+        home: VotingResultsPage(),
       ),
     );
   }
