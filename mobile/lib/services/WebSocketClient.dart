@@ -30,12 +30,7 @@ class WebSocketClient {
   Stream<VotingSummary> get votingSummaryUpdate => _votingSummaryUpdate.stream;
 
   WebSocketClient._internal();
-  void Test()
-  {
-    VotingResult result = VotingResult(username: 'uczytkownik', voteCount: 3);
-    VotingSummary sum = VotingSummary(results: [result]);
-    _votingSummaryUpdate.add(sum);
-  }
+
   factory WebSocketClient() {
     _instance ??= WebSocketClient._internal();
     return _instance!;

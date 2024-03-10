@@ -84,7 +84,6 @@ class VotingViewModel extends ChangeNotifier {
 
   void connectWebSocket() {
     webSocketClient.votingSummaryUpdate.listen((votingSummary) { setVotingResults(votingSummary); });
-    webSocketClient.Test();
   }
 }
 
