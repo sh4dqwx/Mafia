@@ -12,4 +12,5 @@ import java.util.Optional;
 public interface RoomRepository extends JpaRepository<Room, Long>, JpaSpecificationExecutor<Room> {
     Optional<Room> findByHost(Account host);
     Optional<Room> findByAccessCode(String accessCode);
+    Optional<Room> findByGameId(Long gameId);
 }
