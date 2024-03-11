@@ -16,7 +16,7 @@ public class VotingController {
     @Autowired
     private VotingService votingService;
 
-    @PostMapping("/vote")
+    @PostMapping("/vote/{votingId}")
     public ResponseEntity<?> saveVote(@PathVariable Long votingId, @RequestBody VoteRequest voteRequest) {
         try {
             votingService.saveVote(votingId, voteRequest.voterId, voteRequest.votedId);
