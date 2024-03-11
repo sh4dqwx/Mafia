@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/viewModels/WinnerRoleViewModel.dart';
 import 'package:mobile/views/GameHistory.dart';
 import 'package:mobile/viewModels/JoinPrivateRoomViewModel.dart';
 import 'package:mobile/viewModels/MenuViewModel.dart';
@@ -32,7 +33,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => RoomSettingsViewModel()),
         ChangeNotifierProvider(create: (context) => GameHistoryViewModel()),
         ChangeNotifierProvider(create: (context) => RoomViewModel()),
-        ChangeNotifierProvider(create: (context) => VotingViewModel())
+        ChangeNotifierProvider(create: (context) => VotingViewModel()),
+        ChangeNotifierProvider(create: (context) => WinnerRoleViewModel())
       ],
       child: const MaterialApp(
         title: 'MAFIA+',
