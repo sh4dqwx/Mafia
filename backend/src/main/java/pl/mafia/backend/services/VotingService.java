@@ -40,6 +40,9 @@ public class VotingService {
         if (fetchedVoted.isEmpty())
             throw new IllegalArgumentException("Voted does not exist");
 
+        if (voterUsername.equals(votedUsername))
+            throw new IllegalArgumentException("Voter and voted can not be the same user");
+
         Voting voting = fetchedVoting.get();
         Account voter = fetchedVoter.get();
         Account voted = fetchedVoted.get();
