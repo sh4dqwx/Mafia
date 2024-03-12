@@ -52,39 +52,38 @@ class VotingResultsBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final viewModel = Provider.of<VotingViewModel>(context, listen: false);
 
-    return Container(
-        color: Colors.white, // Kolor tła
-        child: Padding(
+    return Scaffold( // Kolor tła
+      body: Padding(
         padding: const EdgeInsets.all(16.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            'Wyniki głosowania',
-            style: const TextStyle(
-                fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 20),
-          for (var voteInfo in viewModel.votingSummary?.results ?? [])
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  voteInfo.username,
-                  style: const TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  'Votes: ${voteInfo.voteCount}',
-                  style: const TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-              ],
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              'Voting results',
+              style: const TextStyle(
+                  fontSize: 20, fontWeight: FontWeight.bold),
             ),
-        ],
-      ),
-    )
+            SizedBox(height: 20),
+            for (var voteInfo in viewModel.votingSummary?.results ?? [])
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    voteInfo.username,
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    'Votes: ${voteInfo.voteCount}',
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+          ],
+        ),
+      )
     );
   }
 }
