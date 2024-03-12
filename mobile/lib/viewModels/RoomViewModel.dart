@@ -61,8 +61,8 @@ class RoomViewModel extends ChangeNotifier{
 
   void connectWebSocket() {
     webSocketClient.roomUpdate.listen((room) { setRoom(room); });
-    webSocketClient.gameStartUpdate.listen((gameStart) {
-      print(gameStart.role);
-    });
+    // webSocketClient.gameStartUpdate.listen((gameStart) {
+    //   print(gameStart.role);
+    // });
   }
 }

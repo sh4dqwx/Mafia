@@ -9,6 +9,7 @@ import 'package:stomp_dart_client/stomp_frame.dart';
 import 'package:mobile/utils/Constants.dart' as Constants;
 import '../models/GameStart.dart';
 import '../models/Room.dart';
+import '../models/Round.dart';
 
 class WebSocketClient {
   static WebSocketClient? _instance;
@@ -21,12 +22,19 @@ class WebSocketClient {
 
   final _roomUpdate = StreamController<Room>();
   Stream<Room> get roomUpdate => _roomUpdate.stream;
+  Room? lastRoomUpdate;
 
   final _gameStartUpdate = StreamController<GameStart>();
   Stream<GameStart> get gameStartUpdate => _gameStartUpdate.stream;
+  GameStart? lastGameStartUpdate;
+
+  final _roundStartUpdate = StreamController<Round>();
+  Stream<Round> get roundStartUpdate => _roundStartUpdate.stream;
+  Round? lastRoundStartUpdate;
 
   final _votingSummaryUpdate = StreamController<VotingSummary>();
   Stream<VotingSummary> get votingSummaryUpdate => _votingSummaryUpdate.stream;
+  VotingSummary? lastVotingSummary;
 
   WebSocketClient._internal();
   factory WebSocketClient() {
@@ -52,21 +60,36 @@ class WebSocketClient {
             destination: "/topic/$roomId/room",
             callback: (frame) {
               Map<String, dynamic> roomJson = jsonDecode(frame.body!);
-              _roomUpdate.add(Room.fromJson(roomJson));
+              Room room = Room.fromJson(roomJson);
+              lastRoomUpdate = room;
+              _roomUpdate.add(room);
             }
           );
           _stompClient?.subscribe(
               destination: "/user/queue/game-start",
               callback: (frame) {
                 Map<String, dynamic> gameStartJson = jsonDecode(frame.body!);
-                _gameStartUpdate.add(GameStart.fromJson(gameStartJson));
+                GameStart gameStart = GameStart.fromJson(gameStartJson);
+                lastGameStartUpdate = gameStart;
+                _gameStartUpdate.add(gameStart);
+              }
+          );
+          _stompClient?.subscribe(
+              destination: "/topic/$roomId/round-start",
+              callback: (frame) {
+                Map<String, dynamic> roundStartJson = jsonDecode(frame.body!);
+                Round round = Round.fromJson(roundStartJson);
+                lastRoundStartUpdate = round;
+                _roundStartUpdate.add(round);
               }
           );
           _stompClient?.subscribe(
             destination: "/topic/$roomId/voting-summary",
             callback: (frame) {
               Map<String, dynamic> votingSummaryJson = jsonDecode(frame.body!);
-              _votingSummaryUpdate.add(VotingSummary.fromJson(votingSummaryJson));
+              VotingSummary votingSummary = VotingSummary.fromJson(votingSummaryJson);
+              lastVotingSummary = votingSummary;
+              _votingSummaryUpdate.add(votingSummary);
             }
           );
           connectionCompleter.complete();

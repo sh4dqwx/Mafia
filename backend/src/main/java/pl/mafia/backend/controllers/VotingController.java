@@ -16,10 +16,10 @@ public class VotingController {
     @Autowired
     private VotingService votingService;
 
-    @PostMapping("/vote")
+    @PostMapping("/vote/{votingId}")
     public ResponseEntity<?> saveVote(@PathVariable Long votingId, @RequestBody VoteRequest voteRequest) {
         try {
-            boolean lastVote = votingService.saveVote(votingId, voteRequest.voterId, voteRequest.votedId);
+            boolean lastVote = votingService.saveVote(votingId, voteRequest.voterUsername, voteRequest.votedUsername);
             if(lastVote)
                 votingService.endVoting(votingId);
             return ResponseEntity.noContent().build();
@@ -32,7 +32,7 @@ public class VotingController {
 
     @Data
     static class VoteRequest {
-        private Long voterId;
-        private Long votedId;
+        private String voterUsername;
+        private String votedUsername;
     }
 }
