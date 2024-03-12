@@ -23,7 +23,7 @@ class _VotingPageState extends State<VotingPage> {
       create: (context) => viewModel,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Głosowanie'),
+          title: Text('Voting'),
         ),
         body: VotingBody(),
       ),
@@ -49,7 +49,7 @@ class VotingBody extends StatelessWidget {
               for (Player player in players)
                 PlayerButton(
                   player: player,
-                  onPressed: () => vote(context, viewModel, player.nickname),
+                  onPressed: () => viewModel.vote(player.nickname) ,
                   votesCount: votesCount[player.nickname] ?? 0,
                 ),
             ],
@@ -59,9 +59,6 @@ class VotingBody extends StatelessWidget {
     );
   }
 
-  void vote(BuildContext context, VotingViewModel viewModel, String playerNickname) {
-    viewModel.vote(playerNickname);
-  }
 }
 
 class PlayerButton extends StatelessWidget {
