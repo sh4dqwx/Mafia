@@ -60,6 +60,12 @@ class VotingResultsBody extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          Text(
+            'Wyniki głosowania',
+            style: const TextStyle(
+                fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 20),
           for (var voteInfo in viewModel.votingSummary?.results ?? [])
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
