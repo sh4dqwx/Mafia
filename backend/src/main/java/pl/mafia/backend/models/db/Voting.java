@@ -18,11 +18,11 @@ public class Voting {
     private Long id;
 
     @ToString.Exclude
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_account")
     private Account account;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "voting")
+    @OneToMany(mappedBy = "voting", fetch = FetchType.LAZY)
     private List<Vote> votes = new ArrayList<>();
 }

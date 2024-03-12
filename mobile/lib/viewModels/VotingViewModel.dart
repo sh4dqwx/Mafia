@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import '../models/Room.dart';
 import '../models/VotingSummary.dart';
 import '../services/WebSocketClient.dart';
-
+import '../services/network/GameService.dart';
 
 class VotingViewModel extends ChangeNotifier {
+  final GameService gameService = GameService();
   final WebSocketClient webSocketClient = WebSocketClient();
   VotingSummary? _votingSummary;
   VotingSummary? get votingSummary => _votingSummary;
@@ -13,11 +14,10 @@ class VotingViewModel extends ChangeNotifier {
   late Map<String, String> _roles; // Change key type to String
   late Map<String, int> _votesCount; // Change key type to
   late List<Map<String, dynamic>> _votesList = [];
+  List<Map<String, dynamic>> get votesList => _votesList;
   Room? _room;
   Room? get room => _room;
-
-
-  List<Map<String, dynamic>> get votesList => _votesList;
+  int? _votingId=0;
 
   VotingViewModel() {
     //pobieranie graczy, tymczasowo utworzono kilku
@@ -34,6 +34,7 @@ class VotingViewModel extends ChangeNotifier {
     };
 
     _votesCount = Map<String, int>.fromIterable(_players, key: (player) => player.nickname, value: (player) => 0);
+    _votingId=webSocketClient.lastRoundStartUpdate?.votingCityId;
   }
 
   List<Player> getPlayers() {
@@ -48,13 +49,14 @@ class VotingViewModel extends ChangeNotifier {
     return _votesCount;
   }
 
-  void vote(String playerNickname) {
+  void vote(String playerNickname) async {
     Player? player = _players.firstWhere((p) => p.nickname == playerNickname, orElse: () => Player(nickname: '', canVote: false));
 
     if (player?.canVote ?? false) {
       print('Głos oddany na gracza: $playerNickname');
       _votesCount[playerNickname] = (_votesCount[playerNickname] ?? 0) + 1;
       notifyListeners();
+      await gameService.addVote(_votingId!, playerNickname);
     } else {
       print('Nie można głosować na $playerNickname');
     }

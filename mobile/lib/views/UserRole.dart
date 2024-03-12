@@ -41,18 +41,7 @@ class _UserRolePageState extends State<UserRolePage> {
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 );
               },
-            ),
-            ElevatedButton(
-              onPressed: () {
-                // Set the buttonPressed flag to true when the button is pressed
-                buttonPressed = true;
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => VotingPage()),
-                );
-              },
-              child: Text("Głosowanie"),
-            ),
+            )
           ],
         ),
       ),
