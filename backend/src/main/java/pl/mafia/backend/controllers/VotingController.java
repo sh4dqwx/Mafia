@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import pl.mafia.backend.models.dto.AccountDetails;
 import pl.mafia.backend.services.VotingService;
 
 @RestController
@@ -17,9 +19,14 @@ public class VotingController {
     private VotingService votingService;
 
     @PostMapping("/vote/{votingId}")
-    public ResponseEntity<?> saveVote(@PathVariable Long votingId, @RequestBody VoteRequest voteRequest) {
+    public ResponseEntity<?> saveVote(
+            @PathVariable Long votingId,
+            @AuthenticationPrincipal AccountDetails accountDetails,
+            @RequestBody VoteRequest voteRequest
+    ) {
         try {
-            boolean lastVote = votingService.saveVote(votingId, voteRequest.voterUsername, voteRequest.votedUsername);
+            String voterUsername = accountDetails.getUsername();
+            boolean lastVote = votingService.saveVote(votingId, voterUsername, voteRequest.votedUsername);
             if(lastVote)
                 votingService.endVoting(votingId);
             return ResponseEntity.noContent().build();
@@ -32,7 +39,6 @@ public class VotingController {
 
     @Data
     static class VoteRequest {
-        private String voterUsername;
         private String votedUsername;
     }
 }
