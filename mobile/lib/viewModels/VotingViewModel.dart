@@ -13,7 +13,7 @@ class VotingViewModel extends ChangeNotifier {
   late Map<String, String> _roles; // Change key type to String
   late Map<String, int> _votesCount; // Change key type to
   late List<Map<String, dynamic>> _votesList = [];
-  late Room _room;
+  Room? _room;
   Room? get room => _room;
 
 
@@ -91,9 +91,10 @@ class VotingViewModel extends ChangeNotifier {
   }
 
   void connectWebSocket() {
-    webSocketClient.votingSummaryUpdate.listen((votingSummary) { setVotingResults(votingSummary); });
-      setRoom(webSocketClient.lastRoomUpdate!);
+    if(webSocketClient.lastVotingSummary != null) { setVotingResults(webSocketClient.lastVotingSummary!); }
+    if(webSocketClient.lastRoomUpdate != null) { setRoom(webSocketClient.lastRoomUpdate!); }
 
+    webSocketClient.votingSummaryUpdate.listen((votingSummary) { setVotingResults(votingSummary); });
   }
 }
 

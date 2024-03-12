@@ -24,11 +24,19 @@ class _VotingResultsPageState extends State<VotingResultsPage> {
     super.initState();
     viewModel = Provider.of<VotingViewModel>(context, listen: false);
     viewModel.connectWebSocket();
-    room=viewModel.room!;
+    if(viewModel.room == null) {
+      Timer(Duration(seconds: 8), () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MenuPage())
+        );
+      });
+      return;
+    }
     Timer(Duration(seconds: 8), () {
-      Navigator.pushReplacement(
+      Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => RoomPage(room)),
+        MaterialPageRoute(builder: (context) => RoomPage(viewModel.room!)),
       );
     });
   }

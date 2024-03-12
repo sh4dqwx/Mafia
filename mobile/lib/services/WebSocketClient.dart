@@ -10,20 +10,30 @@ import 'package:stomp_dart_client/stomp_frame.dart';
 import 'package:mobile/utils/Constants.dart' as Constants;
 import '../models/GameStart.dart';
 import '../models/Room.dart';
+import '../models/RoomSettings.dart';
 import '../models/Round.dart';
 
 class WebSocketClient {
   static WebSocketClient? _instance;
   StompClient? _stompClient;
   late int roomId;
-  late String username;
+  late String username = "aaa";
   late String password;
 
   final String baseUrl = "ws://${Constants.baseUrl}";
 
   final _roomUpdate = StreamController<Room>();
   Stream<Room> get roomUpdate => _roomUpdate.stream;
-  Room? lastRoomUpdate;
+  Room? lastRoomUpdate = Room(
+      id: 1,
+      accountUsernames: ["aaa", "bbb"],
+      hostUsername: "aaa",
+      accessCode: "123",
+      roomSettings: RoomSettings(
+        isPublic: true,
+        numberOfPlayers: 10
+      )
+  );
 
   final _gameStartUpdate = StreamController<GameStart>();
   Stream<GameStart> get gameStartUpdate => _gameStartUpdate.stream;
@@ -35,7 +45,12 @@ class WebSocketClient {
 
   final _votingSummaryUpdate = StreamController<VotingSummary>();
   Stream<VotingSummary> get votingSummaryUpdate => _votingSummaryUpdate.stream;
-  VotingSummary? lastVotingSummary;
+  VotingSummary? lastVotingSummary = VotingSummary(
+      results: [
+        VotingResult(username: "aaa", voteCount: 2),
+        VotingResult(username: "bbb", voteCount: 0)
+      ]
+  );
 
   WebSocketClient._internal();
 
