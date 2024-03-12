@@ -16,23 +16,14 @@ class WebSocketClient {
   static WebSocketClient? _instance;
   StompClient? _stompClient;
   late int roomId;
-  late String username = "aaa";
+  late String username;
   late String password;
 
   final String baseUrl = "ws://${Constants.baseUrl}";
 
   final _roomUpdate = StreamController<Room>();
   Stream<Room> get roomUpdate => _roomUpdate.stream;
-  Room? lastRoomUpdate = Room(
-      id: 1,
-      accountUsernames: ["aaa", "bbb"],
-      hostUsername: "aaa",
-      accessCode: "0001",
-      roomSettings: RoomSettings(
-          isPublic: true,
-          numberOfPlayers: 10
-      )
-  );
+  Room? lastRoomUpdate;
 
   final _gameStartUpdate = StreamController<GameStart>();
   Stream<GameStart> get gameStartUpdate => _gameStartUpdate.stream;
@@ -40,7 +31,7 @@ class WebSocketClient {
 
   final _roundStartUpdate = StreamController<Round>();
   Stream<Round> get roundStartUpdate => _roundStartUpdate.stream;
-  Round? lastRoundStartUpdate = Round(id: 1, votingCityId: 1);
+  Round? lastRoundStartUpdate;
 
   final _votingSummaryUpdate = StreamController<VotingSummary>();
   Stream<VotingSummary> get votingSummaryUpdate => _votingSummaryUpdate.stream;

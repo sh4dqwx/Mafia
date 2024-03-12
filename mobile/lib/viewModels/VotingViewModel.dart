@@ -13,6 +13,8 @@ class VotingViewModel extends ChangeNotifier {
   VotingSummary? _votingSummary;
   VotingSummary? get votingSummary => _votingSummary;
   List<Player> _players = []; // Lista użytkowników
+  Player? _votedPlayer;
+  Player? get votedPlayer => _votedPlayer;
   late Map<String, String> _roles; // Change key type to String
   Map<String, int> _votesCount = {};
   int? _votingId=0;
@@ -35,6 +37,7 @@ class VotingViewModel extends ChangeNotifier {
 
   void vote(String playerNickname) async {
     Player? player = _players.firstWhere((p) => p.nickname == playerNickname, orElse: () => Player(nickname: '', canVote: false));
+    _votedPlayer = player;
 
     if (player?.canVote ?? false) {
       print('Głos oddany na gracza: $playerNickname');
@@ -44,6 +47,8 @@ class VotingViewModel extends ChangeNotifier {
     } else {
       print('Nie można głosować na $playerNickname');
     }
+
+    notifyListeners();
   }
 
   int getVotesForPlayer(String playerNickname) {

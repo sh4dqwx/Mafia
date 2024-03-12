@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 import pl.mafia.backend.models.db.Account;
 import pl.mafia.backend.models.db.Vote;
 import pl.mafia.backend.models.db.Voting;
+import pl.mafia.backend.models.dto.VotingResult;
+import pl.mafia.backend.models.dto.VotingSummary;
 import pl.mafia.backend.repositories.AccountRepository;
 import pl.mafia.backend.repositories.GameRepository;
 import pl.mafia.backend.repositories.VoteRepository;
@@ -67,6 +69,11 @@ public class VotingService {
         Map<Account, Long> voteCounts = voting.getVotes().stream()
                 .map(Vote::getVoted)
                 .collect(Collectors.groupingBy(account -> account, Collectors.counting()));
+        List<VotingResult> votingResults = new ArrayList<>();
+        for (Map.Entry<Account, Long> entry : voteCounts.entrySet()) {
+            VotingResult result = new VotingResult(entry.getKey().getUsername(), entry.getValue());
+            votingResults.add(result);
+        }
 
         long maxVotes = voteCounts.values().stream().mapToLong(v -> v).max().orElse(0);
 
@@ -82,6 +89,6 @@ public class VotingService {
 
         voting = votingRepository.save(voting);
         //Do ustalenia co wysyłamy
-        messagingTemplate.convertAndSend("/topic/" + voting.getAccount().getRoom().getId() + "/voting-summary", voting.getAccount());
+        messagingTemplate.convertAndSend("/topic/" + voting.getAccount().getRoom().getId() + "/voting-summary", new VotingSummary(votingResults));
     }
 }

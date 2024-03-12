@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/services/WebSocketClient.dart';
 import 'package:provider/provider.dart';
 import 'package:mobile/viewModels/VotingViewModel.dart';
 
@@ -32,6 +33,7 @@ class _VotingPageState extends State<VotingPage> {
 }
 
 class VotingBody extends StatelessWidget {
+  final WebSocketClient webSocketClient = WebSocketClient();
 
   @override
   Widget build(BuildContext context) {
@@ -42,19 +44,44 @@ class VotingBody extends StatelessWidget {
 
         return Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              for (Player player in players)
-                PlayerButton(
-                  player: player,
-                  onPressed: () => viewModel.vote(player.nickname) ,
-                  votesCount: votesCount[player.nickname] ?? 0,
-                ),
-              SizedBox(height: 8.0),
-            ],
-          ),
+          child: ListView.builder(
+            itemCount: players.length - 1,
+            itemBuilder: (context, index) {
+              List<Widget> elements = [];
+              for (Player player in players) {
+                if(player.nickname == webSocketClient.username) continue;
+                elements.add(
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8.0),
+                    child: PlayerButton(
+                      player: player,
+                      onPressed: () => viewModel.vote(player.nickname),
+                      votesCount: votesCount[player.nickname] ?? 0,
+                    )
+                  )
+                );
+              }
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: elements,
+              );
+            },
+          )
+          // child: Column(
+          //   mainAxisAlignment: MainAxisAlignment.center,
+          //   crossAxisAlignment: CrossAxisAlignment.center,
+          //   children: [
+          //     for (Player player in players) {
+          //       PlayerButton(
+          //         player: player,
+          //         onPressed: () => viewModel.vote(player.nickname),
+          //         votesCount: votesCount[player.nickname] ?? 0,
+          //       ),
+          //       SizedBox(height: 8.0),
+          //     }
+          //   ],
+          // ),
         );
       },
     );
@@ -78,7 +105,7 @@ class PlayerButton extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: player.canVote ? onPressed : null,
+        onPressed: player.canVote && player.nickname != context.watch<VotingViewModel>().votedPlayer?.nickname ? onPressed : null,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 16.0),
           child: Column(

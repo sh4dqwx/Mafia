@@ -2,6 +2,7 @@ package pl.mafia.backend.models.db;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import java.util.ArrayList;
@@ -18,11 +19,13 @@ public class Voting {
     private Long id;
 
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_account")
     private Account account;
 
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "voting", fetch = FetchType.LAZY)
     private List<Vote> votes = new ArrayList<>();
 }
