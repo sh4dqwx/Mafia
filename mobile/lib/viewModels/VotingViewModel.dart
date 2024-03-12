@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/Room.dart';
 import '../services/WebSocketClient.dart';
 import '../models/VotingSummary.dart';
+import '../services/network/GameService.dart';
 
 import '../services/WebSocketClient.dart';
 import '../services/network/GameService.dart';
@@ -18,7 +19,8 @@ class VotingViewModel extends ChangeNotifier {
 
   VotingViewModel() {
     webSocketClient.roomUpdate.listen((room) {
-      _players = room.accountUsernames.map((username) => Player(nickname: username, canVote: true)).toList();
+      _players = webSocketClient.lastRoomUpdate!.accountUsernames.map(
+        (username) => Player(nickname: username, canVote: true)).toList();
       notifyListeners();
     });
     _votesCount = Map<String, int>.fromIterable(_players, key: (player) => player.nickname, value: (player) => 0);
@@ -38,6 +40,7 @@ class VotingViewModel extends ChangeNotifier {
 
     if (player?.canVote ?? false) {
       print('Głos oddany na gracza: $playerNickname');
+      _gameService.addVote(_votingId!, playerNickname);
       _votesCount[playerNickname] = (_votesCount[playerNickname] ?? 0) + 1;
       notifyListeners();
       await _gameService.addVote(_votingId!, playerNickname);
