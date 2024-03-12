@@ -31,7 +31,7 @@ class GameService {
       final response = await httpClient.post(
         Uri.parse("$baseUrl/voting/vote/$votingId"),
         body: jsonEncode(<String, String>{
-          'voted': votedName,
+          'votedUsername': votedName,
         }),
       );
       return handleResponse(response);

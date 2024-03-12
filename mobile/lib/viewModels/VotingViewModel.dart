@@ -38,10 +38,9 @@ class VotingViewModel extends ChangeNotifier {
 
     if (player?.canVote ?? false) {
       print('Głos oddany na gracza: $playerNickname');
-      _gameService.addVote(_votingId!, playerNickname);
+      await _gameService.addVote(_votingId!, playerNickname);
       _votesCount[playerNickname] = (_votesCount[playerNickname] ?? 0) + 1;
       notifyListeners();
-      await _gameService.addVote(_votingId!, playerNickname);
     } else {
       print('Nie można głosować na $playerNickname');
     }
