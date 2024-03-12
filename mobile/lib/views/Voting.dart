@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:mobile/viewModels/VotingViewModel.dart';
 
 class VotingPage extends StatefulWidget {
+  const VotingPage({super.key});
   @override
   _VotingPageState createState() => _VotingPageState();
 }
@@ -31,12 +32,12 @@ class _VotingPageState extends State<VotingPage> {
 }
 
 class VotingBody extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return Consumer<VotingViewModel>(
       builder: (context, viewModel, child) {
         List<Player> players = viewModel.getPlayers();
-        Map<String, String> roles = viewModel.getRoles();
         Map<String, int> votesCount = viewModel.getVotesCount();
 
         return Padding(

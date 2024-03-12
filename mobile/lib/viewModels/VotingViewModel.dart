@@ -7,33 +7,20 @@ class VotingViewModel extends ChangeNotifier {
   final WebSocketClient webSocketClient = WebSocketClient();
   VotingSummary? _votingSummary;
   VotingSummary? get votingSummary => _votingSummary;
-  late Room _room;
-  late List<Player> _players;
-  late Map<String, String> _roles;
-  late Map<String, int> _votesCount;
-
-  void setRoom(Room value)
-  {
-    _room = value;
-    notifyListeners();
-  }
+  List<Player> _players = []; // Lista użytkowników
 
   VotingViewModel() {
-    _votesCount = Map<String, int>.fromIterable(_players, key: (player) => player.nickname, value: (player) => 0);
+    webSocketClient.roomUpdate.listen((room) {
+      _players = room.accountUsernames.map((username) => Player(nickname: username, canVote: true)).toList();
+      notifyListeners();
+    });
   }
-
 
   List<Player> getPlayers() {
-    List<Player> players = _room.accountUsernames
-        .map((username) => Player(nickname: username, canVote: true))
-        .toList();
-    return players;
+    return _players;
   }
 
-
-  Map<String, String> getRoles() {
-    return _roles;
-  }
+  Map<String, int> _votesCount = {};
 
   Map<String, int> getVotesCount() {
     return _votesCount;
@@ -55,13 +42,12 @@ class VotingViewModel extends ChangeNotifier {
     return _votesCount[playerNickname] ?? 0;
   }
 
-  //tutaj metoda do wyniku glosowania
   Player? getPlayerWithMostVotes() {
     int maxVotes = 0;
     Player? playerWithMostVotes;
 
     for (Player player in _players) {
-      int votes = _votesCount[player.nickname] ?? 0; // Change key to player.nickname
+      int votes = _votesCount[player.nickname] ?? 0;
       if (votes > maxVotes) {
         maxVotes = votes;
         playerWithMostVotes = player;
@@ -70,15 +56,17 @@ class VotingViewModel extends ChangeNotifier {
 
     return playerWithMostVotes;
   }
-  void setVotingResults(VotingSummary value)
-  {
+
+  void setVotingResults(VotingSummary value) {
     _votingSummary = value;
     notifyListeners();
   }
-  void connectWebSocket() {
-    webSocketClient.votingSummaryUpdate.listen((votingSummary) { setVotingResults(votingSummary); });
-  }
 
+  void connectWebSocket() {
+    webSocketClient.votingSummaryUpdate.listen((votingSummary) {
+      setVotingResults(votingSummary);
+    });
+  }
 }
 
 class Player {
