@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/views/Winner.dart';
 import 'package:provider/provider.dart';
 import 'package:mobile/viewModels/VotingViewModel.dart';
 
@@ -49,7 +50,13 @@ class VotingBody extends StatelessWidget {
               for (Player player in players)
                 PlayerButton(
                   player: player,
-                  onPressed: () => vote(context, viewModel, player.nickname),
+                  //onPressed: () => vote(context, viewModel, player.nickname),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => WinnerPage())
+                    );
+                  },
                   votesCount: votesCount[player.nickname] ?? 0,
                 ),
             ],
