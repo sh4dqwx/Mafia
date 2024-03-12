@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import '../models/Room.dart';
 import '../services/WebSocketClient.dart';
 import '../models/VotingSummary.dart';
+import '../services/network/GameService.dart';
 
 class VotingViewModel extends ChangeNotifier {
   final WebSocketClient webSocketClient = WebSocketClient();
+  final _gameService = GameService();
   VotingSummary? _votingSummary;
   VotingSummary? get votingSummary => _votingSummary;
   List<Player> _players = []; // Lista użytkowników
@@ -30,8 +32,10 @@ class VotingViewModel extends ChangeNotifier {
 
     if (player?.canVote ?? false) {
       print('Głos oddany na gracza: $playerNickname');
+      _gameService.addVote(votingId,playerNickname);
       _votesCount[playerNickname] = (_votesCount[playerNickname] ?? 0) + 1;
       notifyListeners();
+      
     } else {
       print('Nie można głosować na $playerNickname');
     }
