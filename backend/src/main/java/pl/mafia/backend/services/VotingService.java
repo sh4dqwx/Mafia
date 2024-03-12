@@ -22,16 +22,16 @@ public class VotingService {
     private AccountRepository accountRepository;
 
     @Transactional
-    public void saveVote(Long votingId, Long voterId, Long votedId) {
+    public void saveVote(Long votingId, String voterUsername, String votedUsername) {
         Optional<Voting> fetchedVoting = votingRepository.findById(votingId);
         if (fetchedVoting.isEmpty())
             throw new IllegalArgumentException("Voting does not exists.");
 
-        Optional<Account> fetchedVoter = accountRepository.findById(voterId);
+        Optional<Account> fetchedVoter = accountRepository.findByUsername(voterUsername);
         if (fetchedVoter.isEmpty())
             throw new IllegalArgumentException("Voter does not exist");
 
-        Optional<Account> fetchedVoted = accountRepository.findById(votedId);
+        Optional<Account> fetchedVoted = accountRepository.findByUsername(votedUsername);
         if (fetchedVoted.isEmpty())
             throw new IllegalArgumentException("Voted does not exist");
 

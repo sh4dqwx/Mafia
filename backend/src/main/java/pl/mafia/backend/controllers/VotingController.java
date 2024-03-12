@@ -19,7 +19,7 @@ public class VotingController {
     @PostMapping("/vote/{votingId}")
     public ResponseEntity<?> saveVote(@PathVariable Long votingId, @RequestBody VoteRequest voteRequest) {
         try {
-            votingService.saveVote(votingId, voteRequest.voterId, voteRequest.votedId);
+            votingService.saveVote(votingId, voteRequest.voterUsername, voteRequest.votedUsername);
             return ResponseEntity.noContent().build();
         } catch(IllegalArgumentException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
@@ -30,7 +30,7 @@ public class VotingController {
 
     @Data
     static class VoteRequest {
-        private Long voterId;
-        private Long votedId;
+        private String voterUsername;
+        private String votedUsername;
     }
 }
