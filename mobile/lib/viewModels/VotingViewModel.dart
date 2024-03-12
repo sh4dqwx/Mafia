@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../models/Room.dart';
 import '../models/VotingSummary.dart';
 import '../services/WebSocketClient.dart';
 
@@ -12,6 +13,8 @@ class VotingViewModel extends ChangeNotifier {
   late Map<String, String> _roles; // Change key type to String
   late Map<String, int> _votesCount; // Change key type to
   late List<Map<String, dynamic>> _votesList = [];
+  late Room _room;
+  Room? get room => _room;
 
 
   List<Map<String, dynamic>> get votesList => _votesList;
@@ -81,9 +84,16 @@ class VotingViewModel extends ChangeNotifier {
     _votingSummary = value;
     notifyListeners();
   }
+  void setRoom(Room value)
+  {
+    _room=value;
+    notifyListeners();
+  }
 
   void connectWebSocket() {
     webSocketClient.votingSummaryUpdate.listen((votingSummary) { setVotingResults(votingSummary); });
+      setRoom(webSocketClient.lastRoomUpdate!);
+
   }
 }
 
