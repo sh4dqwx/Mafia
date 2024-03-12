@@ -19,7 +19,9 @@ public class VotingController {
     @PostMapping("/vote/{votingId}")
     public ResponseEntity<?> saveVote(@PathVariable Long votingId, @RequestBody VoteRequest voteRequest) {
         try {
-            votingService.saveVote(votingId, voteRequest.voterUsername, voteRequest.votedUsername);
+            boolean lastVote = votingService.saveVote(votingId, voteRequest.voterUsername, voteRequest.votedUsername);
+            if(lastVote)
+                votingService.endVoting(votingId);
             return ResponseEntity.noContent().build();
         } catch(IllegalArgumentException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());

@@ -5,6 +5,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import pl.mafia.backend.models.db.*;
+import pl.mafia.backend.models.dto.RoundDTO;
 import pl.mafia.backend.repositories.*;
 import pl.mafia.backend.websockets.WebSocketListener;
 import pl.mafia.backend.models.dto.GameStartDTO;
@@ -55,10 +56,11 @@ public class GameService {
         Game createdGame = new Game();
         createdGame.setCreateTimestamp(Timestamp.from(Instant.now()));
         for(Account account : room.getAccounts()) createdGame.getAccounts().add(account);
+        createdGame.setRoom(room);
         createdGame = gameRepository.save(createdGame);
 
         room.setGame(createdGame);
-        room = roomRepository.save(room);
+        roomRepository.save(room);
 
         String destination = "/queue/game-start";
         for(String user : webSocketListener.getSubscriptions(roomId)) {
@@ -122,7 +124,8 @@ public class GameService {
         createdVoting = votingRepository.save(createdVoting);
         round.setVotingCity(createdVoting);
 
-        roundRepository.save(round);
-
+        round = roundRepository.save(round);
+        Room room = round.getGame().getRoom();
+        simpMessagingTemplate.convertAndSend("/topic/" + room.getId() + "/round-start", new RoundDTO(round));
     }
 }
