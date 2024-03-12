@@ -56,10 +56,11 @@ public class GameService {
         Game createdGame = new Game();
         createdGame.setCreateTimestamp(Timestamp.from(Instant.now()));
         for(Account account : room.getAccounts()) createdGame.getAccounts().add(account);
+        createdGame.setRoom(room);
         createdGame = gameRepository.save(createdGame);
 
         room.setGame(createdGame);
-        room = roomRepository.save(room);
+        roomRepository.save(room);
 
         String destination = "/queue/game-start";
         for(String user : webSocketListener.getSubscriptions(roomId)) {
@@ -124,6 +125,7 @@ public class GameService {
         round.setVotingCity(createdVoting);
 
         round = roundRepository.save(round);
-        simpMessagingTemplate.convertAndSend("topic/" + round.getId() + "/round-start", new RoundDTO(round));
+        Room room = round.getGame().getRoom();
+        simpMessagingTemplate.convertAndSend("/topic/" + room.getId() + "/round-start", new RoundDTO(round));
     }
 }
