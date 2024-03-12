@@ -88,15 +88,15 @@ class PlayerButton extends StatelessWidget {
               Text(
                 player.nickname,
                 style: TextStyle(
-                  fontSize: 18.0, // Powiększamy czcionkę
-                  fontWeight: FontWeight.bold, // Opcjonalnie, dodajemy pogrubienie
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 8.0), // Dodajemy odstęp między nazwą gracza a liczbą głosów
+              SizedBox(height: 8.0), //nie dziala
               Text(
                 'Głosy: $votesCount',
                 style: TextStyle(
-                  fontSize: 16.0, // Powiększamy czcionkę
+                  fontSize: 16.0,
                 ),
               ),
             ],
@@ -105,7 +105,7 @@ class PlayerButton extends StatelessWidget {
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
           padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-            EdgeInsets.all(16.0), // Dodajemy wypełnienie dla przycisku
+            EdgeInsets.all(16.0),
           ),
         ),
       ),
