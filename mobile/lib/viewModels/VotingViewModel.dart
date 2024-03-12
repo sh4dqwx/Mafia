@@ -18,13 +18,11 @@ class VotingViewModel extends ChangeNotifier {
   int? _votingId=0;
 
   VotingViewModel() {
-    webSocketClient.roomUpdate.listen((room) {
-      _players = webSocketClient.lastRoomUpdate!.accountUsernames.map(
-        (username) => Player(nickname: username, canVote: true)).toList();
-      notifyListeners();
-    });
+    _players = webSocketClient.lastRoomUpdate!.accountUsernames.map(
+      (username) => Player(nickname: username, canVote: true)).toList();
     _votesCount = Map<String, int>.fromIterable(_players, key: (player) => player.nickname, value: (player) => 0);
-    _votingId=webSocketClient.lastRoundStartUpdate?.votingCityId;
+    _votingId = webSocketClient.lastRoundStartUpdate?.votingCityId;
+    notifyListeners();
   }
 
   List<Player> getPlayers() {

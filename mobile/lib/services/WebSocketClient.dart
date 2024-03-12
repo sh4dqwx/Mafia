@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:ffi';
+import 'package:mobile/models/RoomSettings.dart';
 import 'package:mobile/models/VotingSummary.dart';
 import 'package:mobile/utils/CustomHttpClient.dart';
 import 'package:stomp_dart_client/stomp.dart';
@@ -15,14 +16,23 @@ class WebSocketClient {
   static WebSocketClient? _instance;
   StompClient? _stompClient;
   late int roomId;
-  late String username;
+  late String username = "aaa";
   late String password;
 
   final String baseUrl = "ws://${Constants.baseUrl}";
 
   final _roomUpdate = StreamController<Room>();
   Stream<Room> get roomUpdate => _roomUpdate.stream;
-  Room? lastRoomUpdate;
+  Room? lastRoomUpdate = Room(
+      id: 1,
+      accountUsernames: ["aaa", "bbb"],
+      hostUsername: "aaa",
+      accessCode: "0001",
+      roomSettings: RoomSettings(
+          isPublic: true,
+          numberOfPlayers: 10
+      )
+  );
 
   final _gameStartUpdate = StreamController<GameStart>();
   Stream<GameStart> get gameStartUpdate => _gameStartUpdate.stream;
@@ -30,7 +40,7 @@ class WebSocketClient {
 
   final _roundStartUpdate = StreamController<Round>();
   Stream<Round> get roundStartUpdate => _roundStartUpdate.stream;
-  Round? lastRoundStartUpdate;
+  Round? lastRoundStartUpdate = Round(id: 1, votingCityId: 1);
 
   final _votingSummaryUpdate = StreamController<VotingSummary>();
   Stream<VotingSummary> get votingSummaryUpdate => _votingSummaryUpdate.stream;
