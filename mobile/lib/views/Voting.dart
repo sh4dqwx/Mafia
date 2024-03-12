@@ -52,6 +52,7 @@ class VotingBody extends StatelessWidget {
                   onPressed: () => viewModel.vote(player.nickname) ,
                   votesCount: votesCount[player.nickname] ?? 0,
                 ),
+              SizedBox(height: 8.0),
             ],
           ),
         );
@@ -74,16 +75,39 @@ class PlayerButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: player.canVote ? onPressed : null,
-      child: Column(
-        children: [
-          Text(player.nickname),
-          Text('Głosy: $votesCount'),
-        ],
-      ),
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: player.canVote ? onPressed : null,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                player.nickname,
+                style: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 8.0), //nie dziala
+              Text(
+                'Głosy: $votesCount',
+                style: TextStyle(
+                  fontSize: 16.0,
+                ),
+              ),
+            ],
+          ),
+        ),
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+            EdgeInsets.all(16.0),
+          ),
+        ),
       ),
     );
   }
