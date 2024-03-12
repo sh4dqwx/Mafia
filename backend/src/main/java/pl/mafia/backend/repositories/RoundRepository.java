@@ -8,5 +8,4 @@ import pl.mafia.backend.models.db.Round;
 import java.util.Optional;
 
 public interface RoundRepository extends JpaRepository<Round, Long> {
-    Optional<Room> findByHost(Account host);
 }
