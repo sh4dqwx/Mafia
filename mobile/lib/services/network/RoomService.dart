@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:mobile/services/WebSocketClient.dart';
 import 'package:mobile/services/network/NetworkException.dart';
 import 'package:mobile/models/Room.dart';
 import 'package:mobile/utils/Constants.dart' as Constants;
@@ -12,6 +13,7 @@ class RoomService {
 
   final String baseUrl = "http://${Constants.baseUrl}";
   final CustomHttpClient httpClient = CustomHttpClient();
+  final WebSocketClient webSocketClient = WebSocketClient();
 
   Future<List<Room>> getPublicRooms() async {
     try {
@@ -40,6 +42,7 @@ class RoomService {
       if(response.statusCode == 200) {
         Map<String, dynamic> json = jsonDecode(response.body);
         Room room = Room.fromJson(json);
+        webSocketClient.lastRoomUpdate = room;
         return room;
       } else return handleResponse(response);
     } catch (e) {
@@ -57,6 +60,7 @@ class RoomService {
       if(response.statusCode == 200) {
         Map<String, dynamic> json = jsonDecode(response.body);
         Room room = Room.fromJson(json);
+        webSocketClient.lastRoomUpdate = room;
         return room;
       } else return handleResponse(response);
     } catch (e) {
@@ -87,6 +91,7 @@ class RoomService {
       if(response.statusCode == 200) {
         Map<String, dynamic> json = jsonDecode(response.body);
         Room room = Room.fromJson(json);
+        webSocketClient.lastRoomUpdate = room;
         return room;
       } else return handleResponse(response);
     } catch (e) {

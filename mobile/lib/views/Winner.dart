@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/Views/Menu.dart';
 import 'package:provider/provider.dart';
 
 import 'package:mobile/viewModels/WinnerRoleViewModel.dart';
@@ -9,16 +10,30 @@ class WinnerPage extends StatefulWidget {
 }
 
 class _WinnerPageState extends State<WinnerPage> {
-  String _winner = "Mafia";
-
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      child: Text(
-        'Your role is: ${_winner}',
-            // '${context.watch<WinnerRoleViewModel>().userRole}',
-        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Consumer<WinnerRoleViewModel>(
+              builder: (context, winnerRoleViewModel, child) {
+                return Text(
+                  'Winner is: '
+                  '${context.watch<WinnerRoleViewModel>().userRole}',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                );
+              },
+            ),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => MenuPage()));
+                },
+                child: Text("Powrót do menu")),
+          ],
+        ),
       ),
     );
   }
