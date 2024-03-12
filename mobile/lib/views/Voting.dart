@@ -52,6 +52,7 @@ class VotingBody extends StatelessWidget {
                   onPressed: () => viewModel.vote(player.nickname) ,
                   votesCount: votesCount[player.nickname] ?? 0,
                 ),
+              SizedBox(height: 8.0),
             ],
           ),
         );
@@ -74,16 +75,39 @@ class PlayerButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: player.canVote ? onPressed : null,
-      child: Column(
-        children: [
-          Text(player.nickname),
-          Text('Głosy: $votesCount'),
-        ],
-      ),
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: player.canVote ? onPressed : null,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                player.nickname,
+                style: TextStyle(
+                  fontSize: 18.0, // Powiększamy czcionkę
+                  fontWeight: FontWeight.bold, // Opcjonalnie, dodajemy pogrubienie
+                ),
+              ),
+              SizedBox(height: 8.0), // Dodajemy odstęp między nazwą gracza a liczbą głosów
+              Text(
+                'Głosy: $votesCount',
+                style: TextStyle(
+                  fontSize: 16.0, // Powiększamy czcionkę
+                ),
+              ),
+            ],
+          ),
+        ),
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+            EdgeInsets.all(16.0), // Dodajemy wypełnienie dla przycisku
+          ),
+        ),
       ),
     );
   }
