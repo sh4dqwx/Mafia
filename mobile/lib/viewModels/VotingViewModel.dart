@@ -10,10 +10,9 @@ class VotingViewModel extends ChangeNotifier {
   List<Player> _players = []; // Lista użytkowników
 
   VotingViewModel() {
-    webSocketClient.roomUpdate.listen((room) {
-      _players = room.accountUsernames.map((username) => Player(nickname: username, canVote: true)).toList();
-      notifyListeners();
-    });
+      _players =
+          webSocketClient.lastRoomUpdate!.accountUsernames.map((username) =>
+              Player(nickname: username, canVote: true)).toList();
   }
 
   List<Player> getPlayers() {
