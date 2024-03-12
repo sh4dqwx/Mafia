@@ -2,15 +2,20 @@ package pl.mafia.backend.services;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 import pl.mafia.backend.models.db.Account;
 import pl.mafia.backend.models.db.Vote;
 import pl.mafia.backend.models.db.Voting;
+import pl.mafia.backend.models.dto.VotingResult;
+import pl.mafia.backend.models.dto.VotingSummary;
 import pl.mafia.backend.repositories.AccountRepository;
+import pl.mafia.backend.repositories.GameRepository;
 import pl.mafia.backend.repositories.VoteRepository;
 import pl.mafia.backend.repositories.VotingRepository;
 
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class VotingService {
@@ -20,9 +25,11 @@ public class VotingService {
     private VoteRepository voteRepository;
     @Autowired
     private AccountRepository accountRepository;
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
     @Transactional
-    public void saveVote(Long votingId, String voterUsername, String votedUsername) {
+    public boolean saveVote(Long votingId, String voterUsername, String votedUsername) {
         Optional<Voting> fetchedVoting = votingRepository.findById(votingId);
         if (fetchedVoting.isEmpty())
             throw new IllegalArgumentException("Voting does not exists.");
@@ -35,6 +42,9 @@ public class VotingService {
         if (fetchedVoted.isEmpty())
             throw new IllegalArgumentException("Voted does not exist");
 
+        if (voterUsername.equals(votedUsername))
+            throw new IllegalArgumentException("Voter and voted can not be the same user");
+
         Voting voting = fetchedVoting.get();
         Account voter = fetchedVoter.get();
         Account voted = fetchedVoted.get();
@@ -46,5 +56,39 @@ public class VotingService {
 
         voting.getVotes().add(vote);
         votingRepository.save(voting);
+        return voting.getVotes().size() >= voter.getRoom().getAccounts().size();
+    }
+
+    @Transactional
+    public void endVoting(Long votingId) {
+        Optional<Voting> fetchedVoting = votingRepository.findById(votingId);
+        if (fetchedVoting.isEmpty())
+            throw new IllegalArgumentException("Voting does not exists.");
+
+        Voting voting = fetchedVoting.get();
+        Map<Account, Long> voteCounts = voting.getVotes().stream()
+                .map(Vote::getVoted)
+                .collect(Collectors.groupingBy(account -> account, Collectors.counting()));
+        List<VotingResult> votingResults = new ArrayList<>();
+        for (Map.Entry<Account, Long> entry : voteCounts.entrySet()) {
+            VotingResult result = new VotingResult(entry.getKey().getUsername(), entry.getValue());
+            votingResults.add(result);
+        }
+
+        long maxVotes = voteCounts.values().stream().mapToLong(v -> v).max().orElse(0);
+
+        List<Account> mostVotedAccounts = voteCounts.entrySet().stream()
+                .filter(entry -> entry.getValue() == maxVotes)
+                .map(Map.Entry::getKey)
+                .toList();
+
+        if (mostVotedAccounts.size() > 1)
+            voting.setAccount(mostVotedAccounts.get(new Random().nextInt(mostVotedAccounts.size())));
+        else
+            voting.setAccount(mostVotedAccounts.isEmpty() ? null : mostVotedAccounts.get(0));
+
+        voting = votingRepository.save(voting);
+        //Do ustalenia co wysyłamy
+        messagingTemplate.convertAndSend("/topic/" + voting.getAccount().getRoom().getId() + "/voting-summary", new VotingSummary(votingResults));
     }
 }

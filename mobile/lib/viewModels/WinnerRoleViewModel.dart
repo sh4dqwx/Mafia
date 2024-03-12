@@ -9,10 +9,9 @@ class WinnerRoleViewModel extends ChangeNotifier{
   WebSocketClient webSocketClient = WebSocketClient();
 
   WinnerRoleViewModel() {
-    webSocketClient.gameStartUpdate.listen((gameStart) {
-      _userRole = gameStart.role;
-      notifyListeners(); // Notify listeners when the role is updated
-    });
+    if(webSocketClient.lastGameStartUpdate == null) return;
+    _userRole = webSocketClient.lastGameStartUpdate!.role;
+    notifyListeners();
   }
 
   String get userRole => _userRole;

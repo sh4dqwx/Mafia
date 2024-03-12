@@ -2,6 +2,7 @@ package pl.mafia.backend.models.db;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 @Entity
@@ -15,16 +16,19 @@ public class Vote {
     private Long id;
 
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @ManyToOne
     @JoinColumn(name = "id_voting")
     private Voting voting;
 
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @ManyToOne
     @JoinColumn(name = "id_voter")
     private Account voter;
 
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @ManyToOne
     @JoinColumn(name = "id_voted")
     private Account voted;

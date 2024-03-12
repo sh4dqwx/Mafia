@@ -20,6 +20,11 @@ public class Game {
     @SequenceGenerator(name = "game_sequence", sequenceName = "GAME_SEQ", allocationSize = 1)
     private Long id;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @OneToOne(mappedBy = "game", fetch = FetchType.LAZY)
+    private Room room;
+
     @Column(nullable = false)
     private Timestamp createTimestamp;
 

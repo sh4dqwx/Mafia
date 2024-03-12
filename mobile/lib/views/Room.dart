@@ -34,6 +34,11 @@ class RoomPageState extends State<RoomPage> {
 
   @override
   Widget build(BuildContext context) {
+    if(context.watch<RoomViewModel>().gameStarted) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => UserRolePage()));
+      });
+    }
     return WillPopScope(
       onWillPop: () async {
         return Future.value(false);
