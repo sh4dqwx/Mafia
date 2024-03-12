@@ -2,6 +2,7 @@ package pl.mafia.backend.models.db;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import java.util.ArrayList;
@@ -18,31 +19,37 @@ public class Round {
     private Long id;
 
     @ToString.Exclude
-    @ManyToOne
+    @EqualsAndHashCode.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_game")
     private Game game;
 
     @ToString.Exclude
-    @ManyToOne
+    @EqualsAndHashCode.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_reward")
     private Reward reward;
 
     @ToString.Exclude
-    @OneToOne
+    @EqualsAndHashCode.Exclude
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_voting_city", unique = true)
     private Voting votingCity;
 
     @ToString.Exclude
-    @OneToOne
+    @EqualsAndHashCode.Exclude
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_voting_mafia", unique = true)
     private Voting votingMafia;
 
     @ToString.Exclude
-    @OneToOne
+    @EqualsAndHashCode.Exclude
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_voting_reward", unique = true)
     private Voting votingReward;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "round")
+    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "round", fetch = FetchType.LAZY)
     private List<RoundMiniGame> roundMiniGames = new ArrayList<>();
 }

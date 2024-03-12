@@ -26,10 +26,10 @@ class GameService {
     }
   }
 
-  Future<void> addVote (int gameId, int votingId, String votedName) async {
+  Future<void> addVote (int votingId, String votedName) async {
     try {
       final response = await httpClient.post(
-        Uri.parse("$baseUrl/game/$gameId/voting/$votingId/vote"),
+        Uri.parse("$baseUrl/voting/vote/$votingId"),
         body: jsonEncode(<String, String>{
           'voted': votedName,
         }),

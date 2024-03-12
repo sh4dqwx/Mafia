@@ -96,6 +96,7 @@ public class WebSocketListener {
     }
 
     public List<String> getSubscriptions(Long roomId) {
+        if(!activeSubscriptions.containsKey(roomId)) return new ArrayList<>();
         return activeSubscriptions.get(roomId);
     }
 }

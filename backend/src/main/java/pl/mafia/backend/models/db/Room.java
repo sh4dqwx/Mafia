@@ -2,6 +2,7 @@ package pl.mafia.backend.models.db;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import java.util.ArrayList;
@@ -18,22 +19,25 @@ public class Room {
     private Long id;
 
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_host")
     private Account host;
 
     @ToString.Exclude
-    @OneToOne
+    @EqualsAndHashCode.Exclude
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_game", unique = true)
     private Game game;
 
     @Column(name = "access_code", nullable = false)
     private String accessCode;
 
-    @OneToOne(mappedBy = "room")
+    @OneToOne(mappedBy = "room", fetch = FetchType.LAZY)
     private RoomSettings roomSettings;
 
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
     private List<Account> accounts = new ArrayList<>();
 }
