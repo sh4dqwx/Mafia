@@ -32,7 +32,7 @@ class WebSocketClient {
   Stream<Round> get roundStartUpdate => _roundStartUpdate.stream;
   Round? lastRoundStartUpdate;
 
-  final _votingSummaryUpdate = StreamController<VotingSummary>();
+  final _votingSummaryUpdate = StreamController<VotingSummary>.broadcast();
   Stream<VotingSummary> get votingSummaryUpdate => _votingSummaryUpdate.stream;
   VotingSummary? lastVotingSummary;
 

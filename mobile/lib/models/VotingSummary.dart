@@ -8,8 +8,9 @@ class VotingSummary {
   });
 
   factory VotingSummary.fromJson(Map<String, dynamic> json) {
+    List<dynamic> resultsJson = json['results'];
     return VotingSummary(
-      results: List<VotingResult>.from(json['username']),
+      results: resultsJson.map((resultJson) => VotingResult.fromJson(resultJson)).toList()
     );
   }
 

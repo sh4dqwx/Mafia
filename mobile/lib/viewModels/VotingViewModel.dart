@@ -22,6 +22,8 @@ class VotingViewModel extends ChangeNotifier {
   int? _votingId=0;
   Room? _room;
   Room? get room => _room;
+  bool _votingFinished = false;
+  bool get votingFinished => _votingFinished;
 
   VotingViewModel() {
     _players = webSocketClient.lastRoomUpdate!.accountUsernames.map(
@@ -77,6 +79,8 @@ class VotingViewModel extends ChangeNotifier {
   void setVotingResults(VotingSummary value)
   {
     _votingSummary = value;
+    _votingFinished = true;
+    print("elop");
     notifyListeners();
   }
   void setRoom(Room value)
