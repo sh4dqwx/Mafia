@@ -4,6 +4,8 @@ import '../services/WebSocketClient.dart';
 import '../models/VotingSummary.dart';
 import '../services/network/GameService.dart';
 
+import '../models/Room.dart';
+import '../models/VotingSummary.dart';
 import '../services/WebSocketClient.dart';
 import '../services/network/GameService.dart';
 
@@ -18,6 +20,10 @@ class VotingViewModel extends ChangeNotifier {
   late Map<String, String> _roles; // Change key type to String
   Map<String, int> _votesCount = {};
   int? _votingId=0;
+  Room? _room;
+  Room? get room => _room;
+  bool _votingFinished = false;
+  bool get votingFinished => _votingFinished;
 
   VotingViewModel() {
     _players = webSocketClient.lastRoomUpdate!.accountUsernames.map(
@@ -70,15 +76,24 @@ class VotingViewModel extends ChangeNotifier {
     return playerWithMostVotes;
   }
 
-  void setVotingResults(VotingSummary value) {
+  void setVotingResults(VotingSummary value)
+  {
     _votingSummary = value;
+    _votingFinished = true;
+    print("elop");
+    notifyListeners();
+  }
+  void setRoom(Room value)
+  {
+    _room=value;
     notifyListeners();
   }
 
   void connectWebSocket() {
-    webSocketClient.votingSummaryUpdate.listen((votingSummary) {
-      setVotingResults(votingSummary);
-    });
+    if(webSocketClient.lastVotingSummary != null) { setVotingResults(webSocketClient.lastVotingSummary!); }
+    if(webSocketClient.lastRoomUpdate != null) { setRoom(webSocketClient.lastRoomUpdate!); }
+
+    webSocketClient.votingSummaryUpdate.listen((votingSummary) { setVotingResults(votingSummary); });
   }
 }
 

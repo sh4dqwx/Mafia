@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/services/WebSocketClient.dart';
+import 'package:mobile/views/VotingResults.dart';
 import 'package:provider/provider.dart';
 import 'package:mobile/viewModels/VotingViewModel.dart';
 
@@ -16,6 +17,7 @@ class _VotingPageState extends State<VotingPage> {
   void initState() {
     super.initState();
     viewModel = VotingViewModel();
+    viewModel.connectWebSocket();
   }
 
   @override
@@ -37,6 +39,12 @@ class VotingBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if(context.watch<VotingViewModel>().votingFinished) {
+      print("elo");
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => VotingResultsPage()));
+      });
+    }
     return Consumer<VotingViewModel>(
       builder: (context, viewModel, child) {
         List<Player> players = viewModel.getPlayers();
@@ -68,20 +76,6 @@ class VotingBody extends StatelessWidget {
               );
             },
           )
-          // child: Column(
-          //   mainAxisAlignment: MainAxisAlignment.center,
-          //   crossAxisAlignment: CrossAxisAlignment.center,
-          //   children: [
-          //     for (Player player in players) {
-          //       PlayerButton(
-          //         player: player,
-          //         onPressed: () => viewModel.vote(player.nickname),
-          //         votesCount: votesCount[player.nickname] ?? 0,
-          //       ),
-          //       SizedBox(height: 8.0),
-          //     }
-          //   ],
-          // ),
         );
       },
     );

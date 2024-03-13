@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:ffi';
-import 'package:mobile/models/RoomSettings.dart';
 import 'package:mobile/models/VotingSummary.dart';
 import 'package:mobile/utils/CustomHttpClient.dart';
 import 'package:stomp_dart_client/stomp.dart';
@@ -33,11 +32,12 @@ class WebSocketClient {
   Stream<Round> get roundStartUpdate => _roundStartUpdate.stream;
   Round? lastRoundStartUpdate;
 
-  final _votingSummaryUpdate = StreamController<VotingSummary>();
+  final _votingSummaryUpdate = StreamController<VotingSummary>.broadcast();
   Stream<VotingSummary> get votingSummaryUpdate => _votingSummaryUpdate.stream;
   VotingSummary? lastVotingSummary;
 
   WebSocketClient._internal();
+
   factory WebSocketClient() {
     _instance ??= WebSocketClient._internal();
     return _instance!;
